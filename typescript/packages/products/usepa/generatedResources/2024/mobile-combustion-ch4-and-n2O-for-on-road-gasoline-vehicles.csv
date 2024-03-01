@@ -1,0 +1,209 @@
+﻿Vehicle Type,Model Year,CH4 Factor (g CH4 / vehicle-mile),N2O Factor (g N2O / vehicle-mile)
+Gasoline Passenger Cars,1973,0.1696,0.0197
+Gasoline Passenger Cars,1974,0.1696,0.0197
+Gasoline Passenger Cars,1975,0.14232,0.04426
+Gasoline Passenger Cars,1976,0.140615,0.045794999999999995
+Gasoline Passenger Cars,1977,0.140615,0.045794999999999995
+Gasoline Passenger Cars,1978,0.13891,0.047330000000000004
+Gasoline Passenger Cars,1979,0.13891,0.047330000000000004
+Gasoline Passenger Cars,1980,0.132648,0.049866
+Gasoline Passenger Cars,1981,0.080165,0.062555
+Gasoline Passenger Cars,1982,0.079514,0.062698
+Gasoline Passenger Cars,1983,0.078212,0.062984
+Gasoline Passenger Cars,1984,0.0704,0.0647
+Gasoline Passenger Cars,1985,0.0704,0.0647
+Gasoline Passenger Cars,1986,0.0704,0.0647
+Gasoline Passenger Cars,1987,0.0704,0.0647
+Gasoline Passenger Cars,1988,0.0704,0.0647
+Gasoline Passenger Cars,1989,0.0704,0.0647
+Gasoline Passenger Cars,1990,0.0704,0.0647
+Gasoline Passenger Cars,1991,0.0704,0.0647
+Gasoline Passenger Cars,1992,0.0704,0.0647
+Gasoline Passenger Cars,1993,0.0704,0.0647
+Gasoline Passenger Cars,1994,0.06174000000000001,0.060340000000000005
+Gasoline Passenger Cars,1995,0.05308,0.055979999999999995
+Gasoline Passenger Cars,1996,0.04339400000000001,0.05027600000000001
+Gasoline Passenger Cars,1997,0.033708,0.044572
+Gasoline Passenger Cars,1998,0.024021999999999998,0.038868
+Gasoline Passenger Cars,1999,0.021457,0.035508
+Gasoline Passenger Cars,2000,0.017523999999999998,0.030356
+Gasoline Passenger Cars,2001,0.010513,0.021172
+Gasoline Passenger Cars,2002,0.010171000000000001,0.020724
+Gasoline Passenger Cars,2003,0.009504,0.018087
+Gasoline Passenger Cars,2004,0.00784,0.008487999999999999
+Gasoline Passenger Cars,2005,0.00751,0.006706
+Gasoline Passenger Cars,2006,0.007634,0.007450999999999999
+Gasoline Passenger Cars,2007,0.007226,0.005213
+Gasoline Passenger Cars,2008,0.0071719999999999996,0.004904
+Gasoline Passenger Cars,2009,0.007113999999999999,0.004585
+Gasoline Passenger Cars,2010,0.007112,0.00458
+Gasoline Passenger Cars,2011,0.007116,0.0045899999999999995
+Gasoline Passenger Cars,2012,0.007117999999999999,0.004594999999999999
+Gasoline Passenger Cars,2013,0.0071200000000000005,0.0046
+Gasoline Passenger Cars,2014,0.007098999999999999,0.004579
+Gasoline Passenger Cars,2015,0.006837,0.004239
+Gasoline Passenger Cars,2016,0.006489999999999999,0.0037809999999999996
+Gasoline Passenger Cars,2017,0.005365,0.0017900000000000004
+Gasoline Passenger Cars,2018,0.00524,0.001585
+Gasoline Passenger Cars,2019,0.005105,0.001452
+Gasoline Passenger Cars,2020,0.004999999999999999,0.00135
+Gasoline Passenger Cars,2021,0.005049999999999999,0.001412
+Gasoline Light-Duty Trucks,1973,0.1908,0.0218
+Gasoline Light-Duty Trucks,1974,0.1908,0.0218
+"(Vans, Pickup Trucks, SUVs)",1975,0.16336,0.051269999999999996
+"(Vans, Pickup Trucks, SUVs)",1976,0.15944000000000003,0.05548
+"(Vans, Pickup Trucks, SUVs)",1977,0.16140000000000002,0.05337499999999999
+"(Vans, Pickup Trucks, SUVs)",1978,0.16140000000000002,0.05337499999999999
+"(Vans, Pickup Trucks, SUVs)",1979,0.15944000000000003,0.05548
+"(Vans, Pickup Trucks, SUVs)",1980,0.15944000000000003,0.05548
+"(Vans, Pickup Trucks, SUVs)",1981,0.1479,0.06598499999999999
+"(Vans, Pickup Trucks, SUVs)",1982,0.1442,0.06806999999999999
+"(Vans, Pickup Trucks, SUVs)",1983,0.1368,0.07224
+"(Vans, Pickup Trucks, SUVs)",1984,0.12940000000000002,0.07641
+"(Vans, Pickup Trucks, SUVs)",1985,0.122,0.08058
+"(Vans, Pickup Trucks, SUVs)",1986,0.11460000000000001,0.08474999999999999
+"(Vans, Pickup Trucks, SUVs)",1987,0.0813,0.103515
+"(Vans, Pickup Trucks, SUVs)",1988,0.0813,0.103515
+"(Vans, Pickup Trucks, SUVs)",1989,0.0813,0.103515
+"(Vans, Pickup Trucks, SUVs)",1990,0.0813,0.103515
+"(Vans, Pickup Trucks, SUVs)",1991,0.0813,0.103515
+"(Vans, Pickup Trucks, SUVs)",1992,0.0813,0.103515
+"(Vans, Pickup Trucks, SUVs)",1993,0.0813,0.103515
+"(Vans, Pickup Trucks, SUVs)",1994,0.06464,0.09820000000000001
+"(Vans, Pickup Trucks, SUVs)",1995,0.05168,0.0908
+"(Vans, Pickup Trucks, SUVs)",1996,0.0452,0.0871
+"(Vans, Pickup Trucks, SUVs)",1997,0.0452,0.0871
+"(Vans, Pickup Trucks, SUVs)",1998,0.041248,0.078676
+"(Vans, Pickup Trucks, SUVs)",1999,0.033344,0.061827999999999994
+"(Vans, Pickup Trucks, SUVs)",2000,0.033951999999999996,0.063124
+"(Vans, Pickup Trucks, SUVs)",2001,0.022095999999999998,0.037852
+"(Vans, Pickup Trucks, SUVs)",2002,0.024223999999999996,0.042387999999999995
+"(Vans, Pickup Trucks, SUVs)",2003,0.022111999999999996,0.037312
+"(Vans, Pickup Trucks, SUVs)",2004,0.011472,0.00875
+"(Vans, Pickup Trucks, SUVs)",2005,0.010544000000000001,0.006410000000000001
+"(Vans, Pickup Trucks, SUVs)",2006,0.0108,0.007956
+"(Vans, Pickup Trucks, SUVs)",2007,0.010272,0.006072000000000001
+"(Vans, Pickup Trucks, SUVs)",2008,0.009456,0.0035880000000000005
+"(Vans, Pickup Trucks, SUVs)",2009,0.009456,0.0035880000000000005
+"(Vans, Pickup Trucks, SUVs)",2010,0.009519999999999999,0.0034599999999999995
+"(Vans, Pickup Trucks, SUVs)",2011,0.009568,0.0033640000000000002
+"(Vans, Pickup Trucks, SUVs)",2012,0.009616,0.003268
+"(Vans, Pickup Trucks, SUVs)",2013,0.009504,0.0034920000000000003
+"(Vans, Pickup Trucks, SUVs)",2014,0.009549,0.003319
+"(Vans, Pickup Trucks, SUVs)",2015,0.009438,0.0031260000000000003
+"(Vans, Pickup Trucks, SUVs)",2016,0.009104,0.002906
+"(Vans, Pickup Trucks, SUVs)",2017,0.008392,0.0017749999999999999
+"(Vans, Pickup Trucks, SUVs)",2018,0.008118,0.001515
+"(Vans, Pickup Trucks, SUVs)",2019,0.007988,0.0013349999999999998
+"(Vans, Pickup Trucks, SUVs)",2020,0.00785,0.0012
+"(Vans, Pickup Trucks, SUVs)",2021,0.00785,0.0012
+Gasoline Heavy-Duty Vehicles,1973,0.4604,0.0497
+Gasoline Heavy-Duty Vehicles,1974,0.4604,0.0497
+Gasoline Heavy-Duty Vehicles,1975,0.4604,0.0497
+Gasoline Heavy-Duty Vehicles,1976,0.4604,0.0497
+Gasoline Heavy-Duty Vehicles,1977,0.4604,0.0497
+Gasoline Heavy-Duty Vehicles,1978,0.4604,0.0497
+Gasoline Heavy-Duty Vehicles,1979,0.4604,0.0497
+Gasoline Heavy-Duty Vehicles,1980,0.4604,0.0497
+Gasoline Heavy-Duty Vehicles,1981,0.44915999999999995,0.0538
+Gasoline Heavy-Duty Vehicles,1982,0.44915999999999995,0.0538
+Gasoline Heavy-Duty Vehicles,1983,0.44915999999999995,0.0538
+Gasoline Heavy-Duty Vehicles,1984,0.44915999999999995,0.0538
+Gasoline Heavy-Duty Vehicles,1985,0.40897500000000003,0.05152
+Gasoline Heavy-Duty Vehicles,1986,0.40897500000000003,0.05152
+Gasoline Heavy-Duty Vehicles,1987,0.36745999999999995,0.08489
+Gasoline Heavy-Duty Vehicles,1988,0.34921,0.09333
+Gasoline Heavy-Duty Vehicles,1989,0.34921,0.09333
+Gasoline Heavy-Duty Vehicles,1990,0.32457499999999995,0.11417
+Gasoline Heavy-Duty Vehicles,1991,0.32457499999999995,0.11417
+Gasoline Heavy-Duty Vehicles,1992,0.32457499999999995,0.11417
+Gasoline Heavy-Duty Vehicles,1993,0.32457499999999995,0.11417
+Gasoline Heavy-Duty Vehicles,1994,0.32457499999999995,0.11417
+Gasoline Heavy-Duty Vehicles,1995,0.32457499999999995,0.11417
+Gasoline Heavy-Duty Vehicles,1996,0.127775,0.16802499999999998
+Gasoline Heavy-Duty Vehicles,1997,0.09238500000000001,0.172595
+Gasoline Heavy-Duty Vehicles,1998,0.0655,0.175
+Gasoline Heavy-Duty Vehicles,1999,0.06479,0.17243199999999997
+Gasoline Heavy-Duty Vehicles,2000,0.063015,0.166012
+Gasoline Heavy-Duty Vehicles,2001,0.057690000000000005,0.146752
+Gasoline Heavy-Duty Vehicles,2002,0.06337,0.16729599999999997
+Gasoline Heavy-Duty Vehicles,2003,0.060172,0.15528899999999998
+Gasoline Heavy-Duty Vehicles,2004,0.029799,0.016383
+Gasoline Heavy-Duty Vehicles,2005,0.029745,0.008265000000000002
+Gasoline Heavy-Duty Vehicles,2006,0.02985,0.024050000000000002
+Gasoline Heavy-Duty Vehicles,2007,0.032238,0.0015
+Gasoline Heavy-Duty Vehicles,2008,0.034024,0.0015
+Gasoline Heavy-Duty Vehicles,2009,0.03393,0.0015
+Gasoline Heavy-Duty Vehicles,2010,0.031956,0.0015
+Gasoline Heavy-Duty Vehicles,2011,0.030358000000000003,0.0015000000000000002
+Gasoline Heavy-Duty Vehicles,2012,0.031298,0.0015
+Gasoline Heavy-Duty Vehicles,2013,0.031298,0.0015
+Gasoline Heavy-Duty Vehicles,2014,0.031486,0.0015
+Gasoline Heavy-Duty Vehicles,2015,0.033184000000000005,0.002105
+Gasoline Heavy-Duty Vehicles,2016,0.032073000000000004,0.006137999999999999
+Gasoline Heavy-Duty Vehicles,2017,0.032873,0.008379
+Gasoline Heavy-Duty Vehicles,2018,0.032572000000000004,0.008230999999999999
+Gasoline Heavy-Duty Vehicles,2019,0.03295,0.009080000000000001
+Gasoline Heavy-Duty Vehicles,2020,0.03315,0.00995
+Gasoline Heavy-Duty Vehicles,2021,0.03315,0.00995
+Gasoline Motorcycles,1960,0.007,0.0083
+Gasoline Motorcycles,1961,0.007,0.0083
+Gasoline Motorcycles,1962,0.007,0.0083
+Gasoline Motorcycles,1963,0.007,0.0083
+Gasoline Motorcycles,1964,0.007,0.0083
+Gasoline Motorcycles,1965,0.007,0.0083
+Gasoline Motorcycles,1966,0.007,0.0083
+Gasoline Motorcycles,1967,0.007,0.0083
+Gasoline Motorcycles,1968,0.007,0.0083
+Gasoline Motorcycles,1969,0.007,0.0083
+Gasoline Motorcycles,1970,0.007,0.0083
+Gasoline Motorcycles,1971,0.007,0.0083
+Gasoline Motorcycles,1972,0.007,0.0083
+Gasoline Motorcycles,1973,0.007,0.0083
+Gasoline Motorcycles,1974,0.007,0.0083
+Gasoline Motorcycles,1975,0.007,0.0083
+Gasoline Motorcycles,1976,0.007,0.0083
+Gasoline Motorcycles,1977,0.007,0.0083
+Gasoline Motorcycles,1978,0.007,0.0083
+Gasoline Motorcycles,1979,0.007,0.0083
+Gasoline Motorcycles,1980,0.007,0.0083
+Gasoline Motorcycles,1981,0.007,0.0083
+Gasoline Motorcycles,1982,0.007,0.0083
+Gasoline Motorcycles,1983,0.007,0.0083
+Gasoline Motorcycles,1984,0.007,0.0083
+Gasoline Motorcycles,1985,0.007,0.0083
+Gasoline Motorcycles,1986,0.007,0.0083
+Gasoline Motorcycles,1987,0.007,0.0083
+Gasoline Motorcycles,1988,0.007,0.0083
+Gasoline Motorcycles,1989,0.007,0.0083
+Gasoline Motorcycles,1990,0.007,0.0083
+Gasoline Motorcycles,1991,0.007,0.0083
+Gasoline Motorcycles,1992,0.007,0.0083
+Gasoline Motorcycles,1993,0.007,0.0083
+Gasoline Motorcycles,1994,0.007,0.0083
+Gasoline Motorcycles,1995,0.007,0.0083
+Gasoline Motorcycles,1996,0 ,0 
+Gasoline Motorcycles,1997,0 ,0 
+Gasoline Motorcycles,1998,0 ,0 
+Gasoline Motorcycles,1999,0 ,0 
+Gasoline Motorcycles,2000,0 ,0 
+Gasoline Motorcycles,2001,0 ,0 
+Gasoline Motorcycles,2002,0 ,0 
+Gasoline Motorcycles,2003,0 ,0 
+Gasoline Motorcycles,2004,0 ,0 
+Gasoline Motorcycles,2005,0 ,0 
+Gasoline Motorcycles,2006,0.007,0.0083
+Gasoline Motorcycles,2007,0.007,0.0083
+Gasoline Motorcycles,2008,0.007,0.0083
+Gasoline Motorcycles,2009,0.007,0.0083
+Gasoline Motorcycles,2010,0.007,0.0083
+Gasoline Motorcycles,2011,0.007,0.0083
+Gasoline Motorcycles,2012,0.007,0.0083
+Gasoline Motorcycles,2013,0.007,0.0083
+Gasoline Motorcycles,2014,0.007,0.0083
+Gasoline Motorcycles,2015,0.007,0.0083
+Gasoline Motorcycles,2016,0.007,0.0083
+Gasoline Motorcycles,2017,0.007,0.0083
+Gasoline Motorcycles,2018,0.007,0.0083
+Gasoline Motorcycles,2019,0.007,0.0083
+Gasoline Motorcycles,2020,0.007,0.0083

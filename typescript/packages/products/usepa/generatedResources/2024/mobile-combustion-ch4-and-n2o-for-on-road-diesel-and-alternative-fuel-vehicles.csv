@@ -1,0 +1,213 @@
+﻿Vehicle Type,Fuel Type,Model Year,CH4 Factor (g CH4 / vehicle-mile),N2O Factor (g N2O / vehicle-mile)
+Passenger Cars,Diesel,1960,0.0006,0.0012
+Passenger Cars,Diesel,1961,0.0006,0.0012
+Passenger Cars,Diesel,1962,0.0006,0.0012
+Passenger Cars,Diesel,1963,0.0006,0.0012
+Passenger Cars,Diesel,1964,0.0006,0.0012
+Passenger Cars,Diesel,1965,0.0006,0.0012
+Passenger Cars,Diesel,1966,0.0006,0.0012
+Passenger Cars,Diesel,1967,0.0006,0.0012
+Passenger Cars,Diesel,1968,0.0006,0.0012
+Passenger Cars,Diesel,1969,0.0006,0.0012
+Passenger Cars,Diesel,1970,0.0006,0.0012
+Passenger Cars,Diesel,1971,0.0006,0.0012
+Passenger Cars,Diesel,1972,0.0006,0.0012
+Passenger Cars,Diesel,1973,0.0006,0.0012
+Passenger Cars,Diesel,1974,0.0006,0.0012
+Passenger Cars,Diesel,1975,0.0006,0.0012
+Passenger Cars,Diesel,1976,0.0006,0.0012
+Passenger Cars,Diesel,1977,0.0006,0.0012
+Passenger Cars,Diesel,1978,0.0006,0.0012
+Passenger Cars,Diesel,1979,0.0006,0.0012
+Passenger Cars,Diesel,1980,0.0006,0.0012
+Passenger Cars,Diesel,1981,0.0006,0.0012
+Passenger Cars,Diesel,1982,0.0006,0.0012
+Passenger Cars,Diesel,1983,0.0005,0.001
+Passenger Cars,Diesel,1984,0.0005,0.001
+Passenger Cars,Diesel,1985,0.0005,0.001
+Passenger Cars,Diesel,1986,0.0005,0.001
+Passenger Cars,Diesel,1987,0.0005,0.001
+Passenger Cars,Diesel,1988,0.0005,0.001
+Passenger Cars,Diesel,1989,0.0005,0.001
+Passenger Cars,Diesel,1990,0.0005,0.001
+Passenger Cars,Diesel,1991,0.0005,0.001
+Passenger Cars,Diesel,1992,0.0005,0.001
+Passenger Cars,Diesel,1993,0.0005,0.001
+Passenger Cars,Diesel,1994,0.0005,0.001
+Passenger Cars,Diesel,1995,0.0005,0.001
+Passenger Cars,Diesel,1996,0.0005,0.001
+Passenger Cars,Diesel,1997,0.0005,0.001
+Passenger Cars,Diesel,1998,0.0005,0.001
+Passenger Cars,Diesel,1999,0.0005,0.001
+Passenger Cars,Diesel,2000,0.0005,0.001
+Passenger Cars,Diesel,2001,0.0005,0.001
+Passenger Cars,Diesel,2002,0.0005,0.001
+Passenger Cars,Diesel,2003,0.0005,0.001
+Passenger Cars,Diesel,2004,0.0005,0.001
+Passenger Cars,Diesel,2005,0.0005,0.001
+Passenger Cars,Diesel,2006,0.0005,0.001
+Passenger Cars,Diesel,2007,0.0302,0.0192
+Passenger Cars,Diesel,2008,0.0302,0.0192
+Passenger Cars,Diesel,2009,0.0302,0.0192
+Passenger Cars,Diesel,2010,0.0302,0.0192
+Passenger Cars,Diesel,2011,0.0302,0.0192
+Passenger Cars,Diesel,2012,0.0302,0.0192
+Passenger Cars,Diesel,2013,0.0302,0.0192
+Passenger Cars,Diesel,2014,0.0302,0.0192
+Passenger Cars,Diesel,2015,0.0302,0.0192
+Passenger Cars,Diesel,2016,0.0302,0.0192
+Passenger Cars,Diesel,2017,0.0302,0.0192
+Passenger Cars,Diesel,2018,0.0302,0.0192
+Passenger Cars,Diesel,2019,0.0302,0.0192
+Passenger Cars,Diesel,2020,0.0302,0.0192
+Passenger Cars,Diesel,2021,0.0302,0.0192
+Light-Duty Trucks,Diesel,1960,0.0011,0.0017
+Light-Duty Trucks,Diesel,1961,0.0011,0.0017
+Light-Duty Trucks,Diesel,1962,0.0011,0.0017
+Light-Duty Trucks,Diesel,1963,0.0011,0.0017
+Light-Duty Trucks,Diesel,1964,0.0011,0.0017
+Light-Duty Trucks,Diesel,1965,0.0011,0.0017
+Light-Duty Trucks,Diesel,1966,0.0011,0.0017
+Light-Duty Trucks,Diesel,1967,0.0011,0.0017
+Light-Duty Trucks,Diesel,1968,0.0011,0.0017
+Light-Duty Trucks,Diesel,1969,0.0011,0.0017
+Light-Duty Trucks,Diesel,1970,0.0011,0.0017
+Light-Duty Trucks,Diesel,1971,0.0011,0.0017
+Light-Duty Trucks,Diesel,1972,0.0011,0.0017
+Light-Duty Trucks,Diesel,1973,0.0011,0.0017
+Light-Duty Trucks,Diesel,1974,0.0011,0.0017
+Light-Duty Trucks,Diesel,1975,0.0011,0.0017
+Light-Duty Trucks,Diesel,1976,0.0011,0.0017
+Light-Duty Trucks,Diesel,1977,0.0011,0.0017
+Light-Duty Trucks,Diesel,1978,0.0011,0.0017
+Light-Duty Trucks,Diesel,1979,0.0011,0.0017
+Light-Duty Trucks,Diesel,1980,0.0011,0.0017
+Light-Duty Trucks,Diesel,1981,0.0011,0.0017
+Light-Duty Trucks,Diesel,1982,0.0011,0.0017
+Light-Duty Trucks,Diesel,1983,0.0009,0.0014
+Light-Duty Trucks,Diesel,1984,0.0009,0.0014
+Light-Duty Trucks,Diesel,1985,0.0009,0.0014
+Light-Duty Trucks,Diesel,1986,0.0009,0.0014
+Light-Duty Trucks,Diesel,1987,0.0009,0.0014
+Light-Duty Trucks,Diesel,1988,0.0009,0.0014
+Light-Duty Trucks,Diesel,1989,0.0009,0.0014
+Light-Duty Trucks,Diesel,1990,0.0009,0.0014
+Light-Duty Trucks,Diesel,1991,0.0009,0.0014
+Light-Duty Trucks,Diesel,1992,0.0009,0.0014
+Light-Duty Trucks,Diesel,1993,0.0009,0.0014
+Light-Duty Trucks,Diesel,1994,0.0009,0.0014
+Light-Duty Trucks,Diesel,1995,0.0009,0.0014
+Light-Duty Trucks,Diesel,1996,0.0009,0.0014
+Light-Duty Trucks,Diesel,1997,0.0009,0.0014
+Light-Duty Trucks,Diesel,1998,0.0009,0.0014
+Light-Duty Trucks,Diesel,1999,0.0009,0.0014
+Light-Duty Trucks,Diesel,2000,0.0009,0.0014
+Light-Duty Trucks,Diesel,2001,0.0009,0.0014
+Light-Duty Trucks,Diesel,2002,0.0009,0.0014
+Light-Duty Trucks,Diesel,2003,0.0009,0.0014
+Light-Duty Trucks,Diesel,2004,0.0009,0.0014
+Light-Duty Trucks,Diesel,2005,0.0009,0.0014
+Light-Duty Trucks,Diesel,2006,0.0009,0.0014
+Light-Duty Trucks,Diesel,2007,0.029,0.0214
+Light-Duty Trucks,Diesel,2008,0.029,0.0214
+Light-Duty Trucks,Diesel,2009,0.029,0.0214
+Light-Duty Trucks,Diesel,2010,0.029,0.0214
+Light-Duty Trucks,Diesel,2011,0.029,0.0214
+Light-Duty Trucks,Diesel,2012,0.029,0.0214
+Light-Duty Trucks,Diesel,2013,0.029,0.0214
+Light-Duty Trucks,Diesel,2014,0.029,0.0214
+Light-Duty Trucks,Diesel,2015,0.029,0.0214
+Light-Duty Trucks,Diesel,2016,0.029,0.0214
+Light-Duty Trucks,Diesel,2017,0.029,0.0214
+Light-Duty Trucks,Diesel,2018,0.029,0.0214
+Light-Duty Trucks,Diesel,2019,0.029,0.0214
+Light-Duty Trucks,Diesel,2020,0.029,0.0214
+Light-Duty Trucks,Diesel,2021,0.029,0.0214
+Medium- and Heavy-Duty Vehicles,Diesel,1960,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1961,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1962,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1963,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1964,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1965,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1966,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1967,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1968,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1969,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1970,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1971,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1972,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1973,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1974,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1975,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1976,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1977,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1978,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1979,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1980,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1981,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1982,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1983,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1984,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1985,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1986,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1987,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1988,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1989,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1990,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1991,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1992,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1993,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1994,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1995,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1996,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1997,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1998,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,1999,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,2000,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,2001,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,2002,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,2003,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,2004,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,2005,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,2006,0.0051,0.0048
+Medium- and Heavy-Duty Vehicles,Diesel,2007,0.0095,0.0431
+Medium- and Heavy-Duty Vehicles,Diesel,2008,0.0095,0.0431
+Medium- and Heavy-Duty Vehicles,Diesel,2009,0.0095,0.0431
+Medium- and Heavy-Duty Vehicles,Diesel,2010,0.0095,0.0431
+Medium- and Heavy-Duty Vehicles,Diesel,2011,0.0095,0.0431
+Medium- and Heavy-Duty Vehicles,Diesel,2012,0.0095,0.0431
+Medium- and Heavy-Duty Vehicles,Diesel,2013,0.0095,0.0431
+Medium- and Heavy-Duty Vehicles,Diesel,2014,0.0095,0.0431
+Medium- and Heavy-Duty Vehicles,Diesel,2015,0.0095,0.0431
+Medium- and Heavy-Duty Vehicles,Diesel,2016,0.0095,0.0431
+Medium- and Heavy-Duty Vehicles,Diesel,2017,0.0095,0.0431
+Medium- and Heavy-Duty Vehicles,Diesel,2018,0.0095,0.0431
+Medium- and Heavy-Duty Vehicles,Diesel,2019,0.0095,0.0431
+Medium- and Heavy-Duty Vehicles,Diesel,2020,0.0095,0.0431
+Medium- and Heavy-Duty Vehicles,Diesel,2021,0.0095,0.0431
+Light-Duty Cars,Methanol,,0.013,0.004
+Light-Duty Cars,Ethanol,,0.013,0.004
+Light-Duty Cars,CNG,,0.133,0.004
+Light-Duty Cars,LPG,,0.013,0.004
+Light-Duty Cars,Biodiesel,,0.036,0.001
+Light-Duty Trucks,Ethanol,,0.014,0.005
+Light-Duty Trucks,CNG,,0.144,0.005
+Light-Duty Trucks,LPG,,0.014,0.005
+Light-Duty Trucks,LNG,,0.144,0.005
+Light-Duty Trucks,Biodiesel,,0.127,0.001
+Medium-Duty Trucks,CNG,,1.807,0.034
+Medium-Duty Trucks,LPG,,0.181,0.034
+Medium-Duty Trucks,LNG,,1.807,0.034
+Medium-Duty Trucks,Biodiesel,,0.04,0.005
+Heavy-Duty Trucks,Methanol,,0.073,0.027
+Heavy-Duty Trucks,Ethanol,,0.073,0.027
+Heavy-Duty Trucks,CNG,,0.921,0.017
+Heavy-Duty Trucks,LPG,,0.092,0.017
+Heavy-Duty Trucks,LNG,,0.921,0.017
+Heavy-Duty Trucks,Biodiesel,,0.014,0.002
+Buses,Methanol,,0.193,0.029
+Buses,Ethanol,,0.193,0.029
+Buses,CNG,,2.753,0.017
+Buses,LPG,,0.275,0.017
+Buses,LNG,,2.753,0.017
+Buses,Biodiesel,,0.016,0.003

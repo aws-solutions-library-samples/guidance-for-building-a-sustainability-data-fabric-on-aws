@@ -1,0 +1,28 @@
+{
+	"name": "df-sustainability",
+	"version": "0.0.1",
+	"description": "Sustainability Data Fabric",
+	"author": "Dean Hart <deanhart@amazon.com>",
+	"scripts": {},
+	"engines": {
+		"node": ">=20.11.1",
+		"pnpm": "=8.15.4"
+	},
+	"private": true,
+	"devDependencies": {
+		"@commitlint/cli": "^17.7.1",
+		"@commitlint/config-conventional": "^17.7.0",
+		"@rushstack/eslint-config": "^3.3.2",
+		"commitlint": "17.7.1",
+		"esbuild": "0.18.14",
+		"eslint": "8.45.0",
+		"husky": "8.0.3"
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "rush lint",
+			"prepare-commit-msg": "exec < /dev/tty && git cz --hook || true",
+			"commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+		}
+	}
+}
