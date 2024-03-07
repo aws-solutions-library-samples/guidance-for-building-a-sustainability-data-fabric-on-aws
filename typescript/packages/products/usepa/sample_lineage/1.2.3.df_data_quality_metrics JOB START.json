@@ -1,0 +1,57 @@
+{
+	"eventTime": "2024-02-23T08:47:19.359Z",
+	"eventType": "START",
+	"job": {
+		// namespace is openlineage namespace, therefore needs a human readable aspect to it for the marquez ui
+		"namespace": "<DOMAIN_NAME> - df.<DOMAIN_ID>",
+		// name needs to be unique within the namespace for the input/output combination. how about something like...
+		"name": "df_data_quality_metrics - <DZ_ASSET_ID>",
+		"facets": {
+			"documentation": {
+				"_producer": "<AWS_STEP_FUNCTION_ARN>",
+				"_schemaURL": "https://github.com/OpenLineage/OpenLineage/blob/main/spec/facets/DocumentationJobFacet.json",
+				// description appropriate for the expected outcome, e.g. will it be transforming? Will it be generating a data qualitu profile? Should also include description from original request
+				"description": "Profiles the <ASSET_NAME> within the DataZone catalog for domain <DOMAIN_NAME> (<DOMAIN_ID>)."
+			},
+			"ownership": {
+				"_producer": "<AWS_STEP_FUNCTION_ARN>",
+				"_schemaURL": "https://openlineage.io/spec/facets/1-0-0/OwnershipJobFacet.json",
+				"owners": [
+					// openlineage naming convention recommends using prefixes
+					{ "name": "user:<data product owner>" },
+					{ "name": "application:df.DataAssetModule" }
+				]
+			}
+		}
+	},
+	"run": {
+		// specification says recommends UUID for runId, but not enforced, but does need to be a globally unique string
+		"runId": "<databrew quality metrics job id>",
+		"facets": {
+			// provide initial job stats
+			"nominalTime": {
+				"_producer": "<databrew job run id>",
+				"_schemaURL": "https://openlineage.io/spec/facets/1-0-0/NominalTimeRunFacet.json",
+				"nominalStartTime": "<databrew job start time>"
+			},
+			// link it to the job that kicked this off
+			"parent": {
+				"job": {
+					"namespace": "df_create_dataset - <DATA_PRODUCT_ID>",
+					"name": "<aws state machine execution id>"
+				}
+			}
+		}
+	},
+	"inputs": [
+		{
+			// input to profile is the asset in the step function post any optional transformations
+			"namespace": "<DOMAIN_NAME> - df.<DOMAIN_ID>",
+			"name": "df.stationary-combustion.<dz asset id>"
+		}
+	],
+
+	// producer here is producer of this data, therefore should be the data asset module
+	"producer": "<AWS_STEP_FUNCTION_ARN>",
+	"schemaURL": "https://openlineage.io/spec/1-0-5/OpenLineage.json#/definitions/RunEvent"
+}

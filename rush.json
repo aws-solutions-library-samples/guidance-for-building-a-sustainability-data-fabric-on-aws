@@ -367,6 +367,12 @@
 	 */
 	"projects": [
 		{
+			"packageName": "@df-sustainability/demo-infrastructure",
+			"projectFolder": "infrastructure/demo",
+			"reviewCategory": "production",
+			"shouldPublish": true
+		},
+		{
 			"packageName": "@df-sustainability/datagen",
 			"projectFolder": "typescript/packages/demo/datagen",
 			"reviewCategory": "production",

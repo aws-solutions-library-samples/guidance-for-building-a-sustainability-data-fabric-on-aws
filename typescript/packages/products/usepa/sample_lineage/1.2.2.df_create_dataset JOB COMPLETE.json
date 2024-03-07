@@ -1,0 +1,152 @@
+{
+	"eventTime": "2024-02-23T08:47:19.359Z",
+	"eventType": "COMPLETE",
+	"job": {
+	  "namespace": "<DOMAIN_NAME> - df.<DOMAIN_ID>",
+	  "name": "df_create_dataset - <DATA_PRODUCT_ID>"
+	},
+	"run": {
+	  "runId": "<aws state machine execution id>",
+	  "facets": {
+        // update job stats
+        "nominalTime": {
+          "_producer":  "<AWS_STEP_FUNCTION_ARN>",
+          "_schemaURL": "https://openlineage.io/spec/facets/1-0-0/NominalTimeRunFacet.json",
+          "nominalStartTime": "<PIPELINE_EXECUTION_START_TIME>",
+          "nominalEndTime": "<PIPELINE_EXECUTION_START_TIME>"
+        }
+	  }
+	},
+	"outputs": [
+	  {
+		"namespace": "<DOMAIN_NAME> - df.<DOMAIN_ID>",
+		"name": "df.stationary-combustion.<dz asset id>",
+		"facets": {
+            "lifecycleStateChange": {
+                "_producer": "<AWS_STEP_FUNCTION_ARN>",
+                "_schemaURL": "https://openlineage.io/spec/facets/1-0-0/LifecycleStateChangeDatasetFacet.json",
+                "lifecycleStateChange": "CREATE"
+            },
+			"ownership": {
+                "_producer": "<AWS_STEP_FUNCTION_ARN>",
+                "_schemaURL": "https://openlineage.io/spec/facets/1-0-0/OwnershipDatasetFacet.json",
+                "owners": [
+					{ "name": "user:<data product owner>" },
+					{ "name": "application:df.DataAssetModule" }
+                ]
+            },
+            "storage": {
+                "_producer": "<AWS_STEP_FUNCTION_ARN>",
+                "_schemaURL": "https://openlineage.io/spec/facets/1-0-0/StorageDatasetFacet.json",
+                "fileFormat": "csv"
+            },
+            "version": {
+                "_producer": "<AWS_STEP_FUNCTION_ARN>",
+                "_schemaURL": "https://openlineage.io/spec/facets/1-0-0/DatasetVersionDatasetFacet.json",
+                "datasetVersion": "<version>"
+            },
+			// note: transformations here were carried out by the custom data product, not data asset module, therefore need to be passed through
+			"columnLineage": {
+				"_producer": "<custom data product owner>",
+				"_schemaURL": "https://openlineage.io/spec/facets/1-0-1/ColumnLineageDatasetFacet.json",
+				"fields": {
+					"category": {
+						"inputFields": [
+							{
+								"namespace": "<DOMAIN_NAME> - df.<DOMAIN_ID>",
+								"name": "usepa.ghg-emission-factors-hub-2023",
+								"field": "Fuel Category"
+							}
+						]
+					},
+					"fuelType": {
+						"inputFields": [
+							{
+								"namespace": "<DOMAIN_NAME> - df.<DOMAIN_ID>",
+								"name": "usepa.ghg-emission-factors-hub-2023",
+								"field": "Fuel Type"
+							}
+						]
+					},
+					"hhv": {
+						"inputFields": [
+							{
+								"namespace": "<DOMAIN_NAME> - df.<DOMAIN_ID>",
+								"name": "usepa.ghg-emission-factors-hub-2023",
+								"field": "Heat Content (HHV)"
+							}
+						]
+					},
+					"hhvUnit": {
+						"inputFields": [
+							{
+								"namespace": "<DOMAIN_NAME> - df.<DOMAIN_ID>",
+								"name": "usepa.ghg-emission-factors-hub-2023",
+								"field": "Heat Content (HHV) Unit"
+							}
+						]
+					},
+					"co2Mmbtu": {
+						"inputFields": [
+							{
+								"namespace": "<DOMAIN_NAME> - df.<DOMAIN_ID>",
+								"name": "usepa.ghg-emission-factors-hub-2023",
+								"field": "CO2 Factor (kg CO2 per mmBtu)"
+							}
+						]
+					},
+					"ch4Mmbtu": {
+						"inputFields": [
+							{
+								"namespace": "<DOMAIN_NAME> - df.<DOMAIN_ID>",
+								"name": "usepa.ghg-emission-factors-hub-2023",
+								"field": "CH4 Factor (g CO2 per mmBtu)"
+							}
+						]
+					},
+					"n2oMmbtu": {
+						"inputFields": [
+							{
+								"namespace": "<DOMAIN_NAME> - df.<DOMAIN_ID>",
+								"name": "usepa.ghg-emission-factors-hub-2023",
+								"field": "N2O Factor (g CO2 per mmBtu)"
+							}
+						]
+					},
+					"co2Ton": {
+						"inputFields": [
+							{
+								"namespace": "<DOMAIN_NAME> - df.<DOMAIN_ID>",
+								"name": "usepa.ghg-emission-factors-hub-2023",
+								"field": "CO2 Factor (kg CO2 per short ton)"
+							}
+						]
+					},
+					"ch4Ton": {
+						"inputFields": [
+							{
+								"namespace": "<DOMAIN_NAME> - df.<DOMAIN_ID>",
+								"name": "usepa.ghg-emission-factors-hub-2023",
+								"field": "CH4 Factor (g CO2 per short ton)"
+							}
+						]
+					},
+					"n2oTon": {
+						"inputFields": [
+							{
+								"namespace": "<DOMAIN_NAME> - df.<DOMAIN_ID>",
+								"name": "usepa.ghg-emission-factors-hub-2023",
+								"field": "N2O Factor (g CO2 per short ton)"
+							}
+						]
+					}
+				}
+			}
+
+		}
+	  }
+	],
+	// producer here is producer of this data, therefore should be the data asset module
+	"producer": "<AWS_STEP_FUNCTION_ARN>",
+	"schemaURL": "https://openlineage.io/spec/1-0-5/OpenLineage.json#/definitions/RunEvent"
+  }

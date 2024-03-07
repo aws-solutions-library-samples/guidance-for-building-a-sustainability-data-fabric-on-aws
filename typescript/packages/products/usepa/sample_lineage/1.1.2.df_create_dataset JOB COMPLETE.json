@@ -1,0 +1,57 @@
+{
+	"eventTime": "2024-02-23T08:47:19.359Z",
+	"eventType": "COMPLETE",
+	"job": {
+	  "namespace": "<DOMAIN_NAME> - df.<DOMAIN_ID>",
+	  "name": "df_create_dataset - <DATA_PRODUCT_ID>"
+	},
+	"run": {
+	  "runId": "<aws state machine execution id>",
+	  "facets": {
+        // update job stats
+        "nominalTime": {
+          "_producer":  "<AWS_STEP_FUNCTION_ARN>",
+          "_schemaURL": "https://openlineage.io/spec/facets/1-0-0/NominalTimeRunFacet.json",
+          "nominalStartTime": "<PIPELINE_EXECUTION_START_TIME>",
+          "nominalEndTime": "<PIPELINE_EXECUTION_START_TIME>"
+        }
+	  }
+	},
+	"outputs": [
+		// now we can log the outputs. As this is registration of a source dataset, just 1
+	  {
+		"namespace": "<DOMAIN_NAME> - df.<DOMAIN_ID>",
+		// TODO: need a unique naming structure
+		"name": "df.ghg-emission-factors-hub-2023.<dz asset id>",
+		"facets": {
+            "lifecycleStateChange": {
+                "_producer": "<AWS_STEP_FUNCTION_ARN>",
+                "_schemaURL": "https://openlineage.io/spec/facets/1-0-0/LifecycleStateChangeDatasetFacet.json",
+                "lifecycleStateChange": "CREATE"
+            },
+			"ownership": {
+                "_producer": "<AWS_STEP_FUNCTION_ARN>",
+                "_schemaURL": "https://openlineage.io/spec/facets/1-0-0/OwnershipDatasetFacet.json",
+                "owners": [
+					{ "name": "user:<data product owner>" },
+					{ "name": "application:df.DataAssetModule" }
+                ]
+            },
+            "storage": {
+                "_producer": "<AWS_STEP_FUNCTION_ARN>",
+                "_schemaURL": "https://openlineage.io/spec/facets/1-0-0/StorageDatasetFacet.json",
+                "fileFormat": "xslx"
+            },
+            "version": {
+                "_producer": "<AWS_STEP_FUNCTION_ARN>",
+                "_schemaURL": "https://openlineage.io/spec/facets/1-0-0/DatasetVersionDatasetFacet.json",
+                "datasetVersion": "<version>"
+            }
+			// note: as a source dataset registration, no transformation, therefore no columnLineage facet
+		}
+	  }
+	],
+	// producer here is producer of this data, therefore should be the data asset module
+	"producer": "<AWS_STEP_FUNCTION_ARN>",
+	"schemaURL": "https://openlineage.io/spec/1-0-5/OpenLineage.json#/definitions/RunEvent"
+  }

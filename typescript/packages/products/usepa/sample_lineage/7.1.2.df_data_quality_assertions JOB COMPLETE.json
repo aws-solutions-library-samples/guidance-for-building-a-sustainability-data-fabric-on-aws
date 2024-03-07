@@ -1,0 +1,44 @@
+{
+	"eventTime": "2024-02-23T08:47:19.359Z",
+	"eventType": "COMPLETE",
+	"job": {
+	  "namespace": "<DOMAIN_NAME> - df.<DOMAIN_ID>",
+	  "name": "df_data_quality_assertions - <DZ_ASSET_ID>"
+	},
+	"run": {
+		"runId": "<databrew quality assertions job id>",
+	  "facets": {
+        // update job stats
+        "nominalTime": {
+          "_producer":  "<databrew quality assertions job run id>",
+          "_schemaURL": "https://openlineage.io/spec/facets/1-0-0/NominalTimeRunFacet.json",
+          "nominalStartTime": "<databrew quality assertions job start time>",
+          "nominalEndTime": "<databrew quality assertions job end time>"
+        }
+	  }
+	},
+
+
+	"inputs": [
+		{
+			"namespace": "<DOMAIN_NAME> - df.<DOMAIN_ID>",
+			"name": "df.invoices.<dz asset id>",
+
+			"inputFacets": {
+				// apply job results
+				"dataQualityMetrics": {
+					"_producer": "<databrew quality assertions job run id>",
+					"_schemaURL": "https://openlineage.io/spec/facets/1-0-0/DataQualityMetricsInputDatasetFacet.json",
+                	"rowCount": 123,
+                	"columnMetrics": {	...  }
+				}
+			}
+		}
+	],
+
+	// intentionally no outputs as no change in dataset
+
+	// producer here is producer of this data, therefore should be the data asset module
+	"producer": "<AWS_STEP_FUNCTION_ARN>",
+	"schemaURL": "https://openlineage.io/spec/1-0-5/OpenLineage.json#/definitions/RunEvent"
+  }

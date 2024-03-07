@@ -1,0 +1,152 @@
+{
+	"eventTime": "2024-02-23T08:47:19.359Z",
+	"eventType": "COMPLETE",
+	"job": {
+	  "namespace": "<DOMAIN_NAME> - df.<DOMAIN_ID>",
+	  "name": "df_create_dataset - <DATA_PRODUCT_ID>"
+	},
+	"run": {
+	  "runId": "<databrew transform job run id>",
+	  "facets": {
+        // update job stats
+        "nominalTime": {
+          "_producer":  "<AWS_STEP_FUNCTION_ARN>",
+          "_schemaURL": "https://openlineage.io/spec/facets/1-0-0/NominalTimeRunFacet.json",
+          "nominalStartTime": "<PIPELINE_EXECUTION_START_TIME>",
+          "nominalEndTime": "<PIPELINE_EXECUTION_START_TIME>"
+        }
+	  }
+	},
+	"outputs": [
+	  {
+		"namespace": "<DOMAIN_NAME> - df.<DOMAIN_ID>",
+		"name": "df.invoices-cleaned.<dz asset id>",
+		"facets": {
+            "lifecycleStateChange": {
+                "_producer": "<AWS_STEP_FUNCTION_ARN>",
+                "_schemaURL": "https://openlineage.io/spec/facets/1-0-0/LifecycleStateChangeDatasetFacet.json",
+                "lifecycleStateChange": "CREATE"
+            },
+			"ownership": {
+                "_producer": "<AWS_STEP_FUNCTION_ARN>",
+                "_schemaURL": "https://openlineage.io/spec/facets/1-0-0/OwnershipDatasetFacet.json",
+                "owners": [
+					{ "name": "user:<data product owner>" },
+					{ "name": "application:df.DataAssetModule" }
+                ]
+            },
+            "storage": {
+                "_producer": "<AWS_STEP_FUNCTION_ARN>",
+                "_schemaURL": "https://openlineage.io/spec/facets/1-0-0/StorageDatasetFacet.json",
+                "fileFormat": "csv"
+            },
+            "version": {
+                "_producer": "<AWS_STEP_FUNCTION_ARN>",
+                "_schemaURL": "https://openlineage.io/spec/facets/1-0-0/DatasetVersionDatasetFacet.json",
+                "datasetVersion": "<version>"
+            },
+			// note: transformations here were carried out by the custom data product, not data asset module, therefore need to be passed through
+			"columnLineage": {
+				"_producer": "<databrew transform job arn>",
+				"_schemaURL": "https://openlineage.io/spec/facets/1-0-1/ColumnLineageDatasetFacet.json",
+				"fields": {
+					"invoiceId": {
+						"inputFields": [
+							{
+								"namespace": "<DOMAIN_NAME> - df.<DOMAIN_ID>",
+								"name": "df.invoices-cleaned.<dz asset id>",
+								"field": "invoiceId"
+							}
+						]
+					},
+					"line": {
+						"inputFields": [
+							{
+								"namespace": "<DOMAIN_NAME> - df.<DOMAIN_ID>",
+								"name": "df.invoices-cleaned.<dz asset id>",
+								"field": "line"
+							}
+						]
+					},
+					"invoiceDate": {
+						"inputFields": [
+							{
+								"namespace": "<DOMAIN_NAME> - df.<DOMAIN_ID>",
+								"name": "df.invoices-cleaned.<dz asset id>",
+								"field": "invoiceDate"
+							}
+						]
+					},
+					"dueDate": {
+						"inputFields": [
+							{
+								"namespace": "<DOMAIN_NAME> - df.<DOMAIN_ID>",
+								"name": "df.invoices-cleaned.<dz asset id>",
+								"field": "dueDate"
+							}
+						]
+					},
+					"materialCode": {
+						"inputFields": [
+							{
+								"namespace": "<DOMAIN_NAME> - df.<DOMAIN_ID>",
+								"name": "df.invoices-cleaned.<dz asset id>",
+								"field": "materialCode"
+							}
+						]
+					},
+					"quantity": {
+						"inputFields": [
+							{
+								"namespace": "<DOMAIN_NAME> - df.<DOMAIN_ID>",
+								"name": "df.invoices-cleaned.<dz asset id>",
+								"field": "quantity"
+							}
+						]
+					},
+					"itemValue": {
+						"inputFields": [
+							{
+								"namespace": "<DOMAIN_NAME> - df.<DOMAIN_ID>",
+								"name": "df.invoices-cleaned.<dz asset id>",
+								"field": "itemValue"
+							}
+						]
+					},
+					"totalValue": {
+						"inputFields": [
+							{
+								"namespace": "<DOMAIN_NAME> - df.<DOMAIN_ID>",
+								"name": "df.invoices-cleaned.<dz asset id>",
+								"field": "totalValue"
+							}
+						]
+					},
+					"currencyCode": {
+						"inputFields": [
+							{
+								"namespace": "<DOMAIN_NAME> - df.<DOMAIN_ID>",
+								"name": "df.invoices-cleaned.<dz asset id>",
+								"field": "currencyCode"
+							}
+						]
+					},
+					"shipMethod": {
+						"inputFields": [
+							{
+								"namespace": "<DOMAIN_NAME> - df.<DOMAIN_ID>",
+								"name": "df.invoices-cleaned.<dz asset id>",
+								"field": "shipMethod"
+							}
+						]
+					}
+				}
+			}
+
+		}
+	  }
+	],
+	// producer here is producer of this data, therefore should be the data asset module
+	"producer": "<AWS_STEP_FUNCTION_ARN>",
+	"schemaURL": "https://openlineage.io/spec/1-0-5/OpenLineage.json#/definitions/RunEvent"
+  }

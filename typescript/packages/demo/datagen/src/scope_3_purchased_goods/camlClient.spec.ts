@@ -4,6 +4,10 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { CamlClient } from './camlClient.js';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 describe('CamlClient', () => {
     let camlClient:CamlClient;
@@ -13,7 +17,7 @@ describe('CamlClient', () => {
 	});
 
 	it('should map naics codes', async () => {
-        const csvFilePath = path.resolve(__dirname, '../..', 'materials.csv');
+		const csvFilePath = path.resolve(__dirname, '..', '..', 'generatedResources', 'materials.csv');
 
         const parser = fs.createReadStream(csvFilePath)
             .pipe(parse({columns:true}));
@@ -41,7 +45,7 @@ describe('CamlClient', () => {
         }
 
         const output = stringify(results);
-        const outputFilePath = path.resolve(__dirname, '../..', 'materials_matched.csv');
+		const outputFilePath = path.resolve(__dirname, '..', '..', 'generatedResources', 'materials_matched.csv');
         const writableStream = fs.createWriteStream(outputFilePath);
         writableStream.write(output);
         writableStream.end();
