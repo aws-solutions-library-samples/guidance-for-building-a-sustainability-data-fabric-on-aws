@@ -1,6 +1,6 @@
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { readFileSync } from "fs";
+import { S3Client } from "@aws-sdk/client-s3";
 import path from "path";
+import { fileURLToPath } from "url";
 import { Electricity } from "./tables/electricity.js";
 import { GWP } from "./tables/gwp.js";
 import { GWPForBlendedRefrigerants } from "./tables/gwpForBlendedRefrigerants.js";
@@ -14,6 +14,9 @@ import { Scope3Category6BusinessTravelandCategory7EmployeeCommuting } from "./ta
 import { StationaryCombustion } from "./tables/stationaryCombustion.js";
 import { SteamAndHeat } from "./tables/steamAndHeat.js";
 import { V2023, V2024 } from "./versions.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export class App {
     private readonly s3:S3Client;
@@ -32,19 +35,8 @@ export class App {
 		];
 
 		for (const v of versions) {
-
-			// A1 - upload source spreadsheets
+			// extract the data from the spreadsheet and save to generatedResources
 			const spreadsheetPath = path.resolve(__dirname, '..', 'resources', v.spreadsheetName);
-			await this.s3.send(new PutObjectCommand({
-				// TODO: inject bucket
-				Bucket: '?',
-				Key: 'sdf/seeds/usepa/' + path.parse(spreadsheetPath).base,
-				Body: readFileSync(spreadsheetPath),
-			}));
-
-			// TODO: A2 - kick off datazone registration (including lineage and provenance)
-
-			// B1 - extract the data from the spreadsheet
 			const dataSetInfos = await Promise.all([
 				(new StationaryCombustion(spreadsheetPath, v.stationaryCombustion, v.outputPrefix)).generate(),
 				(new MobileCombustionCO2(spreadsheetPath, v.mobileCombustionCO2, v.outputPrefix)).generate(),
@@ -60,18 +52,11 @@ export class App {
 				(new GWPForBlendedRefrigerants(spreadsheetPath, v.gwpForBlendedRefrigerants, v.outputPrefix)).generate(),
 			]);
 
-			// B2 - Upload extracted CSV files to S3
-			for (const dsi of dataSetInfos) {
-				await this.s3.send(new PutObjectCommand({
-					// TODO: inject bucket
-					Bucket: '?',
-					Key: 'sdf/seeds/usepa/' + path.parse(dsi.csvLocation).base,
-					Body: readFileSync(path.resolve(__dirname, '..', 'resources', dsi.csvLocation)),
-				}));
-			}
-
-			// TODO: B3 - kick off datazone registration (including lineage)
 		}
     }
 
 }
+
+
+const app = new App();
+await app.run();

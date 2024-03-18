@@ -1,0 +1,8 @@
+﻿Vehicle Type,CO2 Factor (kg CO2 / unit),CH4 Factor (g CH4 / unit),N2O Factor (g N2O / unit),Units
+Medium- and Heavy-Duty Truck,,,,vehicle-mile
+Passenger Car A,,,,vehicle-mile
+Light-Duty Truck B,,,,vehicle-mile
+Medium- and Heavy-Duty TruckC,,,,ton-mile
+Rail,,,,ton-mile
+Waterborne Craft,,,,ton-mile
+Aircraft,,,,ton-mile
