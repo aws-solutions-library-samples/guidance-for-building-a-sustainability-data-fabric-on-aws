@@ -1,5 +1,18 @@
+/**
+ *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance
+ *  with the License. A copy of the License is located at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  or in the 'license' file accompanying this file. This file is distributed on an 'AS IS' BASIS, WITHOUT WARRANTIES
+ *  OR CONDITIONS OF ANY KIND, express or implied. See the License for the specific language governing permissions
+ *  and limitations under the License.
+ */
+
 import { Arn, ArnFormat, Aws, CustomResource, Duration, Fn, Stack } from 'aws-cdk-lib';
-import { AccountPrincipal, Effect, IRole, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
+import { AccountPrincipal, Effect, IRole, PolicyDocument, PolicyStatement, Role } from 'aws-cdk-lib/aws-iam';
 import { Architecture, IFunction, Runtime, Tracing } from 'aws-cdk-lib/aws-lambda';
 import { NodejsFunction, OutputFormat } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { RetentionDays } from 'aws-cdk-lib/aws-logs';
@@ -7,13 +20,13 @@ import { CfnWorkgroup } from 'aws-cdk-lib/aws-redshiftserverless';
 import { Provider } from 'aws-cdk-lib/custom-resources';
 import { Construct, IConstruct } from 'constructs';
 import path from 'path';
-import { addCfnNagForCustomResourceProvider, addCfnNagToStack, ruleRolePolicyWithWildcardResources, ruleToSuppressRolePolicyWithWildcardResources } from './redshift/cfn-nag.js';
-import { createLambdaRole } from './redshift/utils/lambda.js';
-import { attachListTagsPolicyForFunction } from './redshift/utils/tags.js';
-import { CreateSchema as CreateSchema, NewNamespaceCustomProperties, RedshiftServerlessWorkgroupProps } from './redshift/models.js';
 import { fileURLToPath } from 'url';
+import { REDSHIFT_CREDENTIAL_SECRET_PARENT } from './redshift/constants.js';
+import { CreateSchema, NewNamespaceCustomProperties, RedshiftServerlessWorkgroupProps } from './redshift/models.js';
+import { createLambdaRole } from './redshift/utils/lambda.js';
 import { createLogGroup } from './redshift/utils/logs.js';
-import { REDSHIFT_CREDENTIAL_SECRET, REDSHIFT_CREDENTIAL_SECRET_PARENT } from './redshift/constants.js';
+import { attachListTagsPolicyForFunction } from './redshift/utils/tags.js';
+import { addCfnNagForCustomResourceProvider, addCfnNagToStack, ruleRolePolicyWithWildcardResources, ruleToSuppressRolePolicyWithWildcardResources } from '../../utils/cfn-nag.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -110,7 +123,7 @@ export class RedshiftServerless extends Construct {
 			securityGroupIds: Fn.split(',', props.securityGroupIds),
 			subnetIds: props.vpc.selectSubnets(props.subnetSelection).subnetIds,
 		});
-		this.redshiftUserCR = this.createRedshiftSchemaCustomResource(props.dataBucket);
+		this.redshiftUserCR = this.createRedshiftSchemaCustomResource();
 
 		this.addCfnNagSuppression();
 	}
@@ -149,7 +162,7 @@ export class RedshiftServerless extends Construct {
 		]);
 	}
 
-	private createRedshiftSchemaCustomResource(dataBucket:string): CustomResource {
+	private createRedshiftSchemaCustomResource(): CustomResource {
 		const eventHandler = this.createCreateSchemaFunction();
 		this.workgroupDefaultAdminRole.grantAssumeRole(eventHandler.grantPrincipal);
 

@@ -13,7 +13,7 @@
 
 import { CfnPolicy, Policy, PolicyStatement, PrincipalBase, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 import { IConstruct } from 'constructs';
-import { addCfnNagSuppressRules } from '../cfn-nag.js';
+import { addCfnNagSuppressRules } from '../../../../utils/cfn-nag.js';
 
 function suppressLogsWildcardResources(policy: Policy) {
 	suppressWildcardResources(policy, 'The lambda service writes to undetermined logs stream by design');

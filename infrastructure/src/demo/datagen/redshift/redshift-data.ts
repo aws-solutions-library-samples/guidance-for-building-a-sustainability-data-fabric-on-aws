@@ -1,11 +1,23 @@
+/**
+ *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance
+ *  with the License. A copy of the License is located at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  or in the 'license' file accompanying this file. This file is distributed on an 'AS IS' BASIS, WITHOUT WARRANTIES
+ *  OR CONDITIONS OF ANY KIND, express or implied. See the License for the specific language governing permissions
+ *  and limitations under the License.
+ */
+
 import { BatchExecuteStatementCommand, DescribeStatementCommand, ExecuteStatementCommand, RedshiftDataClient, StatusString } from '@aws-sdk/client-redshift-data';
 import { fromTemporaryCredentials } from '@aws-sdk/credential-providers';
 import { NodeHttpHandler } from '@smithy/node-http-handler';
-import { ExistingRedshiftServerlessCustomProps, RedshiftServerlessProps } from './models.js';
+import { ExistingRedshiftServerlessProps, RedshiftServerlessProps } from './models.js';
 import { logger } from './utils/logger.js';
-import { readS3ObjectAsString } from './utils/s3.js';
-import { aws_sdk_client_common_config } from './utils/sdk-client-config.js';
 import { sleep } from './utils/misc.js';
+import { aws_sdk_client_common_config } from './utils/sdk-client-config.js';
 
 export function getRedshiftClient(roleArn: string) {
 	return new RedshiftDataClient({
@@ -29,20 +41,10 @@ export function getRedshiftClient(roleArn: string) {
 	});
 }
 
-export const executeStatements = async (
-	client: RedshiftDataClient,
-	sqlStatements: string[],
-	serverlessRedshiftProps?: RedshiftServerlessProps,
-	// provisionedRedshiftProps?: ProvisionedRedshiftProps,
-	// database?: string,
-	logSQL: boolean = true
-) => {
+export const executeStatements = async (client: RedshiftDataClient, sqlStatements: string[], serverlessRedshiftProps?: RedshiftServerlessProps, logSQL: boolean = true) => {
 	if (serverlessRedshiftProps) {
 		logger.info(`Execute SQL statement in ${serverlessRedshiftProps.workgroupName}.${serverlessRedshiftProps.databaseName}`);
 	}
-	// else if (provisionedRedshiftProps) {
-	// 	logger.info(`Execute SQL statement in ${provisionedRedshiftProps.clusterIdentifier}.${provisionedRedshiftProps.databaseName}`);
-	// }
 
 	const logSqlStatements = sqlStatements.map((s) => {
 		if (s.toLocaleLowerCase().includes('password')) {
@@ -61,8 +63,6 @@ export const executeStatements = async (
 		const params = new ExecuteStatementCommand({
 			Sql: sqlStatements[0],
 			WorkgroupName: serverlessRedshiftProps?.workgroupName,
-			// ClusterIdentifier: provisionedRedshiftProps?.clusterIdentifier,
-			// DbUser: provisionedRedshiftProps?.dbUser,
 			Database: serverlessRedshiftProps?.databaseName!,
 			WithEvent: true,
 		});
@@ -72,8 +72,6 @@ export const executeStatements = async (
 		const params = new BatchExecuteStatementCommand({
 			Sqls: sqlStatements,
 			WorkgroupName: serverlessRedshiftProps?.workgroupName,
-			// ClusterIdentifier: provisionedRedshiftProps?.clusterIdentifier,
-			// DbUser: provisionedRedshiftProps?.dbUser,
 			Database: serverlessRedshiftProps?.databaseName,
 			WithEvent: true,
 		});
@@ -94,8 +92,7 @@ export interface WaitProps {
 export const executeStatementsWithWait = async (
 	client: RedshiftDataClient,
 	sqlStatements: string[],
-	serverlessRedshiftProps?: ExistingRedshiftServerlessCustomProps,
-	// database?: string,
+	serverlessRedshiftProps?: ExistingRedshiftServerlessProps,
 	logSQL: boolean = true,
 	waitProps: WaitProps = {
 		checkIntervalMilliseconds: 1000,
@@ -130,47 +127,3 @@ export const executeStatementsWithWait = async (
 	}
 	return queryId;
 };
-
-export async function executeBySqlOrS3File(
-	sqlOrS3File: string,
-	redShiftClient: RedshiftDataClient,
-	serverlessRedshiftProps?: RedshiftServerlessProps,
-	// provisionedRedshiftProps?: ProvisionedRedshiftProps,
-	// databaseName?: string
-): Promise<{ queryId: string }> {
-	logger.info('executeBySqlOrS3File() sqlOrS3File: ' + sqlOrS3File);
-
-	const sqlStatements = await getSqlStatement(sqlOrS3File);
-
-	const queryId = await executeStatements(redShiftClient, sqlStatements, serverlessRedshiftProps, true);
-	logger.info('executeBySqlOrS3File() get queryId: ' + queryId);
-
-	return {
-		queryId: queryId!,
-	};
-}
-
-async function getSqlStatement(sqlOrS3File: string): Promise<string[]> {
-	logger.info('getSqlStatement() sqlOrS3File: ' + sqlOrS3File);
-
-	let sqlContent = sqlOrS3File;
-	if (sqlOrS3File.startsWith('s3://')) {
-		sqlContent = await readSqlFileFromS3(sqlOrS3File);
-	}
-	return [sqlContent];
-}
-
-async function readSqlFileFromS3(s3Path: string): Promise<string> {
-	logger.info('readSqlFileFromS3() s3Path: ' + s3Path);
-
-	const params = {
-		Bucket: s3Path.split('/')[2],
-		Key: s3Path.split('/').slice(3).join('/'),
-	};
-
-	const sqlString = await readS3ObjectAsString(params.Bucket, params.Key);
-	if (!sqlString) {
-		throw new Error('Failed to read sql file from s3: ' + s3Path);
-	}
-	return sqlString;
-}
