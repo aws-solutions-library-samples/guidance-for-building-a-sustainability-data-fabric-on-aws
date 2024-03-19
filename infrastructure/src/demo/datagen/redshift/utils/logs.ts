@@ -11,11 +11,11 @@
  *  and limitations under the License.
  */
 
-import { CfnResource, RemovalPolicy, Stack } from 'aws-cdk-lib';
+import { CfnResource, RemovalPolicy } from 'aws-cdk-lib';
 import { LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { Construct } from 'constructs';
-import { addCfnNagSuppressRules, ruleToSuppressCloudWatchLogEncryption } from '../cfn-nag.js';
-import { getShortIdOfStack } from './stack.js';
+import { addCfnNagSuppressRules, ruleToSuppressCloudWatchLogEncryption } from '../../../../utils/cfn-nag.js';
+
 
 export function createLogGroup(
 	scope: Construct,
@@ -24,10 +24,7 @@ export function createLogGroup(
 		retention?: RetentionDays;
 		removalPolicy?: RemovalPolicy;
 	}
-) : LogGroup {
-	// const shortId = getShortIdOfStack(Stack.of(scope));
-	// const logGroupName = `${props.prefix}-${shortId}`;
-
+): LogGroup {
 	const logGroup = new LogGroup(scope, `LogGroup-${props.prefix}`, {
 		logGroupName: props.prefix,
 		retention: props.retention ?? RetentionDays.ONE_WEEK,

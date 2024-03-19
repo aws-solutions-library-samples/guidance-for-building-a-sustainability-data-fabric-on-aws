@@ -99,10 +99,8 @@ async function createNamespace(client: RedshiftServerlessClient, props: Resource
 	return response.namespace!;
 }
 
-//create function updateNamespace like createNamespace
 async function deleteNamespace(client: RedshiftServerlessClient, props: ResourcePropertiesType): Promise<Namespace | undefined> {
 	const input = {
-		// DeleteNamespace
 		namespaceName: props.namespaceName,
 	};
 	logger.info('Deleting redshift serverless namespace with input', { input });

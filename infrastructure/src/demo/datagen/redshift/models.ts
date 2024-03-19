@@ -1,5 +1,17 @@
+/**
+ *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance
+ *  with the License. A copy of the License is located at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  or in the 'license' file accompanying this file. This file is distributed on an 'AS IS' BASIS, WITHOUT WARRANTIES
+ *  OR CONDITIONS OF ANY KIND, express or implied. See the License for the specific language governing permissions
+ *  and limitations under the License.
+ */
+
 import { IVpc, SubnetSelection } from 'aws-cdk-lib/aws-ec2';
-import { IBucket } from 'aws-cdk-lib/aws-s3';
 
 export interface RedshiftServerlessWorkgroupProps {
 	readonly vpc: IVpc;
@@ -8,7 +20,6 @@ export interface RedshiftServerlessWorkgroupProps {
 	readonly baseCapacity: number;
 	readonly workgroupName: string;
 	readonly databaseName: string;
-	// readonly projectId: string;
 	readonly dataBucket: string;
 }
 
@@ -20,92 +31,33 @@ export interface RedshiftServerlessProps extends RedshiftProps {
 	readonly workgroupName: string;
 }
 
-export interface BasicRedshiftServerlessProps extends RedshiftServerlessProps {
+export interface ExistingRedshiftServerlessProps extends RedshiftServerlessProps {
 	readonly workgroupId?: string;
 	readonly namespaceId?: string;
-	readonly createdInStack: boolean;
-}
-
-export interface ExistingRedshiftServerlessProps extends BasicRedshiftServerlessProps {
 	readonly dataAPIRoleArn: string;
 }
-export type ExistingRedshiftServerlessCustomProps = Omit<ExistingRedshiftServerlessProps, 'createdInStack'>;
-
-// export interface ProvisionedRedshiftProps extends RedshiftProps {
-// 	readonly clusterIdentifier: string;
-// 	readonly dbUser: string;
-// }
 
 export interface CustomProperties {
-	readonly serverlessRedshiftProps?: ExistingRedshiftServerlessCustomProps;
+	readonly serverlessRedshiftProps?: ExistingRedshiftServerlessProps;
 }
 
-export type CreateSchema = Omit<CustomProperties, 'provisionedRedshiftProps'> & {
+export type CreateSchema = CustomProperties & {
 	readonly dataRoleName: string;
 };
 
-export type CopyS3Data = Omit<CustomProperties, 'provisionedRedshiftProps'> & {
+export type CopyS3Data = CustomProperties & {
 	readonly redshiftRoleForCopyFromS3: string;
 	readonly dataBucket: string;
-}
+};
 
 export type NewNamespaceCustomProperties = RedshiftProps & {
 	readonly adminRoleArn: string;
 	readonly namespaceName: string;
 };
-
-export type MustacheParamBaseType = {
-	[key: string]: string;
-};
-
-// TODO: add any specifics we need for our sql templates
-export type MustacheParamType = {
-	workgroup_default_admin_role_arn: string;
-	password: string;
-};
-
-type SQLBasic = {
-	readonly multipleLine?: 'true' | 'false';
-};
-
-export type SQLDef = SQLBasic & {
-	readonly sqlFile: string;
-};
-
-export type SQLViewDef = SQLBasic & {
-	readonly viewName: string;
-};
-
 export interface UserCredential {
 	readonly username: string;
 	readonly password: string;
 }
-
-//   export interface RedshiftOdsTables {
-// 	readonly event: string;
-// 	readonly event_parameter: string;
-// 	readonly user: string;
-// 	readonly item: string;
-//   }
-export type CreateDatabaseAndSchemas = CustomProperties & {
-	// readonly projectId: string;
-	// readonly appIds: string;
-	// readonly odsTableNames: RedshiftOdsTables;
-	readonly databaseName: string;
-	readonly dataAPIRole: string;
-	readonly redshiftUserParameter: string;
-	// readonly redshiftBIUsernamePrefix: string;
-	// readonly reportingViewsDef: SQLViewDef[];
-	readonly schemaDefs: SQLDef[];
-	// readonly lastModifiedTime: number;
-};
-
-interface BucketInfo {
-	readonly s3Bucket: IBucket;
-	readonly prefix: string;
-}
-
-export type WorkflowBucketInfo = BucketInfo;
 
 export type AssociateIAMRoleToRedshift = CustomProperties & {
 	readonly roleArn: string;

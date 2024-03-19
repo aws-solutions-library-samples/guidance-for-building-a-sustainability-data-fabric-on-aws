@@ -1,3 +1,16 @@
+/**
+ *  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance
+ *  with the License. A copy of the License is located at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  or in the 'license' file accompanying this file. This file is distributed on an 'AS IS' BASIS, WITHOUT WARRANTIES
+ *  OR CONDITIONS OF ANY KIND, express or implied. See the License for the specific language governing permissions
+ *  and limitations under the License.
+ */
+
 import { CustomResource, Duration, Stack, StackProps } from 'aws-cdk-lib';
 import { IRole, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 import { Architecture, Runtime, Tracing } from 'aws-cdk-lib/aws-lambda';
@@ -35,10 +48,10 @@ export class DatagenInfrastructureStack extends Stack {
 	constructor(scope: Construct, id: string, props: DatagenStackProperties) {
 		super(scope, id, props);
 
-		// bucket to store demo data
+		// Provided bucket to store demo data
 		const dataBucket = Bucket.fromBucketName(this, 'DataBucket', props.bucketName);
 
-		// upload demo data to s3. some will be pushed to redshift later
+		// Upload demo data to s3. some will be pushed to redshift later
 		const demoDataPath = path.join(__dirname, '..', '..', '..', '..', 'typescript', 'packages', 'demo', 'datagen', 'generatedResources');
 		new BucketDeployment(this, 'DemoDataDeployment', {
 			sources: [Source.asset(demoDataPath)],
@@ -46,6 +59,7 @@ export class DatagenInfrastructureStack extends Stack {
 			destinationKeyPrefix: 'demo/datagen/',
 		});
 
+		// Amazon Redshift Serverless runs in a VPC
 		const network = new Network(this, 'Network', {
 			userVpcConfig: props.userVpcConfig ? props.userVpcConfig : undefined,
 		});
@@ -65,7 +79,6 @@ export class DatagenInfrastructureStack extends Stack {
 		});
 
 		const existingRedshiftServerlessProps: ExistingRedshiftServerlessProps = {
-			createdInStack: true,
 			workgroupId: redshiftServerlessWorkgroup.workgroup.attrWorkgroupWorkgroupId,
 			workgroupName: redshiftServerlessWorkgroup.workgroup.attrWorkgroupWorkgroupName,
 			namespaceId: redshiftServerlessWorkgroup.namespaceId,
@@ -73,28 +86,29 @@ export class DatagenInfrastructureStack extends Stack {
 			databaseName: redshiftServerlessWorkgroup.databaseName,
 		};
 
-		// custom resource to associate the IAM role to redshift cluster
+		// Redshift requires a role with sufficient permissions to copy from S3
 		const redshiftRoleForCopyFromS3 = new Role(this, 'CopyDataFromS3Role', {
 			assumedBy: new ServicePrincipal('redshift.amazonaws.com'),
 		});
 		dataBucket.grantRead(redshiftRoleForCopyFromS3);
 
+		// Custom resource to associate the IAM role required to copy from S3 to Redshift cluster
 		const crForModifyClusterIAMRoles = new RedshiftAssociateIAMRole(this, 'RedshiftAssociateS3CopyRole', {
 			serverlessRedshift: existingRedshiftServerlessProps,
 			role: redshiftRoleForCopyFromS3,
 		}).cr;
 		crForModifyClusterIAMRoles.node.addDependency(redshiftServerlessWorkgroup);
 
-		// load the data from S3
-		const cr = this.createCopyFromS3CustomResource(
+		// Customer resource to load the data into redshift from S3
+		const crCopyFromS3 = this.createCopyFromS3CustomResource(
 			dataBucket.bucketName,
 			redshiftServerlessWorkgroup.workgroupDefaultAdminRole,
 			redshiftRoleForCopyFromS3,
 			redshiftServerlessWorkgroup.workgroup,
 			redshiftServerlessWorkgroup.databaseName
 		);
-		cr.node.addDependency(redshiftServerlessWorkgroup.redshiftUserCR);
-		cr.node.addDependency(crForModifyClusterIAMRoles);
+		crCopyFromS3.node.addDependency(redshiftServerlessWorkgroup.redshiftUserCR);
+		crCopyFromS3.node.addDependency(crForModifyClusterIAMRoles);
 
 		// TODO: Create custom resource to call data asset module to register all of above datasets, as well as setting glossary terms
 	}
