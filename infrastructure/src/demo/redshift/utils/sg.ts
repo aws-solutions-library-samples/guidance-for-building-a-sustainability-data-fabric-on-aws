@@ -13,7 +13,7 @@
 
 import { SecurityGroup, IVpc, ISecurityGroup } from 'aws-cdk-lib/aws-ec2';
 import { Construct } from 'constructs';
-import { addCfnNagToSecurityGroup } from '../../../../utils/cfn-nag.js';
+import { addCfnNagToSecurityGroup } from '../../../utils/cfn-nag.js';
 
 export function createSGForEgressToAwsService(scope: Construct, id: string, vpc: IVpc)
   : ISecurityGroup {

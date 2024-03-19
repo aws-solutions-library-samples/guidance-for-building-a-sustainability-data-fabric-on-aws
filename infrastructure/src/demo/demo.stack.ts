@@ -31,28 +31,30 @@ import { RedshiftAssociateIAMRole } from './redshift/redshift-associate-iam-role
 import { createLambdaRole } from './redshift/utils/lambda.js';
 import { createLogGroup } from './redshift/utils/logs.js';
 import { createSGForEgressToAwsService } from './redshift/utils/sg.js';
+import { Website } from './website.construct.js';
+import { NagSuppressions } from 'cdk-nag';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export type DatagenStackProperties = StackProps & {
+export type DemoStackProperties = StackProps & {
 	userVpcConfig?: SdfVpcConfig;
 	bucketName: string;
 };
 
 export const redshiftUserParameter = `/df/sdfDemo/redshift/username`;
 
-export class DatagenInfrastructureStack extends Stack {
+export class DemoInfrastructureStack extends Stack {
 	readonly vpcId: string;
 
-	constructor(scope: Construct, id: string, props: DatagenStackProperties) {
+	constructor(scope: Construct, id: string, props: DemoStackProperties) {
 		super(scope, id, props);
 
-		// Provided bucket to store demo data
+		// Provided bucket to store demo artifacts
 		const dataBucket = Bucket.fromBucketName(this, 'DataBucket', props.bucketName);
 
 		// Upload demo data to s3. some will be pushed to redshift later
-		const demoDataPath = path.join(__dirname, '..', '..', '..', '..', 'typescript', 'packages', 'demo', 'datagen', 'generatedResources');
+		const demoDataPath = path.join(__dirname, '..', '..', '..', 'typescript', 'packages', 'demo', 'datagen', 'generatedResources');
 		new BucketDeployment(this, 'DemoDataDeployment', {
 			sources: [Source.asset(demoDataPath)],
 			destinationBucket: dataBucket,
@@ -110,7 +112,44 @@ export class DatagenInfrastructureStack extends Stack {
 		crCopyFromS3.node.addDependency(redshiftServerlessWorkgroup.redshiftUserCR);
 		crCopyFromS3.node.addDependency(crForModifyClusterIAMRoles);
 
-		// TODO: Create custom resource to call data asset module to register all of above datasets, as well as setting glossary terms
+		// TODO: Create custom resource to call data asset module to register invoices.csv (csv), as well as setting glossary terms
+		// TODO: Create custom resource to call data asset module to register materials (redshift), as well as setting glossary terms
+
+		// deploy the website
+        new Website(this, 'Website', {});
+        NagSuppressions.addResourceSuppressionsByPath(this, [
+            '/SdfDemoStack/Website/SdfDemoWebsiteBucket/Resource',
+            '/SdfDemoStack/Website/SdfDemoWebsiteBucket/Policy/Resource'
+        ],
+            [
+                {
+                    id: 'AwsSolutions-S1',
+                    reason: 'This is a demo application and does not require Access Logs'
+
+                },
+                {
+                    id: 'AwsSolutions-S10',
+                    reason: 'This is a demo application and does not require SSL'
+
+                }],
+            true);
+        NagSuppressions.addResourceSuppressionsByPath(this, [
+            '/SdfDemoStack/Website/SdfWebsiteDistribution/CFDistribution'
+        ],
+            [
+                {
+                    id: 'AwsSolutions-CFR3',
+                    reason: 'This is a demo application and does not require Access Logs'
+
+                },
+                {
+                    id: 'AwsSolutions-CFR4',
+                    reason: 'This is a demo application and we need to support TLSV1 for now'
+
+                }],
+            true);
+
+		// TODO: once all infrastructure is deployed, deploy the worklow.construct and kick off an execution of the step function to process the remainder of the flow
 	}
 
 	private createCopyFromS3CustomResource(dataBucket: string, workgroupDefaultAdminRole: IRole, redshiftRoleForCopyFromS3: IRole, workgroup: CfnWorkgroup, databaseName: string): CustomResource {
@@ -163,7 +202,7 @@ export class DatagenInfrastructureStack extends Stack {
 				banner: "import { createRequire } from 'module';const require = createRequire(import.meta.url);import { fileURLToPath } from 'url';import { dirname } from 'path';const __filename = fileURLToPath(import.meta.url);const __dirname = dirname(__filename);",
 				externalModules: ['aws-sdk'],
 			},
-			depsLockFilePath: path.join(__dirname, '../../../../common/config/rush/pnpm-lock.yaml'),
+			depsLockFilePath: path.join(__dirname, '../../../common/config/rush/pnpm-lock.yaml'),
 			architecture: Architecture.ARM_64,
 		});
 

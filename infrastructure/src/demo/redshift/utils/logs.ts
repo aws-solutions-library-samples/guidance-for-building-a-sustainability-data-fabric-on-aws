@@ -14,7 +14,7 @@
 import { CfnResource, RemovalPolicy } from 'aws-cdk-lib';
 import { LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { Construct } from 'constructs';
-import { addCfnNagSuppressRules, ruleToSuppressCloudWatchLogEncryption } from '../../../../utils/cfn-nag.js';
+import { addCfnNagSuppressRules, ruleToSuppressCloudWatchLogEncryption } from '../../../utils/cfn-nag.js';
 
 
 export function createLogGroup(

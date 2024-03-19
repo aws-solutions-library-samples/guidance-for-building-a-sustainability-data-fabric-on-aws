@@ -26,7 +26,7 @@ import { CreateSchema, NewNamespaceCustomProperties, RedshiftServerlessWorkgroup
 import { createLambdaRole } from './redshift/utils/lambda.js';
 import { createLogGroup } from './redshift/utils/logs.js';
 import { attachListTagsPolicyForFunction } from './redshift/utils/tags.js';
-import { addCfnNagForCustomResourceProvider, addCfnNagToStack, ruleRolePolicyWithWildcardResources, ruleToSuppressRolePolicyWithWildcardResources } from '../../utils/cfn-nag.js';
+import { addCfnNagForCustomResourceProvider, addCfnNagToStack, ruleRolePolicyWithWildcardResources, ruleToSuppressRolePolicyWithWildcardResources } from '../utils/cfn-nag.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -213,7 +213,7 @@ export class RedshiftServerless extends Construct {
 				banner: "import { createRequire } from 'module';const require = createRequire(import.meta.url);import { fileURLToPath } from 'url';import { dirname } from 'path';const __filename = fileURLToPath(import.meta.url);const __dirname = dirname(__filename);",
 				externalModules: ['aws-sdk'],
 			},
-			depsLockFilePath: path.join(__dirname, '../../../../common/config/rush/pnpm-lock.yaml'),
+			depsLockFilePath: path.join(__dirname, '../../../common/config/rush/pnpm-lock.yaml'),
 			architecture: Architecture.ARM_64,
 		});
 
@@ -291,7 +291,7 @@ export class RedshiftServerless extends Construct {
 				banner: "import { createRequire } from 'module';const require = createRequire(import.meta.url);import { fileURLToPath } from 'url';import { dirname } from 'path';const __filename = fileURLToPath(import.meta.url);const __dirname = dirname(__filename);",
 				externalModules: ['aws-sdk'],
 			},
-			depsLockFilePath: path.join(__dirname, '../../../../common/config/rush/pnpm-lock.yaml'),
+			depsLockFilePath: path.join(__dirname, '../../../common/config/rush/pnpm-lock.yaml'),
 			architecture: Architecture.ARM_64,
 		});
 

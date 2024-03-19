@@ -30,10 +30,9 @@ This document describes the overall data flow, as well each data products respon
     * Extracted data registered (or updated) within DataZone
     * Lineage representing datasets derived from original spreadsheets
 
-
 ### 2 - Import US EPA Emission Factors into SIF
 
-**Package name:** @df-sustainability/usepaSifImport.
+**Package name:** N/A.
 **Package location:** df-sustainability/typescript/packages/products/usepaSifImport.
 
 **Inputs:**
@@ -44,12 +43,10 @@ This document describes the overall data flow, as well each data products respon
 
 * Seeding of 12 impact pipelines to import the 12 US EPA emission factor tables into SIF.
 
-
 ### 3 - USEEIO Emission Factors
 
 **Package name:** @df-sustainability/useeio.
 **Package location:** df-sustainability/typescript/packages/products/useeio.
-
 
 **Inputs:**
 
@@ -62,12 +59,10 @@ This document describes the overall data flow, as well each data products respon
     * Assets registered (or updated) within DataZone
     * Lineage representing source dataset
 
-
 ### 4 - SDF Demo Data Generation
 
 **Package name:** @df-sustainability/datagen.
 **Package location:** df-sustainability/typescript/packages/demo/datagen.
-
 
 **Inputs:**
 
@@ -84,12 +79,10 @@ This document describes the overall data flow, as well each data products respon
     * Asset registered (or updated) within DataZone
     * Lineage representing source dataset
 
-
 ### 5 - Mapping materials to EEIO emission factors
 
-**Package name:** @df-sustainability/materialsNaicsMatching.
+**Package name:** N/A.
 **Package location:** df-sustainability/typescript/packages/demo/materialsNaicsMatching.
-
 
 **Inputs:**
 
@@ -104,7 +97,6 @@ This document describes the overall data flow, as well each data products respon
 
 **Package name:** @df-sustainability/matchedNaics.
 **Package location:** df-sustainability/typescript/packages/demo/matchedNaics.
-
 
 **Inputs:**
 

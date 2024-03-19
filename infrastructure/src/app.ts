@@ -18,13 +18,11 @@ import { AwsSolutionsChecks, NagPackSuppression, NagSuppressions } from 'cdk-nag
 import * as fs from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
-import { DatagenInfrastructureStack } from './demo/datagen/datagen.stack.js';
-import { UseeioInfrastructureStack } from './products/useeio/useeio.stack.js';
-import { UsepaInfrastructureStack } from './products/usepa/usepa.stack.js';
+import { CommonInfrastructureStack } from './common.stack.js';
+import { DemoInfrastructureStack } from './demo/demo.stack.js';
+import { ProductInfrastructureStack } from './products/product.stack.js';
 import { commonCdkNagRules } from './utils/cfn-nag.js';
 import { getOrThrow, tryGetBooleanContext } from './utils/util.js';
-import { CommonInfrastructureStack } from './common.stack.js';
-import { WebsiteStack } from './demo/website/website.stack.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -48,68 +46,10 @@ if (useExistingVpc) {
 
 cdk.Aspects.of(app).add(new AwsSolutionsChecks({ verbose: true }));
 
-const stackNameProducts = (suffix: string) => `sdf-${suffix}`;
-const stackNameDemo = (suffix: string) => `sdf-demo-${suffix}`;
-const stackDescription = (moduleName: string) => `Infrastructure for SDF ${moduleName} module`;
-
 const commonInfrastructureStack = new CommonInfrastructureStack(app, 'SdfCommonStack', {
-	stackName: stackNameProducts('common'),
-	description: stackDescription('common'),
+	stackName: 'sdf-common',
+	description: 'Infrastructure shared between SDF and SDF demo.',
 });
-
-const deployPlatform = (callerEnvironment?: { accountId?: string; region?: string }): void => {
-	stackSuppressions(
-		[
-			new WebsiteStack(app, 'WebsiteStack', {
-				stackName: stackNameDemo('ui'),
-				description: stackDescription('UI'),
-				env: {
-					// The DF_REGION domain variable
-					region: process.env?.['DF_REGION'] || callerEnvironment?.region,
-					account: callerEnvironment?.accountId,
-				},
-			}),
-
-			new UsepaInfrastructureStack(app, 'SdfUsepaStack', {
-				stackName: stackNameProducts('usepa'),
-				description: stackDescription('USEPA'),
-				bucketName: commonInfrastructureStack.bucketName,
-				env: {
-					// The DF_REGION domain variable
-					region: process.env?.['DF_REGION'] || callerEnvironment?.region,
-					account: callerEnvironment?.accountId,
-				},
-			}),
-			new UseeioInfrastructureStack(app, 'SdfUseeioStack', {
-				stackName: stackNameProducts('useeio'),
-				description: stackDescription('USEEIO'),
-				bucketName: commonInfrastructureStack.bucketName,
-				env: {
-					// The DF_REGION domain variable
-					region: process.env?.['DF_REGION'] || callerEnvironment?.region,
-					account: callerEnvironment?.accountId,
-				},
-			}),
-			new DatagenInfrastructureStack(app, 'SdfDemoDatagenStack', {
-				stackName: stackNameDemo('datagen'),
-				description: stackDescription('Datagen'),
-				bucketName: commonInfrastructureStack.bucketName,
-				userVpcConfig: useExistingVpc
-					? {
-						vpcId: userVpcId,
-						isolatedSubnetIds: userIsolatedSubnetIds,
-					}
-					: undefined,
-				env: {
-					// The DF_REGION domain variable
-					region: process.env?.['DF_REGION'] || callerEnvironment?.region,
-					account: callerEnvironment?.accountId,
-				},
-			}),
-		],
-		commonCdkNagRules
-	);
-};
 
 const getCallerEnvironment = (): { accountId?: string; region?: string } | undefined => {
 	if (!fs.existsSync(`${__dirname}/predeploy.json`)) {
@@ -118,5 +58,24 @@ const getCallerEnvironment = (): { accountId?: string; region?: string } | undef
 	const { callerEnvironment } = JSON.parse(fs.readFileSync(`${__dirname}/predeploy.json`, 'utf-8'));
 	return callerEnvironment;
 };
+const callerEnvironment = getCallerEnvironment();
+const region = process.env?.['DF_REGION'] || callerEnvironment?.region;
+const account = callerEnvironment?.accountId;
+const env = { region, account };
 
-deployPlatform(getCallerEnvironment());
+const products = new ProductInfrastructureStack(app, 'SdfProductStack', {
+	stackName: 'sdf-products',
+	description: 'Infrastructure for SDF data products.',
+	bucketName: commonInfrastructureStack.bucketName,
+	env,
+});
+
+const demos = new DemoInfrastructureStack(app, 'SdfDemoStack', {
+	stackName: 'sdf-demo',
+	description: 'Infrastructure for SDF demo.',
+	bucketName: commonInfrastructureStack.bucketName,
+	env,
+});
+demos.addDependency(products);
+
+stackSuppressions([products, demos], commonCdkNagRules);

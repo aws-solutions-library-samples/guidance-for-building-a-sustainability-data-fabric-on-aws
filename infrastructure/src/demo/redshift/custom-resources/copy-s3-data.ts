@@ -59,7 +59,7 @@ async function onCreate(event: CdkCustomResourceEvent) {
 	try {
 		await executeStatementsWithWait(
 			redshiftClient,
-			[`COPY sustainability.golden_materials FROM 's3://${props.dataBucket}/materials.csv' CREDENTIALS 'aws_iam_role=${props.redshiftRoleForCopyFromS3}' csv`],
+			[`COPY sustainability.golden_materials FROM 's3://${props.dataBucket}/demo/datagen/materials.csv' CREDENTIALS 'aws_iam_role=${props.redshiftRoleForCopyFromS3}' csv`],
 			props.serverlessRedshiftProps,
 			true
 		);

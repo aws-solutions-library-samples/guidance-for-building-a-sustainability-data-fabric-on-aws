@@ -21,20 +21,20 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export type UsepaProperties = StackProps & {
+export type UsepaProperties = {
 	bucketName: string;
 };
 
-export class UsepaInfrastructureStack extends Stack {
+export class UsepaInfrastructureConstruct extends Construct {
 	readonly vpcId: string;
 
 	constructor(scope: Construct, id: string, props: UsepaProperties) {
-		super(scope, id, props);
+		super(scope, id);
 
 		const bucket = Bucket.fromBucketName(this, 'Bucket', props.bucketName);
 
 		// Upload USEPA spreadsheets and provenance to S3
-		let dataPath = path.join(__dirname, '..','..','..','..','typescript','packages','products','usepa','resources');
+		let dataPath = path.join(__dirname, '..','..','..','typescript','packages','products','usepa','resources');
 		new BucketDeployment(this, 'UsepaSourceDeployment', {
 			sources: [Source.asset(dataPath)],
 			destinationBucket: bucket,
@@ -42,7 +42,7 @@ export class UsepaInfrastructureStack extends Stack {
 		});
 
 		// Upload extracted USEPA csv's to S3
-		dataPath = path.join(__dirname, '..','..','..','..','typescript','packages','products','usepa','generatedResources');
+		dataPath = path.join(__dirname, '..','..','..','typescript','packages','products','usepa','generatedResources');
 		new BucketDeployment(this, 'UsepaExtractedDeployment', {
 			sources: [Source.asset(dataPath)],
 			destinationBucket: bucket,
