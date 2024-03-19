@@ -10,6 +10,7 @@ import { UsepaInfrastructureStack } from './products/usepa/usepa.stack.js';
 import { commonCdkNagRules } from './utils/cfn-nag.js';
 import { getOrThrow, tryGetBooleanContext } from './utils/util.js';
 import { CommonInfrastructureStack } from './common.stack.js';
+import { WebsiteStack } from './demo/website/website.stack.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -45,6 +46,15 @@ const commonInfrastructureStack = new CommonInfrastructureStack(app, 'SdfCommonS
 const deployPlatform = (callerEnvironment?: { accountId?: string; region?: string }): void => {
 	stackSuppressions(
 		[
+			new WebsiteStack(app, 'WebsiteStack', {
+				stackName: stackNameDemo('ui'),
+				description: stackDescription('UI'),
+				env: {
+					// The DF_REGION domain variable
+					region: process.env?.['DF_REGION'] || callerEnvironment?.region,
+					account: callerEnvironment?.accountId,
+				},
+			}),
 
 			new UsepaInfrastructureStack(app, 'SdfUsepaStack', {
 				stackName: stackNameProducts('usepa'),
@@ -72,9 +82,9 @@ const deployPlatform = (callerEnvironment?: { accountId?: string; region?: strin
 				bucketName: commonInfrastructureStack.bucketName,
 				userVpcConfig: useExistingVpc
 					? {
-							vpcId: userVpcId,
-							isolatedSubnetIds: userIsolatedSubnetIds,
-					  }
+						vpcId: userVpcId,
+						isolatedSubnetIds: userIsolatedSubnetIds,
+					}
 					: undefined,
 				env: {
 					// The DF_REGION domain variable
