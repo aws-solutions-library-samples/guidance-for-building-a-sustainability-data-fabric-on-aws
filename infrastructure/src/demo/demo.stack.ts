@@ -11,31 +11,16 @@
  *  and limitations under the License.
  */
 
-import { CustomResource, Duration, Stack, StackProps } from 'aws-cdk-lib';
-import { IRole, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
-import { Architecture, Runtime, Tracing } from 'aws-cdk-lib/aws-lambda';
-import { NodejsFunction, OutputFormat } from 'aws-cdk-lib/aws-lambda-nodejs';
-import { RetentionDays } from 'aws-cdk-lib/aws-logs';
-import { CfnWorkgroup } from 'aws-cdk-lib/aws-redshiftserverless';
-import { Bucket } from 'aws-cdk-lib/aws-s3';
-import { BucketDeployment, Source } from 'aws-cdk-lib/aws-s3-deployment';
-import { Provider } from 'aws-cdk-lib/custom-resources';
-import { Construct } from 'constructs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { Network, SdfVpcConfig } from './network.construct.js';
-import { RedshiftServerless } from './redshift-serverless.construct.js';
-import { REDSHIFT_DATABASE_NAME, REDSHIFT_WORKGROUP_NAME } from './redshift/constants.js';
-import { CopyS3Data, ExistingRedshiftServerlessProps } from './redshift/models.js';
-import { RedshiftAssociateIAMRole } from './redshift/redshift-associate-iam-role.js';
-import { createLambdaRole } from './redshift/utils/lambda.js';
-import { createLogGroup } from './redshift/utils/logs.js';
-import { createSGForEgressToAwsService } from './redshift/utils/sg.js';
-import { Website } from './website.construct.js';
+import { Stack, StackProps } from 'aws-cdk-lib';
 import { NagSuppressions } from 'cdk-nag';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import { Construct } from 'constructs';
+import { UsepaInfrastructureConstruct } from '../products/usepa.construct.js';
+import { DatagenInfrastructureConstruct } from './datagen.construct.js';
+import { MaterialsNaicsMatchingConstruct } from './materialsNaicsMatching.construct.js';
+import { SdfVpcConfig } from './network.construct.js';
+import { Scope3PurchasedGoodsConstruct } from './scope3PurchaseGoods.construct.js';
+import { WebsiteConstruct } from './website.construct.js';
+import { WorkflowConstruct } from './workflow.construct.js';
 
 export type DemoStackProperties = StackProps & {
 	userVpcConfig?: SdfVpcConfig;
@@ -50,162 +35,72 @@ export class DemoInfrastructureStack extends Stack {
 	constructor(scope: Construct, id: string, props: DemoStackProperties) {
 		super(scope, id, props);
 
-		// Provided bucket to store demo artifacts
-		const dataBucket = Bucket.fromBucketName(this, 'DataBucket', props.bucketName);
-
-		// Upload demo data to s3. some will be pushed to redshift later
-		const demoDataPath = path.join(__dirname, '..', '..', '..', 'typescript', 'packages', 'demo', 'datagen', 'generatedResources');
-		new BucketDeployment(this, 'DemoDataDeployment', {
-			sources: [Source.asset(demoDataPath)],
-			destinationBucket: dataBucket,
-			destinationKeyPrefix: 'demo/datagen/',
+		// 2 - Import US EPA Emission Factors into SIF
+		const usepa = new UsepaInfrastructureConstruct(this, 'UsepaInfrastructure', {
+			bucketName: props.bucketName,
 		});
 
-		// Amazon Redshift Serverless runs in a VPC
-		const network = new Network(this, 'Network', {
-			userVpcConfig: props.userVpcConfig ? props.userVpcConfig : undefined,
+		// 4 - SDF Demo Data Generation
+		const datagen = new DatagenInfrastructureConstruct(this, 'Datagen', {
+			userVpcConfig: props.userVpcConfig,
+			bucketName: props.bucketName,
 		});
 
-		const securityGroupForLambda = createSGForEgressToAwsService(this, 'LambdaEgressToAWSServiceSG', network.vpc);
-
-		const redshiftServerlessWorkgroup = new RedshiftServerless(this, 'RedshiftServerlessWorkgroup', {
-			vpc: network.vpc,
-			subnetSelection: {
-				subnets: network.vpc.isolatedSubnets,
-			},
-			securityGroupIds: securityGroupForLambda.securityGroupId,
-			baseCapacity: 8, // 8 to 512 RPUs
-			workgroupName: REDSHIFT_WORKGROUP_NAME,
-			databaseName: REDSHIFT_DATABASE_NAME,
-			dataBucket: dataBucket.bucketName,
+		// 5 - Mapping materials to EEIO emission factors
+		// 6 - Publishing matched material NAICS to DF
+		const materialsNaicsMatching = new MaterialsNaicsMatchingConstruct(this, 'MaterialsNaicsMatching', {
+			bucketName: props.bucketName,
 		});
 
-		const existingRedshiftServerlessProps: ExistingRedshiftServerlessProps = {
-			workgroupId: redshiftServerlessWorkgroup.workgroup.attrWorkgroupWorkgroupId,
-			workgroupName: redshiftServerlessWorkgroup.workgroup.attrWorkgroupWorkgroupName,
-			namespaceId: redshiftServerlessWorkgroup.namespaceId,
-			dataAPIRoleArn: redshiftServerlessWorkgroup.redshiftDataAPIExecRole.roleArn,
-			databaseName: redshiftServerlessWorkgroup.databaseName,
-		};
-
-		// Redshift requires a role with sufficient permissions to copy from S3
-		const redshiftRoleForCopyFromS3 = new Role(this, 'CopyDataFromS3Role', {
-			assumedBy: new ServicePrincipal('redshift.amazonaws.com'),
+		// 10 - Scope 3 purchased goods & services
+		const scope3PurchasedGoods = new Scope3PurchasedGoodsConstruct(this, 'Scope3PurchasedGoods', {
+			bucketName: props.bucketName,
 		});
-		dataBucket.grantRead(redshiftRoleForCopyFromS3);
-
-		// Custom resource to associate the IAM role required to copy from S3 to Redshift cluster
-		const crForModifyClusterIAMRoles = new RedshiftAssociateIAMRole(this, 'RedshiftAssociateS3CopyRole', {
-			serverlessRedshift: existingRedshiftServerlessProps,
-			role: redshiftRoleForCopyFromS3,
-		}).cr;
-		crForModifyClusterIAMRoles.node.addDependency(redshiftServerlessWorkgroup);
-
-		// Customer resource to load the data into redshift from S3
-		const crCopyFromS3 = this.createCopyFromS3CustomResource(
-			dataBucket.bucketName,
-			redshiftServerlessWorkgroup.workgroupDefaultAdminRole,
-			redshiftRoleForCopyFromS3,
-			redshiftServerlessWorkgroup.workgroup,
-			redshiftServerlessWorkgroup.databaseName
-		);
-		crCopyFromS3.node.addDependency(redshiftServerlessWorkgroup.redshiftUserCR);
-		crCopyFromS3.node.addDependency(crForModifyClusterIAMRoles);
-
-		// TODO: Create custom resource to call data asset module to register invoices.csv (csv), as well as setting glossary terms
-		// TODO: Create custom resource to call data asset module to register materials (redshift), as well as setting glossary terms
 
 		// deploy the website
-        new Website(this, 'Website', {});
-        NagSuppressions.addResourceSuppressionsByPath(this, [
-            '/SdfDemoStack/Website/SdfDemoWebsiteBucket/Resource',
-            '/SdfDemoStack/Website/SdfDemoWebsiteBucket/Policy/Resource'
-        ],
-            [
-                {
-                    id: 'AwsSolutions-S1',
-                    reason: 'This is a demo application and does not require Access Logs'
+		new WebsiteConstruct(this, 'Website', {});
+		this.websiteNags();
 
-                },
-                {
-                    id: 'AwsSolutions-S10',
-                    reason: 'This is a demo application and does not require SSL'
-
-                }],
-            true);
-        NagSuppressions.addResourceSuppressionsByPath(this, [
-            '/SdfDemoStack/Website/SdfWebsiteDistribution/CFDistribution'
-        ],
-            [
-                {
-                    id: 'AwsSolutions-CFR3',
-                    reason: 'This is a demo application and does not require Access Logs'
-
-                },
-                {
-                    id: 'AwsSolutions-CFR4',
-                    reason: 'This is a demo application and we need to support TLSV1 for now'
-
-                }],
-            true);
-
-		// TODO: once all infrastructure is deployed, deploy the worklow.construct and kick off an execution of the step function to process the remainder of the flow
+		// once all infrastructure is deployed, deploy the worklow.construct and kick off an execution of the step function to process the remainder of the flow
+		const workflow = new WorkflowConstruct(this, 'Workflow', {
+			bucketName: props.bucketName,
+		});
+		workflow.node.addDependency(usepa);
+		workflow.node.addDependency(datagen);
+		workflow.node.addDependency(materialsNaicsMatching);
+		workflow.node.addDependency(scope3PurchasedGoods);
 	}
 
-	private createCopyFromS3CustomResource(dataBucket: string, workgroupDefaultAdminRole: IRole, redshiftRoleForCopyFromS3: IRole, workgroup: CfnWorkgroup, databaseName: string): CustomResource {
-		const eventHandler = this.createCopyFromS3Function();
-		workgroupDefaultAdminRole.grantAssumeRole(eventHandler.grantPrincipal);
-
-		const provider = new Provider(this, 'CopyFromS3CustomResourceProvider', {
-			onEventHandler: eventHandler,
-			logRetention: RetentionDays.ONE_WEEK,
-		});
-
-		const customProps: CopyS3Data = {
-			serverlessRedshiftProps: {
-				workgroupName: workgroup.attrWorkgroupWorkgroupName,
-				workgroupId: workgroup.attrWorkgroupWorkgroupId,
-				dataAPIRoleArn: workgroupDefaultAdminRole.roleArn,
-				databaseName,
-			},
-			dataBucket,
-			redshiftRoleForCopyFromS3: redshiftRoleForCopyFromS3.roleArn,
-		};
-		const cr = new CustomResource(this, 'CopyFromS3CustomResource', {
-			serviceToken: provider.serviceToken,
-			properties: customProps,
-		});
-
-		return cr;
-	}
-
-	private createCopyFromS3Function() {
-		const logGroup = createLogGroup(this, { prefix: 'sdfDemo-datagen-copyS3Data' });
-		const fn = new NodejsFunction(this, 'CopyS3DataFn', {
-			functionName: `sdfDemo-datagen-copyS3Data`,
-			description: `SDF Demo datagen`,
-			entry: path.join(__dirname, 'redshift', 'custom-resources', 'copy-s3-data.ts'),
-			handler: 'handler',
-			runtime: Runtime.NODEJS_20_X,
-			tracing: Tracing.ACTIVE,
-			memorySize: 128,
-			timeout: Duration.minutes(3),
-			logGroup,
-			role: createLambdaRole(this, 'CopyS3DataRole', false, []),
-
-			bundling: {
-				minify: true,
-				format: OutputFormat.ESM,
-				target: 'node20.11',
-				sourceMap: false,
-				sourcesContent: false,
-				banner: "import { createRequire } from 'module';const require = createRequire(import.meta.url);import { fileURLToPath } from 'url';import { dirname } from 'path';const __filename = fileURLToPath(import.meta.url);const __dirname = dirname(__filename);",
-				externalModules: ['aws-sdk'],
-			},
-			depsLockFilePath: path.join(__dirname, '../../../common/config/rush/pnpm-lock.yaml'),
-			architecture: Architecture.ARM_64,
-		});
-
-		return fn;
+	private websiteNags() {
+		NagSuppressions.addResourceSuppressionsByPath(
+			this,
+			['/SdfDemoStack/Website/SdfDemoWebsiteBucket/Resource', '/SdfDemoStack/Website/SdfDemoWebsiteBucket/Policy/Resource'],
+			[
+				{
+					id: 'AwsSolutions-S1',
+					reason: 'This is a demo application and does not require Access Logs',
+				},
+				{
+					id: 'AwsSolutions-S10',
+					reason: 'This is a demo application and does not require SSL',
+				},
+			],
+			true
+		);
+		NagSuppressions.addResourceSuppressionsByPath(
+			this,
+			['/SdfDemoStack/Website/SdfWebsiteDistribution/CFDistribution'],
+			[
+				{
+					id: 'AwsSolutions-CFR3',
+					reason: 'This is a demo application and does not require Access Logs',
+				},
+				{
+					id: 'AwsSolutions-CFR4',
+					reason: 'This is a demo application and we need to support TLSV1 for now',
+				},
+			],
+			true
+		);
 	}
 }

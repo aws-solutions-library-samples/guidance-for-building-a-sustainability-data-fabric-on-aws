@@ -20,4 +20,4 @@ df-sustainability/typescript/packages/demo/datagen> npx vitest -t 'caml'
 
 ## Deployment
 
-Handled via the [DataGen stack](../../../../infrastructure/src/demo/datagen/datagen.stack.ts).
+Handled via the [DataGen stack](../../../../infrastructure/src/demo/demo.stack.ts).

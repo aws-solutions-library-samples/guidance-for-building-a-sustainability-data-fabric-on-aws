@@ -11,16 +11,17 @@
  *  and limitations under the License.
  */
 
+import { Stack, StackProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 
-export type MaterialsNaicsMatchingProps = {
+export type MaterialsNaicsMatchingProps = StackProps & {
 	bucketName: string;
 };
 
-export class MaterialsNaicsMatchingConstruct extends Construct {
+export class PublishMatchedMaterialsStack extends Stack {
 	constructor(scope: Construct, id: string, props: MaterialsNaicsMatchingProps) {
-		super(scope, id);
+		super(scope, id, props);
 
-		// TODO: Create custom resource to call SIF to create the CaML pipeline definitions
+		// TODO: ?
 	}
 }

@@ -13,14 +13,14 @@
 
 import { Construct } from 'constructs';
 
-export type MaterialsNaicsMatchingProps = {
+export type Scope3PurchasedGoodsProps = {
 	bucketName: string;
 };
 
-export class MaterialsNaicsMatchingConstruct extends Construct {
-	constructor(scope: Construct, id: string, props: MaterialsNaicsMatchingProps) {
+export class Scope3PurchasedGoodsConstruct extends Construct {
+	constructor(scope: Construct, id: string, props: Scope3PurchasedGoodsProps) {
 		super(scope, id);
 
-		// TODO: Create custom resource to call SIF to create the CaML pipeline definitions
+		// TODO: Create custom resource to call SIF to import the pipeline definitions
 	}
 }

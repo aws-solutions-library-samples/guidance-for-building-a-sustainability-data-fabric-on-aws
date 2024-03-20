@@ -13,7 +13,9 @@ This document describes the overall data flow, as well each data products respon
 ### 1 - US EPA Emission Factors
 
 **Package name:** @df-sustainability/usepa.
-**Package location:** df-sustainability/typescript/packages/products/usepa.
+**Package location:** df-sustainability/typescript/packages/products/usepa
+**Infrastructure location:** df-sustainability/infrastructure/src/products/usepa.construct.ts
+**Included in runtime workflow?** No
 
 **Inputs:**
 
@@ -22,18 +24,20 @@ This document describes the overall data flow, as well each data products respon
 **Outcomes:**
 
 * Original GHG Emission Factor Hub spreadsheets (both 2023 and 2024 versions):
-    * Spreadsheets uploaded to S3
-    * Spreadsheets registered (or updated) within DataZone
-    * Lineage representing external source
+  * Spreadsheets uploaded to S3
+  * Spreadsheets registered (or updated) within DataZone
+  * Lineage representing external source
 * Individual tables (12 per version) extracted from GHG Emission Factor Hub spreadsheets (both 2023 and 2024 versions):
-    * Extracted data uploaded to S3 (csv)
-    * Extracted data registered (or updated) within DataZone
-    * Lineage representing datasets derived from original spreadsheets
+  * Extracted data uploaded to S3 (csv)
+  * Extracted data registered (or updated) within DataZone
+  * Lineage representing datasets derived from original spreadsheets
 
 ### 2 - Import US EPA Emission Factors into SIF
 
-**Package name:** N/A.
-**Package location:** df-sustainability/typescript/packages/products/usepaSifImport.
+**Package name:** N/A
+**Package location:** N/A
+**Infrastructure location:** df-sustainability/infrastructure/src/demo/usepaSifImport.construct.ts
+**Included in runtime workflow?** Yes
 
 **Inputs:**
 
@@ -45,8 +49,10 @@ This document describes the overall data flow, as well each data products respon
 
 ### 3 - USEEIO Emission Factors
 
-**Package name:** @df-sustainability/useeio.
-**Package location:** df-sustainability/typescript/packages/products/useeio.
+**Package name:** @df-sustainability/useeio
+**Package location:** df-sustainability/typescript/packages/products/useeio
+**Infrastructure location:** df-sustainability/infrastructure/src/products/useeio.construct.ts
+**Included in runtime workflow?** No
 
 **Inputs:**
 
@@ -55,14 +61,16 @@ This document describes the overall data flow, as well each data products respon
 **Outcomes:**
 
 * Original _SupplyChainGHGEmissionFactors_v1.2_NAICS_CO2e_USD2021.csv_ and _SupplyChainGHGEmissionFactors_v1.2_NAICS_byGHG_USD2021.csv_ datasets:
-    * Assets uploaded to S3
-    * Assets registered (or updated) within DataZone
-    * Lineage representing source dataset
+  * Assets uploaded to S3
+  * Assets registered (or updated) within DataZone
+  * Lineage representing source dataset
 
 ### 4 - SDF Demo Data Generation
 
-**Package name:** @df-sustainability/datagen.
-**Package location:** df-sustainability/typescript/packages/demo/datagen.
+**Package name:** @df-sustainability/datagen
+**Package location:** df-sustainability/typescript/packages/demo/datagen
+**Infrastructure location:** df-sustainability/infrastructure/src/demo/datagen.construct.ts
+**Included in runtime workflow?** No
 
 **Inputs:**
 
@@ -71,18 +79,20 @@ This document describes the overall data flow, as well each data products respon
 **Outcomes:**
 
 * Materials:
-    * Demo data generated, and loaded into Redshift serverless
-    * Asset registered (or updated) within DataZone
-    * Lineage representing source dataset
+  * Demo data generated, and loaded into Redshift serverless
+  * Asset registered (or updated) within DataZone
+  * Lineage representing source dataset
 * Invoices:
-    * Demo data generated, and uploaded into S3 (csv)
-    * Asset registered (or updated) within DataZone
-    * Lineage representing source dataset
+  * Demo data generated, and uploaded into S3 (csv)
+  * Asset registered (or updated) within DataZone
+  * Lineage representing source dataset
 
 ### 5 - Mapping materials to EEIO emission factors
 
 **Package name:** N/A.
-**Package location:** df-sustainability/typescript/packages/demo/materialsNaicsMatching.
+**Package location:** N/A
+**Infrastructure location:** df-sustainability/infrastructure/src/demo/materialsNaicsMatching.construct.ts
+**Included in runtime workflow?** Yes
 
 **Inputs:**
 
@@ -95,8 +105,10 @@ This document describes the overall data flow, as well each data products respon
 
 ### 6 - Publishing matched material NAICS to DF
 
-**Package name:** @df-sustainability/matchedNaics.
-**Package location:** df-sustainability/typescript/packages/demo/matchedNaics.
+**Package name:** @df-sustainability/matchedNaics
+**Package location:** N/A
+**Infrastructure location:** df-sustainability/infrastructure/src/demo/publishMatchedMaterials.construct.ts
+**Included in runtime workflow?** Yes
 
 **Inputs:**
 
@@ -111,9 +123,10 @@ This document describes the overall data flow, as well each data products respon
 
 ### 7 - Invoice data quality assertions
 
-**Package name:** @df-sustainability/rawInvoiceDataQuality.
-**Package location:** df-sustainability/typescript/packages/demo/rawInvoiceDataQuality.
-
+**Package name:** N/A
+**Package location:** N/A
+**Infrastructure location:** N/A
+**Included in runtime workflow?** Yes
 
 **Inputs:**
 
@@ -126,9 +139,10 @@ This document describes the overall data flow, as well each data products respon
 
 ### 8 - Cleaned invoice data
 
-**Package name:** @df-sustainability/invoiceCleaning.
-**Package location:** df-sustainability/typescript/packages/demo/invoiceCleaning.
-
+**Package name:** N/A
+**Package location:** N/A
+**Infrastructure location:** N/A
+**Included in runtime workflow?** Yes
 
 **Inputs:**
 
@@ -141,13 +155,12 @@ This document describes the overall data flow, as well each data products respon
 * Asset registered (or updated) within DataZone.
 * Lineage representing derived dataset.
 
-
-
 ### 9 - Cleaned invoice data quality assertions
 
-**Package name:** @df-sustainability/cleanInvoiceDataQuality.
-**Package location:** df-sustainability/typescript/packages/demo/cleanInvoiceDataQuality.
-
+**Package name:** N/A
+**Package location:** N/A
+**Infrastructure location:** N/A
+**Included in runtime workflow?** Yes
 
 **Inputs:**
 
@@ -158,13 +171,12 @@ This document describes the overall data flow, as well each data products respon
 * Same data quality profile as executed for 7 - Invoice data quality assertions created for cleaned invoice data, stored as new metaform.
 * Data quality profile stored in lineage as inputs.dataQualityMetrics facet.
 
-
-
 ### 10 - Scope 3 purchased goods & services
 
-**Package name:** @df-sustainability/scope3PurchasedGoods.
-**Package location:** df-sustainability/typescript/packages/demo/scope3PurchasedGoods.
-
+**Package name:** N/A
+**Package location:** df-sustainability/typescript/packages/demo/scope3PurchasedGoods
+**Infrastructure location:** df-sustainability/infrastructure/src/demo/scope3PurchasedGoods.construct.ts
+**Included in runtime workflow?** Yes
 
 **Inputs:**
 
@@ -179,4 +191,3 @@ This document describes the overall data flow, as well each data products respon
 * Latest affected metrics for the affected time period exported to S3.
 * Assets registered (or updated) within DataZone.
 * Lineage representing derived dataset.
-

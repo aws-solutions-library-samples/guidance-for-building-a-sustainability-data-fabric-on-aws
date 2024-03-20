@@ -25,5 +25,19 @@ export class WorkflowConstruct extends Construct {
 		const bucket = Bucket.fromBucketName(this, 'Bucket', props.bucketName);
 
 		// TODO: Create step function that processes the workflow (basically everything in the demo flow that was not already registered as source by other constructs)
+
+		// 2 - Import US EPA Emission Factors into SIF
+
+		// 5 - Mapping materials to EEIO emission factors
+
+		// 6 - Publishing matched material NAICS to DF
+
+		// 7 - Included in runtime workflow? Yes
+
+		// 8 - Cleaned invoice data
+
+		// 9 - Cleaned invoice data quality assertions
+
+		// 10 - Scope 3 purchased goods & services
 	}
 }

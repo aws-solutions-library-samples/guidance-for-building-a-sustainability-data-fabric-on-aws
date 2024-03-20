@@ -4,7 +4,7 @@
 
 Holds a local copy of the USEPA datasets (see `/resources`).
 
-When run, extracts the individual tables from the souce datasets and stores in `/generatedResources`.
+When run, extracts the individual tables from the source datasets and stores (committed to source control) in `/generatedResources`.
 
 ## Provenance
 
@@ -15,4 +15,3 @@ Note: The provenance json files were manually constructed using information obta
 ## Deployment
 
 Handled via the [USEPA stack](../../../../infrastructure/src/products/usepa/usepa.stack.ts).
-

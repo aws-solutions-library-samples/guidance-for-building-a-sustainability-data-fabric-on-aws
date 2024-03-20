@@ -13,14 +13,14 @@
 
 import { Construct } from 'constructs';
 
-export type MaterialsNaicsMatchingProps = {
+export type InvoiceDataQualityAssertionsProps = {
 	bucketName: string;
 };
 
-export class MaterialsNaicsMatchingConstruct extends Construct {
-	constructor(scope: Construct, id: string, props: MaterialsNaicsMatchingProps) {
+export class InvoiceDataQualityAssertionsConstruct extends Construct {
+	constructor(scope: Construct, id: string, props: InvoiceDataQualityAssertionsProps) {
 		super(scope, id);
 
-		// TODO: Create custom resource to call SIF to create the CaML pipeline definitions
+		// TODO: Create custom resource to call data asset module to create data quality assertions
 	}
 }

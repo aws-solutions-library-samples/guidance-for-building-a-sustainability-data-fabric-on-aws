@@ -11,14 +11,7 @@
  *  and limitations under the License.
  */
 
-import { Bucket } from 'aws-cdk-lib/aws-s3';
-import { BucketDeployment, Source } from 'aws-cdk-lib/aws-s3-deployment';
 import { Construct } from 'constructs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 export type UsepaSifImport = {
 	bucketName: string;
@@ -27,16 +20,6 @@ export type UsepaSifImport = {
 export class UsepaSifImportConstruct extends Construct {
 	constructor(scope: Construct, id: string, props: UsepaSifImport) {
 		super(scope, id);
-
-		const bucket = Bucket.fromBucketName(this, 'Bucket', props.bucketName);
-
-		// Upload SIF files ready for import
-		let dataPath = path.join(__dirname, '..', '..', '..', '..', 'typescript', 'packages', 'demo', 'usepaSifImport', 'resources');
-		new BucketDeployment(this, 'UsepaSifImportDeployment', {
-			sources: [Source.asset(dataPath)],
-			destinationBucket: bucket,
-			destinationKeyPrefix: 'products/usepaSifImport',
-		});
 
 		// TODO: Create custom resource to call SIF to import the pipeline definitions
 	}

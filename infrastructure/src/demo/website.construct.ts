@@ -8,7 +8,7 @@ export interface WebsiteProperties {
 
 }
 
-export class Website extends Construct {
+export class WebsiteConstruct extends Construct {
 
     constructor(scope: Construct, id: string, props: WebsiteProperties) {
         super(scope, id);
