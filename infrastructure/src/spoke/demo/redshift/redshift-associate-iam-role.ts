@@ -76,7 +76,7 @@ export class RedshiftAssociateIAMRole extends Construct {
 				banner: "import { createRequire } from 'module';const require = createRequire(import.meta.url);import { fileURLToPath } from 'url';import { dirname } from 'path';const __filename = fileURLToPath(import.meta.url);const __dirname = dirname(__filename);",
 				externalModules: ['aws-sdk'],
 			},
-			depsLockFilePath: path.join(__dirname, '../../../../common/config/rush/pnpm-lock.yaml'),
+			depsLockFilePath: path.join(__dirname, '../../../../../common/config/rush/pnpm-lock.yaml'),
 			architecture: Architecture.ARM_64,
 		});
 

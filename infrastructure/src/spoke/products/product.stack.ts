@@ -11,17 +11,25 @@
  *  and limitations under the License.
  */
 
-import { SecurityGroup, IVpc, ISecurityGroup } from 'aws-cdk-lib/aws-ec2';
+import { Stack, StackProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { addCfnNagToSecurityGroup } from '../../../utils/cfn-nag.js';
+import { UsepaInfrastructureConstruct } from './usepa.construct.js';
 
-export function createSGForEgressToAwsService(scope: Construct, id: string, vpc: IVpc)
-  : ISecurityGroup {
-  const sg = new SecurityGroup(scope, id, {
-    vpc,
-    allowAllOutbound: true,
-  });
-  addCfnNagToSecurityGroup(sg, ['W40', 'W5']);
+export type UseeioProperties = StackProps & {
+	bucketName: string;
+};
 
-  return sg;
+export class SpokeProductInfrastructureStack extends Stack {
+
+	public constructor(scope: Construct, id: string, props: UseeioProperties) {
+		super(scope, id, props);
+
+		new UsepaInfrastructureConstruct(this, 'USEPA', {
+			bucketName: props.bucketName
+		});
+
+		// new UseeioInfrastructureConstruct(this, 'USEEIO', {
+		// 	bucketName: props.bucketName
+		// });
+	}
 }

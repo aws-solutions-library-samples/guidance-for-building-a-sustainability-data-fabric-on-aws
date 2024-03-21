@@ -33,11 +33,11 @@ export class UseeioInfrastructureConstruct extends Construct {
 		const bucket = Bucket.fromBucketName(this, 'Bucket', props.bucketName);
 
 		// Upload Useeio data and provenance to S3
-		let dataPath = path.join(__dirname, '..', '..', '..', 'typescript', 'packages', 'products', 'useeio', 'resources');
+		let dataPath = path.join(__dirname, '..', '..', '..', '..', 'typescript', 'packages', 'products', 'useeio', 'resources');
 		new BucketDeployment(this, 'UseeioSourceDeployment', {
 			sources: [Source.asset(dataPath)],
 			destinationBucket: bucket,
-			destinationKeyPrefix: 'products/Useeio/',
+			destinationKeyPrefix: 'products/Useeio/'
 		});
 
 		// TODO: Create custom resource to call data asset module to register all of above datasets, set provenance metaform for sources, as well as setting glossary terms

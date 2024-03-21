@@ -31,5 +31,7 @@ export * from './clients/sif/execution.models.js';
 export * from './clients/df/dataAsset.client.js';
 export * from './clients/df/dataAsset.model.js';
 
+export * from './common/invoker.js';
+
 export * from './common/models.js';
 

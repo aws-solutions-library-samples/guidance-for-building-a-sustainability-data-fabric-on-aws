@@ -13,7 +13,7 @@
 
 import { CfnPolicy, Policy, PolicyStatement, PrincipalBase, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 import { IConstruct } from 'constructs';
-import { addCfnNagSuppressRules } from '../../../utils/cfn-nag.js';
+import { addCfnNagSuppressRules } from '../../../../utils/cfn-nag.js';
 
 function suppressLogsWildcardResources(policy: Policy) {
 	suppressWildcardResources(policy, 'The lambda service writes to undetermined logs stream by design');
@@ -27,8 +27,8 @@ function suppressWildcardResources(policy: Policy, reason: string) {
 	addCfnNagSuppressRules(policy.node.defaultChild as CfnPolicy, [
 		{
 			id: 'W12',
-			reason: reason,
-		},
+			reason: reason
+		}
 	]);
 }
 
@@ -36,8 +36,8 @@ function getLambdaBasicPolicyStatements(inVpc: boolean, logGroupArn: string = '*
 	const statements = [
 		new PolicyStatement({
 			actions: ['logs:CreateLogStream', 'logs:PutLogEvents', 'logs:CreateLogGroup'],
-			resources: [logGroupArn],
-		}),
+			resources: [logGroupArn]
+		})
 	];
 
 	if (inVpc) {
@@ -49,13 +49,13 @@ function getLambdaBasicPolicyStatements(inVpc: boolean, logGroupArn: string = '*
 function getLambdaInVpcRolePolicyStatement(): PolicyStatement {
 	return new PolicyStatement({
 		actions: ['ec2:CreateNetworkInterface', 'ec2:DescribeNetworkInterfaces', 'ec2:DeleteNetworkInterface', 'ec2:AssignPrivateIpAddresses', 'ec2:UnassignPrivateIpAddresses'],
-		resources: ['*'],
+		resources: ['*']
 	});
 }
 
 export function createLambdaRole(scope: IConstruct, id: string, inVpc: boolean, extraPolicyStatements: PolicyStatement[], assumedBy: PrincipalBase = new ServicePrincipal('lambda.amazonaws.com'), logGroupArn: string = '*'): Role {
 	const role = new Role(scope, id, {
-		assumedBy,
+		assumedBy
 	});
 	getLambdaBasicPolicyStatements(inVpc, logGroupArn).forEach((ps) => role.addToPolicy(ps));
 	extraPolicyStatements.forEach((ps) => role.addToPolicy(ps));

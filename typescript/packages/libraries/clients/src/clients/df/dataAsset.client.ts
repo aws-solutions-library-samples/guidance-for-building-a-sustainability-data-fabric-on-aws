@@ -16,13 +16,32 @@ import { Invoker, LambdaApiGatewayEventBuilder } from '../../common/invoker';
 import { ClientServiceBase } from '../../common/common.js';
 import type { DataAssetTaskResource, DataAssetTaskResourceList, NewDataAssetTaskResource } from './dataAsset.model.js';
 
+
+export interface DFLambdaRequestContext {
+	authorizer: {
+		claims: {
+			email: string;
+			identities: string
+		};
+	};
+}
+
+export const getLambdaRequestContext = (email: string, userId: string): DFLambdaRequestContext => ({
+	authorizer: {
+		claims: {
+			email: email,
+			identities: JSON.stringify({ userId })
+		}
+	}
+});
+
 export class DataAssetClient extends ClientServiceBase {
 
 	constructor(private log: BaseLogger, private lambdaInvoker: Invoker, private dataAssetFunctionName: string) {
 		super();
 	}
 
-	public async create(newTask: NewDataAssetTaskResource, requestContext?: LambdaRequestContext): Promise<DataAssetTaskResource> {
+	public async create(newTask: NewDataAssetTaskResource, requestContext?: DFLambdaRequestContext): Promise<DataAssetTaskResource> {
 		this.log.info(`DataAssetClient> create> in> newTask: ${newTask}`);
 
 		const additionalHeaders = {};

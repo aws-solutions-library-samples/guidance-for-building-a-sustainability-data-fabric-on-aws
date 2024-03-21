@@ -52,7 +52,7 @@ export class DatagenInfrastructureConstruct extends Construct {
 		const dataBucket = Bucket.fromBucketName(this, 'DataBucket', props.bucketName);
 
 		// Upload demo data to s3. some will be pushed to redshift later
-		const demoDataPath = path.join(__dirname, '..', '..', '..', 'typescript', 'packages', 'demo', 'datagen', 'generatedResources');
+		const demoDataPath = path.join(__dirname, '..','..', '..', '..', 'typescript', 'packages', 'demo', 'datagen', 'generatedResources');
 		new BucketDeployment(this, 'DemoDataDeployment', {
 			sources: [Source.asset(demoDataPath)],
 			destinationBucket: dataBucket,
@@ -164,7 +164,7 @@ export class DatagenInfrastructureConstruct extends Construct {
 				banner: "import { createRequire } from 'module';const require = createRequire(import.meta.url);import { fileURLToPath } from 'url';import { dirname } from 'path';const __filename = fileURLToPath(import.meta.url);const __dirname = dirname(__filename);",
 				externalModules: ['aws-sdk'],
 			},
-			depsLockFilePath: path.join(__dirname, '../../../common/config/rush/pnpm-lock.yaml'),
+			depsLockFilePath: path.join(__dirname, '../../../../common/config/rush/pnpm-lock.yaml'),
 			architecture: Architecture.ARM_64,
 		});
 

@@ -29,7 +29,7 @@ export type DemoStackProperties = StackProps & {
 
 export const redshiftUserParameter = `/df/sdfDemo/redshift/username`;
 
-export class DemoInfrastructureStack extends Stack {
+export class SpokeDemoInfrastructureStack extends Stack {
 	readonly vpcId: string;
 
 	constructor(scope: Construct, id: string, props: DemoStackProperties) {
@@ -37,24 +37,24 @@ export class DemoInfrastructureStack extends Stack {
 
 		// 2 - Import US EPA Emission Factors into SIF
 		const usepa = new UsepaInfrastructureConstruct(this, 'UsepaInfrastructure', {
-			bucketName: props.bucketName,
+			bucketName: props.bucketName
 		});
 
 		// 4 - SDF Demo Data Generation
 		const datagen = new DatagenInfrastructureConstruct(this, 'Datagen', {
 			userVpcConfig: props.userVpcConfig,
-			bucketName: props.bucketName,
+			bucketName: props.bucketName
 		});
 
 		// 5 - Mapping materials to EEIO emission factors
 		// 6 - Publishing matched material NAICS to DF
 		const materialsNaicsMatching = new MaterialsNaicsMatchingConstruct(this, 'MaterialsNaicsMatching', {
-			bucketName: props.bucketName,
+			bucketName: props.bucketName
 		});
 
 		// 10 - Scope 3 purchased goods & services
 		const scope3PurchasedGoods = new Scope3PurchasedGoodsConstruct(this, 'Scope3PurchasedGoods', {
-			bucketName: props.bucketName,
+			bucketName: props.bucketName
 		});
 
 		// deploy the website
@@ -63,7 +63,7 @@ export class DemoInfrastructureStack extends Stack {
 
 		// once all infrastructure is deployed, deploy the worklow.construct and kick off an execution of the step function to process the remainder of the flow
 		const workflow = new WorkflowConstruct(this, 'Workflow', {
-			bucketName: props.bucketName,
+			bucketName: props.bucketName
 		});
 		workflow.node.addDependency(usepa);
 		workflow.node.addDependency(datagen);
@@ -78,12 +78,12 @@ export class DemoInfrastructureStack extends Stack {
 			[
 				{
 					id: 'AwsSolutions-S1',
-					reason: 'This is a demo application and does not require Access Logs',
+					reason: 'This is a demo application and does not require Access Logs'
 				},
 				{
 					id: 'AwsSolutions-S10',
-					reason: 'This is a demo application and does not require SSL',
-				},
+					reason: 'This is a demo application and does not require SSL'
+				}
 			],
 			true
 		);
@@ -93,12 +93,12 @@ export class DemoInfrastructureStack extends Stack {
 			[
 				{
 					id: 'AwsSolutions-CFR3',
-					reason: 'This is a demo application and does not require Access Logs',
+					reason: 'This is a demo application and does not require Access Logs'
 				},
 				{
 					id: 'AwsSolutions-CFR4',
-					reason: 'This is a demo application and we need to support TLSV1 for now',
-				},
+					reason: 'This is a demo application and we need to support TLSV1 for now'
+				}
 			],
 			true
 		);

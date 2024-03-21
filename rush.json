@@ -313,6 +313,12 @@
 			"projectFolder": "typescript/packages/libraries/clients",
 			"reviewCategory": "production",
 			"shouldPublish": true
+		},
+		{
+			"packageName": "@df-sustainability/deployment-helper",
+			"projectFolder": "typescript/packages/libraries/deployment-helper",
+			"reviewCategory": "production",
+			"shouldPublish": true
 		}
 		// {
 		//   /**
