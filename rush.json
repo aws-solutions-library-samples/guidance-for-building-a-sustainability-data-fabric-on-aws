@@ -307,6 +307,12 @@
 			"projectFolder": "typescript/packages/products/usepa",
 			"reviewCategory": "production",
 			"shouldPublish": true
+		},
+		{
+			"packageName": "@df-sustainability/clients",
+			"projectFolder": "typescript/packages/libraries/clients",
+			"reviewCategory": "production",
+			"shouldPublish": true
 		}
 		// {
 		//   /**
