@@ -22,12 +22,22 @@ export class WebsiteConstruct extends Construct {
 
         const namePrefix = 'sdf-demo'
 
+		const websiteLogsBucket = new Bucket(this, 'SdfDemoWebsiteLogsBucket', {
+            bucketName: `${namePrefix}-${accountId}-${region}-ui-logs`,
+            publicReadAccess: false,
+            blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
+            removalPolicy: RemovalPolicy.DESTROY,
+            autoDeleteObjects: true
+        });
+
         const websiteBucket = new Bucket(this, 'SdfDemoWebsiteBucket', {
             bucketName: `${namePrefix}-${accountId}-${region}-ui`,
             publicReadAccess: false,
             blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
             removalPolicy: RemovalPolicy.DESTROY,
-            autoDeleteObjects: true
+            autoDeleteObjects: true,
+			serverAccessLogsBucket: websiteLogsBucket,
+			serverAccessLogsPrefix: 'website-access-logs/'
         });
 
         websiteBucket.addToResourcePolicy(new PolicyStatement({
@@ -45,6 +55,10 @@ export class WebsiteConstruct extends Construct {
 
 		const distribution = new CloudFrontWebDistribution(this, 'SdfWebsiteDistribution', {
 			defaultRootObject: 'index.html',
+			loggingConfig: {
+				bucket: websiteLogsBucket,
+				prefix: 'website-access-logs/'
+			},
 			errorConfigurations: [
 				{
 					errorCode: 404,

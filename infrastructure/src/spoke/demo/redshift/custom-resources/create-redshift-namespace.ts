@@ -11,7 +11,7 @@
  *  and limitations under the License.
  */
 
-import { CreateNamespaceCommand, DeleteNamespaceCommand, Namespace, NamespaceStatus, RedshiftServerlessClient, ResourceNotFoundException, Tag } from '@aws-sdk/client-redshift-serverless';
+import { CreateNamespaceCommand, DeleteNamespaceCommand, LogExport, Namespace, NamespaceStatus, RedshiftServerlessClient, ResourceNotFoundException, Tag } from '@aws-sdk/client-redshift-serverless';
 import { fromTemporaryCredentials } from '@aws-sdk/credential-providers';
 import { CdkCustomResourceEvent, CdkCustomResourceHandler, CdkCustomResourceResponse, Context } from 'aws-lambda';
 import { NewNamespaceCustomProperties } from '../models.js';
@@ -91,6 +91,7 @@ async function createNamespace(client: RedshiftServerlessClient, props: Resource
 		// auto-creates the database:
 		dbName: props.databaseName,
 		namespaceName: props.namespaceName,
+		logExports: [LogExport.CONNECTION_LOG, LogExport.USER_ACTIVITY_LOG, LogExport.USER_LOG],
 		tags,
 	};
 	logger.info('Creating redshift serverless namespace with input', { input });
