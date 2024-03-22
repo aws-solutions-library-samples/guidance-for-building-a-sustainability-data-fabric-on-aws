@@ -37,7 +37,7 @@ export class UseeioInfrastructureConstruct extends Construct {
 		new BucketDeployment(this, 'UseeioSourceDeployment', {
 			sources: [Source.asset(dataPath)],
 			destinationBucket: bucket,
-			destinationKeyPrefix: 'products/Useeio/'
+			destinationKeyPrefix: 'products/useeio/resources'
 		});
 
 		// TODO: Create custom resource to call data asset module to register all of above datasets, set provenance metaform for sources, as well as setting glossary terms

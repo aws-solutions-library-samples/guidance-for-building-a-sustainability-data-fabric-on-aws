@@ -14,6 +14,9 @@
 import { Stack, StackProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { UsepaInfrastructureConstruct } from './usepa.construct.js';
+import { StringParameter } from 'aws-cdk-lib/aws-ssm';
+import { crHubProviderServiceTokenParameter } from '../common.stack.js';
+import { UseeioInfrastructureConstruct } from './useeio.construct.js';
 
 export type UseeioProperties = StackProps & {
 	bucketName: string;
@@ -24,12 +27,18 @@ export class SpokeProductInfrastructureStack extends Stack {
 	public constructor(scope: Construct, id: string, props: UseeioProperties) {
 		super(scope, id, props);
 
+		const customResourceProviderToken = StringParameter.fromStringParameterAttributes(this, 'customResourceProviderToken', {
+			parameterName: crHubProviderServiceTokenParameter,
+			simpleName: false
+		}).stringValue;
+
 		new UsepaInfrastructureConstruct(this, 'USEPA', {
-			bucketName: props.bucketName
+			bucketName: props.bucketName,
+			customResourceProviderToken
 		});
 
-		// new UseeioInfrastructureConstruct(this, 'USEEIO', {
-		// 	bucketName: props.bucketName
-		// });
+		new UseeioInfrastructureConstruct(this, 'USEEIO', {
+			bucketName: props.bucketName
+		});
 	}
 }

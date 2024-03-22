@@ -17,13 +17,14 @@ import { S3Client } from '@aws-sdk/client-s3';
 import { GlueClient } from '@aws-sdk/client-glue';
 import { CustomResourceManager } from '../customResources/customResource.manager.js';
 import { SecretsManagerClient } from '@aws-sdk/client-secrets-manager';
-import { DataAssetClient, Invoker } from '@df-sustainability/clients';
+import { DataAssetClient, getLambdaRequestContext, Invoker } from '@df-sustainability/clients';
 import { LambdaClient } from '@aws-sdk/client-lambda';
 import type { Cradle } from '@fastify/awilix';
-import { UsepaProductSeeder } from '../seeders/useepa';
 import type { Logger } from 'pino';
 import { pino } from 'pino';
 import pretty from 'pino-pretty';
+import { UsepaProductSeeder } from '../seeders/useepaProduct.js';
+import { GeneralProductSeeder } from '../seeders/generalProduct';
 
 const { captureAWSv3Client } = pkg;
 
@@ -47,9 +48,10 @@ declare module '@fastify/awilix' {
 		s3Client: S3Client;
 		dataAssetClient: DataAssetClient;
 		invoker: Invoker;
-		usepaProductSeeder: UsepaProductSeeder;
 		lambdaClient: LambdaClient;
 		customResourceManager: CustomResourceManager;
+		usepaProductSeeder: UsepaProductSeeder;
+		generalProductSeeder: GeneralProductSeeder;
 	}
 }
 
@@ -101,12 +103,15 @@ const roleArn = process.env['DATAZONE_ROLE_ARN'];
 const athenaEnvironmentId = process.env['DATAZONE_ATHENA_ENVIRONMENT_ID'];
 const redshiftEnvironmentId = process.env['DATAZONE_REDSHIFT_ENVIRONMENT_ID'];
 const domainName = process.env['DATAZONE_DOMAIN_NAME'];
+const adminEmailAddress = process.env['SIF_ADMINISTRATOR_EMAIL'];
 
 const metadata: DataZoneMetadata = { domainId, projectId, athenaEnvironmentId, redshiftEnvironmentId, domainName, region: awsRegion, spokeAccountId, roleArn };
 
 const commonInjectionOptions = {
 	lifetime: Lifetime.SINGLETON
 };
+
+const dfRequestContext = getLambdaRequestContext(adminEmailAddress, adminEmailAddress);
 
 container.register({
 
@@ -129,13 +134,16 @@ container.register({
 	secretsManagerClient: asFunction(() => SecretsManagerClientFactory.create(awsRegion), {
 		...commonInjectionOptions
 	}),
-	customResourceManager: asFunction((container: Cradle) => new CustomResourceManager(logger, container.usepaProductSeeder), {
+	customResourceManager: asFunction((container: Cradle) => new CustomResourceManager(logger, container.usepaProductSeeder, container.generalProductSeeder), {
 		...commonInjectionOptions
 	}),
 	dataAssetClient: asFunction((container: Cradle) => new DataAssetClient(logger, container.invoker, dataAssetFunctionName), {
 		...commonInjectionOptions
 	}),
-	usepaProductSeeder: asFunction((container: Cradle) => new UsepaProductSeeder(logger, container.s3Client, container.dataAssetClient, metadata), {
+	usepaProductSeeder: asFunction((container: Cradle) => new UsepaProductSeeder(logger, container.s3Client, container.dataAssetClient, metadata, dfRequestContext), {
+		...commonInjectionOptions
+	}),
+	generalProductSeeder: asFunction((container: Cradle) => new GeneralProductSeeder(logger, container.s3Client, container.dataAssetClient, metadata, dfRequestContext), {
 		...commonInjectionOptions
 	})
 });

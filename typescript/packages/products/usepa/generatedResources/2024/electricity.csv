@@ -1,4 +1,4 @@
-﻿eGRID Subregion Acronym,eGRID Subregion Name,Total Output CO2 Factor (lb CO2 / MWh),Total Output CH4 Factor (lb CH4 / MWh),Total Output N2O Factor (lb N2O / MWh),Non-Baseload CO2 Factor (lb CO2 / MWh),Non-Baseload CH4 Factor (lb CH4 / MWh),Non-Baseload N2O Factor (lb CN2OO2 / MWh)
+﻿eGRID Subregion Acronym,eGRID Subregion Name,Total Output CO2 Factor,Total Output CH4 Factor,Total Output N2O Factor,Non-Baseload CO2 Factor,Non-Baseload CH4 Factor,Non-Baseload N2O Factor
 AKGD,ASCC Alaska Grid,1052.114,0.088,0.012,1224.498,,0.017
 AKMS,ASCC Miscellaneous,495.772,0.023,0.004,1587.893,,0.012
 AZNM,WECC Southwest,776.036,0.051,0.007,1205.221,,0.009

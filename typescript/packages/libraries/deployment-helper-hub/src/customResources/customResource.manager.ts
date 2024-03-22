@@ -14,14 +14,16 @@
 import type { BaseLogger } from 'pino';
 import type { CustomResource } from './customResource.js';
 import type { CustomResourceEvent } from './customResource.model.js';
-import type { UsepaProductSeeder } from '../seeders/useepa';
+import type { UsepaProductSeeder } from '../seeders/useepaProduct.js';
+import type { GeneralProductSeeder } from '../seeders/generalProduct.js';
 
 export class CustomResourceManager {
 	private readonly customResources: { [key: string]: CustomResource };
 
-	public constructor(private readonly logger: BaseLogger, usepaProductSeeder: UsepaProductSeeder) {
+	public constructor(private readonly logger: BaseLogger, usepaProductSeeder: UsepaProductSeeder, generalProductSeeder: GeneralProductSeeder) {
 		this.customResources = {
-			'Custom::UsepaProductSeeder': usepaProductSeeder
+			'Custom::UsepaProductSeeder': usepaProductSeeder,
+			'Custom::GeneralProductSeeder': generalProductSeeder
 		};
 	}
 

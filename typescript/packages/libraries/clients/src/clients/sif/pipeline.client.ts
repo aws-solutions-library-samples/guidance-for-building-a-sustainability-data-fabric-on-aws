@@ -15,7 +15,7 @@ import { Invoker, LambdaApiGatewayEventBuilder } from '../../common/invoker.js';
 import type { BaseLogger } from 'pino';
 import { ClientServiceBase } from '../../common/common.js';
 import type { LambdaRequestContext } from '../../common/models.js';
-import type { EditPipeline, Pipeline, PipelineVersionList } from './pipeline.models.js';
+import type { EditPipeline, NewPipeline, Pipeline, PipelineList, PipelineVersionList } from './pipeline.models.js';
 
 export class PipelineClient extends ClientServiceBase {
 	private readonly pipelineFunctionName: string;
@@ -44,7 +44,7 @@ export class PipelineClient extends ClientServiceBase {
 			.setHeaders(super.buildHeaders(additionalHeaders))
 			.setPath(version ? `pipelines/${pipelineId}/versions/${version}` : `pipelines/${pipelineId}`)
 			.setQueryStringParameters({
-				verbose: verbose.toString(),
+				verbose: verbose.toString()
 			});
 
 		const result = await this.lambdaInvoker.invoke(this.pipelineFunctionName, event);
@@ -67,7 +67,7 @@ export class PipelineClient extends ClientServiceBase {
 			.setHeaders(super.buildHeaders(additionalHeaders))
 			.setPath(`pipelines/${pipelineId}/versions`)
 			.setQueryStringParameters({
-				verbose: verbose.toString(),
+				verbose: verbose.toString()
 			});
 
 		const result = await this.lambdaInvoker.invoke(this.pipelineFunctionName, event);
@@ -75,7 +75,75 @@ export class PipelineClient extends ClientServiceBase {
 		return result.body as PipelineVersionList;
 	}
 
-	public async update(pipelineId: string, pipeline:EditPipeline, requestContext?: LambdaRequestContext): Promise<Pipeline> {
+	public async create(pipeline: NewPipeline, requestContext?: LambdaRequestContext): Promise<Pipeline> {
+		this.log.info(`PipelineClient > create > in > pipeline: ${pipeline}, pipeline:${pipeline}`);
+
+		const additionalHeaders = {};
+
+		if (requestContext.authorizer.claims.groupContextId) {
+			additionalHeaders['x-groupcontextid'] = requestContext.authorizer.claims.groupContextId;
+		}
+
+		const event: LambdaApiGatewayEventBuilder = new LambdaApiGatewayEventBuilder()
+			.setMethod('POST')
+			.setRequestContext(requestContext)
+			.setHeaders(super.buildHeaders(additionalHeaders))
+			.setPath(`pipelines`)
+			.setBody(
+				pipeline
+			);
+
+		const result = await this.lambdaInvoker.invoke(this.pipelineFunctionName, event);
+		this.log.info(`PipelineClient > updateConfiguration > exit > result: ${JSON.stringify(result)}`);
+		return result.body as Pipeline;
+	}
+
+	public async getByAlias(pipelineName: string, requestContext?: LambdaRequestContext, verbose = true): Promise<Pipeline | undefined> {
+		this.log.info(`PipelineClient > getByAlias > in > pipelineName: ${pipelineName},verbose:${verbose}`);
+
+		const additionalHeaders = {};
+
+		if (requestContext.authorizer.claims.groupContextId) {
+			additionalHeaders['x-groupcontextid'] = requestContext.authorizer.claims.groupContextId;
+		}
+
+		const event: LambdaApiGatewayEventBuilder = new LambdaApiGatewayEventBuilder()
+			.setMethod('GET')
+			.setRequestContext(requestContext)
+			.setHeaders(super.buildHeaders(additionalHeaders))
+			.setPath(`pipelines?name=${pipelineName}`)
+			.setQueryStringParameters({
+				verbose: verbose.toString()
+			});
+
+		const result = await this.lambdaInvoker.invoke(this.pipelineFunctionName, event);
+		this.log.info(`PipelineClient > getByAlias > exit > result: ${JSON.stringify(result)}`);
+		const pipelineList = (result.body as PipelineList);
+
+		return pipelineList.pipelines.length < 1 ? undefined : pipelineList.pipelines[0];
+	}
+
+	public async delete(pipelineId: string, requestContext?: LambdaRequestContext): Promise<Pipeline> {
+		this.log.info(`PipelineClient > delete > in > pipelineId: ${pipelineId}`);
+
+		const additionalHeaders = {};
+
+		if (requestContext.authorizer.claims.groupContextId) {
+			additionalHeaders['x-groupcontextid'] = requestContext.authorizer.claims.groupContextId;
+		}
+
+		const event: LambdaApiGatewayEventBuilder = new LambdaApiGatewayEventBuilder()
+			.setMethod('DELETE')
+			.setRequestContext(requestContext)
+			.setHeaders(super.buildHeaders(additionalHeaders))
+			.setPath(`pipelines/${pipelineId}`).setBody({});
+
+		const result = await this.lambdaInvoker.invoke(this.pipelineFunctionName, event);
+		this.log.info(`PipelineClient > delete > exit > result: ${JSON.stringify(result)}`);
+		return result.body as Pipeline;
+	}
+
+	public async update(pipelineId: string, pipeline: EditPipeline, requestContext?: LambdaRequestContext): Promise<Pipeline> {
 		this.log.info(`PipelineClient > updateConfiguration > in > pipelineId: ${pipelineId}, pipeline:${pipeline}`);
 
 		const additionalHeaders = {};

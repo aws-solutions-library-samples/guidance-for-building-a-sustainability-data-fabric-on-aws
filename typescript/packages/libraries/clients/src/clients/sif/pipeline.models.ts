@@ -62,6 +62,8 @@ export interface Pipeline {
 	tags?: Record<string, string>;
 }
 
+export type NewPipeline = Omit<Pipeline, 'id' | 'createdAt' | 'updatedAt' | 'version' | 'createdBy'>
+
 export interface EditPipeline {
 	activeAt?: Date,
 	attributes?: Record<string, string>,
@@ -74,6 +76,11 @@ export interface EditPipeline {
 export interface PipelineVersionList {
 	pipelines: Pipeline[];
 }
+
+export interface PipelineList {
+	pipelines: Pipeline[];
+}
+
 
 export interface PipelineConnectorConfig {
 	input: ConnectorConfig[];

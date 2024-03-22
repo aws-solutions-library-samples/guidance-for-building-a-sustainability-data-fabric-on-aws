@@ -315,8 +315,14 @@
 			"shouldPublish": true
 		},
 		{
-			"packageName": "@df-sustainability/deployment-helper",
-			"projectFolder": "typescript/packages/libraries/deployment-helper",
+			"packageName": "@df-sustainability/deployment-helper-hub",
+			"projectFolder": "typescript/packages/libraries/deployment-helper-hub",
+			"reviewCategory": "production",
+			"shouldPublish": true
+		},
+		{
+			"packageName": "@df-sustainability/deployment-helper-spoke",
+			"projectFolder": "typescript/packages/libraries/deployment-helper-spoke",
 			"reviewCategory": "production",
 			"shouldPublish": true
 		}

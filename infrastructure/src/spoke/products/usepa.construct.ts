@@ -16,12 +16,14 @@ import { Bucket } from 'aws-cdk-lib/aws-s3';
 import { Construct } from 'constructs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { CustomResource } from 'aws-cdk-lib';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export type UsepaProperties = {
 	bucketName: string;
+	customResourceProviderToken: string;
 };
 
 export class UsepaInfrastructureConstruct extends Construct {
@@ -48,6 +50,26 @@ export class UsepaInfrastructureConstruct extends Construct {
 			destinationKeyPrefix: 'products/usepa/converted/'
 		});
 
+
+		// Upload pipeline definition to create USEPA impact factor to s3
+		dataPath = path.join(__dirname, '..', '..', '..', '..', 'typescript', 'packages', 'products', 'usepa', 'pipelines');
+		const pipelineDefinitionDeployment = new BucketDeployment(this, 'UsepaPipelineDefinitionDeployment', {
+			sources: [Source.asset(dataPath)],
+			destinationBucket: bucket,
+			destinationKeyPrefix: 'products/usepa/pipelines/'
+		});
+
+		const customResource = new CustomResource(this, 'UsepaPipelineSeeder', {
+			serviceToken: props.customResourceProviderToken,
+			resourceType: 'Custom::UsepaPipelineSeeder',
+			properties: {
+				uniqueToken: Date.now(),
+				prefix: 'products/usepa/pipelines',
+				bucket: props.bucketName
+			}
+		});
+
+		customResource.node.addDependency(pipelineDefinitionDeployment);
 		// TODO: Create custom resource to call data asset module to register all of above datasets, set provenance metaform for sources, as well as setting glossary terms
 
 	}

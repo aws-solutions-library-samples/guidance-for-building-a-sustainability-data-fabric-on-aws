@@ -1,5 +1,5 @@
 {
-	"name": "@df-sustainability/deployment-helper",
+	"name": "@df-sustainability/deployment-helper-hub",
 	"version": "0.6.0",
 	"description": "Custom resources library to automate resource creation",
 	"author": "William Sia <willsia@amazon.com>",

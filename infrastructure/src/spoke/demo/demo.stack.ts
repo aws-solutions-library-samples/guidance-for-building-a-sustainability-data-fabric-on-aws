@@ -14,13 +14,14 @@
 import { Stack, StackProps } from 'aws-cdk-lib';
 import { NagSuppressions } from 'cdk-nag';
 import { Construct } from 'constructs';
-import { UsepaInfrastructureConstruct } from '../products/usepa.construct.js';
 import { DatagenInfrastructureConstruct } from './datagen.construct.js';
 import { MaterialsNaicsMatchingConstruct } from './materialsNaicsMatching.construct.js';
 import { SdfVpcConfig } from './network.construct.js';
 import { Scope3PurchasedGoodsConstruct } from './scope3PurchaseGoods.construct.js';
 import { WebsiteConstruct } from './website.construct.js';
 import { WorkflowConstruct } from './workflow.construct.js';
+import { StringParameter } from 'aws-cdk-lib/aws-ssm';
+import { crHubProviderServiceTokenParameter } from '../common.stack.js';
 
 export type DemoStackProperties = StackProps & {
 	userVpcConfig?: SdfVpcConfig;
@@ -35,10 +36,10 @@ export class SpokeDemoInfrastructureStack extends Stack {
 	constructor(scope: Construct, id: string, props: DemoStackProperties) {
 		super(scope, id, props);
 
-		// 2 - Import US EPA Emission Factors into SIF
-		const usepa = new UsepaInfrastructureConstruct(this, 'UsepaInfrastructure', {
-			bucketName: props.bucketName
-		});
+		const customResourceProviderToken = StringParameter.fromStringParameterAttributes(this, 'customResourceProviderToken', {
+			parameterName: crHubProviderServiceTokenParameter,
+			simpleName: false
+		}).stringValue;
 
 		// 4 - SDF Demo Data Generation
 		const datagen = new DatagenInfrastructureConstruct(this, 'Datagen', {
@@ -65,7 +66,6 @@ export class SpokeDemoInfrastructureStack extends Stack {
 		const workflow = new WorkflowConstruct(this, 'Workflow', {
 			bucketName: props.bucketName
 		});
-		workflow.node.addDependency(usepa);
 		workflow.node.addDependency(datagen);
 		workflow.node.addDependency(materialsNaicsMatching);
 		workflow.node.addDependency(scope3PurchasedGoods);
@@ -74,7 +74,7 @@ export class SpokeDemoInfrastructureStack extends Stack {
 	private websiteNags() {
 		NagSuppressions.addResourceSuppressionsByPath(
 			this,
-			['/SdfDemoStack/Website/SdfDemoWebsiteBucket/Resource', '/SdfDemoStack/Website/SdfDemoWebsiteBucket/Policy/Resource'],
+			['/SdfSpokeDemoStack/Website/SdfDemoWebsiteBucket/Resource', '/SdfSpokeDemoStack/Website/SdfDemoWebsiteBucket/Policy/Resource'],
 			[
 				{
 					id: 'AwsSolutions-S1',
@@ -89,7 +89,7 @@ export class SpokeDemoInfrastructureStack extends Stack {
 		);
 		NagSuppressions.addResourceSuppressionsByPath(
 			this,
-			['/SdfDemoStack/Website/SdfWebsiteDistribution/CFDistribution'],
+			['/SdfSpokeDemoStack/Website/SdfWebsiteDistribution/CFDistribution'],
 			[
 				{
 					id: 'AwsSolutions-CFR3',
