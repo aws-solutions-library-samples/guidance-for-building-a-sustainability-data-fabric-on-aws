@@ -175,3 +175,6 @@ cdk.context.json
 
 license-checker/
 **/~*.xlsx
+
+predeploy.json
+
