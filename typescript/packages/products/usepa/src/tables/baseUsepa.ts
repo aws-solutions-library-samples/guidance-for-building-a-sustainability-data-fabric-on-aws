@@ -9,13 +9,13 @@ export abstract class BaseUSEPA {
     protected worksheet: WorkSheet;
     protected workbook: WorkBook;
     protected cellReferences: CellReferences;
-	protected outputPrefix:string;
+	protected year:number;
 
-    public constructor(sourceFile:string, cellReferences: CellReferences, outputPrefix:string) {
+    public constructor(sourceFile:string, cellReferences: CellReferences, year:number) {
         this.workbook = xlsx.readFile(sourceFile);
         this.worksheet = this.workbook.Sheets['Emission Factors Hub'];
         this.cellReferences = cellReferences;
-		this.outputPrefix = outputPrefix;
+		this.year = year;
     }
 
     protected extractAsStringArray(worksheetRef: string) : string[] {

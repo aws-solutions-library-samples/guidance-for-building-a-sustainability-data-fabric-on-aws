@@ -18,11 +18,12 @@ interface Item {
 	nonBaseloadCo2Factor: number;
 	nonBaseloadCh4Factor: number;
 	nonBaseloadN2oFactor: number;
+	year: number;
 }
 
 export class Electricity extends BaseUSEPA {
-	public constructor(sourceFile: string, cellReferences: CellReferences, outputPrefix: string) {
-		super(sourceFile, cellReferences, outputPrefix);
+	public constructor(sourceFile: string, cellReferences: CellReferences, year: number) {
+		super(sourceFile, cellReferences, year);
 	}
 
 	private async saveAsCsv(): Promise<string> {
@@ -42,14 +43,15 @@ export class Electricity extends BaseUSEPA {
 					totalOutputCh4Factor: d['CH4 Factor'],
 					totalOutputN2oFactor: d['N2O Factor'],
 					nonBaseloadCo2Factor: d['CO2 Factor_1'],
-					nonBaseloadCh4Factor: d['CH2 Factor_1'],
+					nonBaseloadCh4Factor: d['CH4 Factor_1'],
 					nonBaseloadN2oFactor: d['N2O Factor_1'],
+					year: this.year,
 				});
 			}
 		});
 
 		// output as csv
-		const csvPath = path.resolve(__dirname, '..', '..', 'generatedResources', this.outputPrefix, 'electricity.csv');
+		const csvPath = path.resolve(__dirname, '..', '..', 'generatedResources', this.year.toString(), 'electricity.csv');
 		const writer = createObjectCsvWriter({
 			path: csvPath,
 			header: [
@@ -60,7 +62,8 @@ export class Electricity extends BaseUSEPA {
 				{ id: 'totalOutputN2oFactor', title: 'Total Output N2O Factor (lb N2O / MWh)' },
 				{ id: 'nonBaseloadCo2Factor', title: 'Non-Baseload CO2 Factor (lb CO2 / MWh)' },
 				{ id: 'nonBaseloadCh4Factor', title: 'Non-Baseload CH4 Factor (lb CH4 / MWh)' },
-				{ id: 'nonBaseloadN2oFactor', title: 'Non-Baseload N2O Factor (lb CN2OO2 / MWh)' },
+				{ id: 'nonBaseloadN2oFactor', title: 'Non-Baseload N2O Factor (lb N2O / MWh)' },
+				{ id: 'year', title: 'Year' },
 			],
 		});
 

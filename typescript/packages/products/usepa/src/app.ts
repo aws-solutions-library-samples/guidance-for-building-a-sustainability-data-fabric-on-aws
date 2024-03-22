@@ -38,18 +38,18 @@ export class App {
 			// extract the data from the spreadsheet and save to generatedResources
 			const spreadsheetPath = path.resolve(__dirname, '..', 'resources', v.spreadsheetName);
 			const dataSetInfos = await Promise.all([
-				(new StationaryCombustion(spreadsheetPath, v.stationaryCombustion, v.outputPrefix)).generate(),
-				(new MobileCombustionCO2(spreadsheetPath, v.mobileCombustionCO2, v.outputPrefix)).generate(),
-				(new MobileCombustionCH4andN2OforOnRoadGasolineVehicles(spreadsheetPath, v.mobileCombustionCH4andN2OforOnRoadGasolineVehicles, v.outputPrefix)).generate(),
-				(new MobileCombustionCH4andN2OforOnRoadDieselandAlternativeFuelVehicles(spreadsheetPath, v.mobileCombustionCH4andN2OforOnRoadDieselandAlternativeFuelVehicles, v.outputPrefix)).generate(),
-				(new MobileCombustionCH4andN2OforNonRoadVehicles(spreadsheetPath, v.mobileCombustionCH4andN2OforNonRoadVehicles, v.outputPrefix)).generate(),
-				(new Electricity(spreadsheetPath, v.electricity, v.outputPrefix)).generate(),
-				(new SteamAndHeat(spreadsheetPath, v.steamAndHeat, v.outputPrefix)).generate(),
-				(new Scope3Category4UpstreamTransportationandDistributionandCategory9DownstreamTransportationandDistribution(spreadsheetPath, v.scope3Category4UpstreamTransportationandDistributionandCategory9DownstreamTransportationandDistribution, v.outputPrefix)).generate(),
-				(new Scope3Category5WasteGeneratedinOperationsandCategory12EndofLifeTreatmentofSoldProducts(spreadsheetPath, v.scope3Category5WasteGeneratedinOperationsandCategory12EndofLifeTreatmentofSoldProducts, v.outputPrefix)).generate(),
-				(new Scope3Category6BusinessTravelandCategory7EmployeeCommuting(spreadsheetPath, v.scope3Category6BusinessTravelandCategory7EmployeeCommuting, v.outputPrefix)).generate(),
-				(new GWP(spreadsheetPath, v.gwp, v.outputPrefix)).generate(),
-				(new GWPForBlendedRefrigerants(spreadsheetPath, v.gwpForBlendedRefrigerants, v.outputPrefix)).generate(),
+				(new StationaryCombustion(spreadsheetPath, v.stationaryCombustion, v.year)).generate(),
+				(new MobileCombustionCO2(spreadsheetPath, v.mobileCombustionCO2, v.year)).generate(),
+				(new MobileCombustionCH4andN2OforOnRoadGasolineVehicles(spreadsheetPath, v.mobileCombustionCH4andN2OforOnRoadGasolineVehicles, v.year)).generate(),
+				(new MobileCombustionCH4andN2OforOnRoadDieselandAlternativeFuelVehicles(spreadsheetPath, v.mobileCombustionCH4andN2OforOnRoadDieselandAlternativeFuelVehicles, v.year)).generate(),
+				(new MobileCombustionCH4andN2OforNonRoadVehicles(spreadsheetPath, v.mobileCombustionCH4andN2OforNonRoadVehicles, v.year)).generate(),
+				(new Electricity(spreadsheetPath, v.electricity, v.year)).generate(),
+				(new SteamAndHeat(spreadsheetPath, v.steamAndHeat, v.year)).generate(),
+				(new Scope3Category4UpstreamTransportationandDistributionandCategory9DownstreamTransportationandDistribution(spreadsheetPath, v.scope3Category4UpstreamTransportationandDistributionandCategory9DownstreamTransportationandDistribution, v.year)).generate(),
+				(new Scope3Category5WasteGeneratedinOperationsandCategory12EndofLifeTreatmentofSoldProducts(spreadsheetPath, v.scope3Category5WasteGeneratedinOperationsandCategory12EndofLifeTreatmentofSoldProducts, v.year)).generate(),
+				(new Scope3Category6BusinessTravelandCategory7EmployeeCommuting(spreadsheetPath, v.scope3Category6BusinessTravelandCategory7EmployeeCommuting, v.year)).generate(),
+				(new GWP(spreadsheetPath, v.gwp, v.year)).generate(),
+				(new GWPForBlendedRefrigerants(spreadsheetPath, v.gwpForBlendedRefrigerants, v.year)).generate(),
 			]);
 
 		}

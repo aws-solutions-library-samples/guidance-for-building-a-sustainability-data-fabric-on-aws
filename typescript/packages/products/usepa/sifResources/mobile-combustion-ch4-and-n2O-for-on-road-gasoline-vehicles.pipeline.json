@@ -1,0 +1,237 @@
+{
+	"name": "usepa:mobile_combustion_ch4_and_n2O_for_on_road_gasoline_vehicles:impacts",
+	"description": "Imports USEPA Mobile Combustion CH4 and N2O for On-Road Gasoline Vehicles (table 3) GHG impact factors.",
+	"type": "impacts",
+	"attributes": {
+		"type": "integration"
+	},
+	"tags": {
+		"source": "usepa"
+	},
+	"connectorConfig": {
+		"input": [
+			{
+				"name": "sif-csv-pipeline-input-connector"
+			}
+		]
+	},
+	"transformer": {
+		"transforms": [
+			{
+				"index": 0,
+				"formula": "CONCAT('usepa:mobile_combustion_ch4_and_n2O_for_on_road_gasoline_vehicles:', :Vehicle Type, ':', :Model Year)",
+				"outputs": [
+					{
+						"description": "Activity name.",
+						"index": 0,
+						"key": "activity:name",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 1,
+				"formula": "CONCAT('USEPA Mobile Combustion CH4 and N2O for On-Road Gasoline Vehicles emission factors for ', :Vehicle Type, ' (', :Model Year, ').')",
+				"outputs": [
+					{
+						"description": "Activity description.",
+						"index": 0,
+						"key": "activity:description",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 2,
+				"formula": "'US EPA'",
+				"outputs": [
+					{
+						"description": "Activity provider tag.",
+						"index": 0,
+						"key": "activity:tag:provider",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 3,
+				"formula": "'Mobile Combustion CH4 and N2O for On-Road Gasoline Vehicles'",
+				"outputs": [
+					{
+						"description": "Activity dataset tag.",
+						"index": 0,
+						"key": "activity:tag:dataset",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 4,
+				"formula": ":Vehicle Type",
+				"outputs": [
+					{
+						"description": "Activity vehicle type tag.",
+						"index": 0,
+						"key": "activity:tag:vehicle_type",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 5,
+				"formula": ":Model Year",
+				"outputs": [
+					{
+						"description": "Activity model year tag.",
+						"index": 0,
+						"key": "activity:tag:model_year",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 6,
+				"formula": ":Year",
+				"outputs": [
+					{
+						"description": "Activity version tag.",
+						"index": 0,
+						"key": "activity:tag:version",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 7,
+				"formula": "'GHG emissions'",
+				"outputs": [
+					{
+						"description": "GHG emissions.",
+						"index": 0,
+						"key": "impact:ghg_emissions:name",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 8,
+				"formula": "'g / vehicle-mile'",
+				"outputs": [
+					{
+						"description": "Emission factor unit.",
+						"index": 0,
+						"key": "impact:ghg_emissions:attribute:unit",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 9,
+				"formula": "'CH4'",
+				"outputs": [
+					{
+						"description": "CH₄ factor.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:ch4:key",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 10,
+				"formula": ":CH4 Factor",
+				"outputs": [
+					{
+						"description": "CH₄ factor.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:ch4:value",
+						"type": "number"
+					}
+				]
+			},
+			{
+				"index": 11,
+				"formula": "'pollutant'",
+				"outputs": [
+					{
+						"description": "CH₄ factor type.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:ch4:type",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 12,
+				"formula": "'N2O'",
+				"outputs": [
+					{
+						"description": "N₂O factor.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:n2o:key",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 13,
+				"formula": ":N2O Factor",
+				"outputs": [
+					{
+						"description": "N₂O factor.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:n2o:value",
+						"type": "number"
+					}
+				]
+			},
+			{
+				"index": 14,
+				"formula": "'pollutant'",
+				"outputs": [
+					{
+						"description": "N₂O factor type.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:n2o:type",
+						"type": "string"
+					}
+				]
+			}
+		],
+		"parameters": [
+			{
+				"index": 0,
+				"key": "Vehicle Type",
+				"label": "Vehicle Type",
+				"type": "string"
+			},
+			{
+				"index": 1,
+				"key": "Model Year",
+				"label": "Model Year",
+				"type": "string"
+			},
+			{
+				"index": 2,
+				"key": "CH4 Factor",
+				"label": "CH4 Factor",
+				"type": "number"
+			},
+			{
+				"index": 3,
+				"key": "N2O Factor",
+				"label": "N2O Factor",
+				"type": "number"
+			},
+			{
+				"index": 4,
+				"key": "Year",
+				"label": "Year",
+				"type": "string"
+			}
+		]
+	}
+}

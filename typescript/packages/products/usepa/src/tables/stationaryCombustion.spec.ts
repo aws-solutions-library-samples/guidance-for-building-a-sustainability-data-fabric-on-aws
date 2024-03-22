@@ -9,7 +9,7 @@ describe('StationaryCombustion', () => {
 	beforeAll( async () => {
 		const version = new V2024();
         const spreadsheetPath = path.resolve(__dirname, '..', '..', 'resources', version.spreadsheetName);
-		underTest = new StationaryCombustion(spreadsheetPath, version.stationaryCombustion, version.outputPrefix);
+		underTest = new StationaryCombustion(spreadsheetPath, version.stationaryCombustion, version.year);
 	});
 
 	it('generate', async () => {

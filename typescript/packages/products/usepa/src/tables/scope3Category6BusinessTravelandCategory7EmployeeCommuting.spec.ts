@@ -9,7 +9,7 @@ describe('Scope3Category6BusinessTravelandCategory7EmployeeCommuting', () => {
 	beforeAll( async () => {
 		const version = new V2024();
         const spreadsheetPath = path.resolve(__dirname, '..', '..', 'resources', version.spreadsheetName);
-		underTest = new Scope3Category6BusinessTravelandCategory7EmployeeCommuting(spreadsheetPath, version.scope3Category6BusinessTravelandCategory7EmployeeCommuting, version.outputPrefix);
+		underTest = new Scope3Category6BusinessTravelandCategory7EmployeeCommuting(spreadsheetPath, version.scope3Category6BusinessTravelandCategory7EmployeeCommuting, version.year);
 	});
 
 	it('generate', async () => {

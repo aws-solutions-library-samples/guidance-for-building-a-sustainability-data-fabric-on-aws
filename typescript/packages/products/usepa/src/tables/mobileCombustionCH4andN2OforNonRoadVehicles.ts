@@ -14,11 +14,12 @@ interface Item {
 	fuelType: string;
 	ch4: number;
 	n2o: number;
+	year: number;
 }
 
 export class MobileCombustionCH4andN2OforNonRoadVehicles extends BaseUSEPA {
-	public constructor(sourceFile: string, cellReferences: CellReferences, outputPrefix: string) {
-		super(sourceFile, cellReferences, outputPrefix);
+	public constructor(sourceFile: string, cellReferences: CellReferences, year: number) {
+		super(sourceFile, cellReferences, year);
 	}
 
 	private async saveAsCsv(): Promise<string> {
@@ -48,11 +49,12 @@ export class MobileCombustionCH4andN2OforNonRoadVehicles extends BaseUSEPA {
 				fuelType: d['Fuel Type'],
 				ch4: d['CH4 Factor \r\n(g CH4 / gallon) '],
 				n2o: d['N2O Factor \r\n(g N2O / gallon) '],
+				year: this.year,
 			});
 		});
 
 		// output as csv
-		const csvPath = path.resolve(__dirname, '..', '..', 'generatedResources', this.outputPrefix, 'mobile-combustion-ch4-and-n2O-for-non-road-vehicles.csv');
+		const csvPath = path.resolve(__dirname, '..', '..', 'generatedResources', this.year.toString(), 'mobile-combustion-ch4-and-n2O-for-non-road-vehicles.csv');
 		const writer = createObjectCsvWriter({
 			path: csvPath,
 			header: [
@@ -60,6 +62,7 @@ export class MobileCombustionCH4andN2OforNonRoadVehicles extends BaseUSEPA {
 				{ id: 'fuelType', title: 'Fuel Type' },
 				{ id: 'ch4', title: 'CH4 Factor (g CH4 / gallon)' },
 				{ id: 'n2o', title: 'N2O Factor (g N2O / gallon)' },
+				{ id: 'year', title: 'Year' },
 			],
 		});
 

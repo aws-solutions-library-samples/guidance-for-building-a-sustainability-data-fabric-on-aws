@@ -1,2 +1,2 @@
-﻿Category,CO2 Factor (kg CO2 / mmBtu),CH4 Factor (g CH4 / mmBtu) ,N2O Factor (g N2O / mmBtu)
-Steam and Heat,,,
+﻿Category,CO2 Factor (kg CO2 / mmBtu),CH4 Factor (g CH4 / mmBtu) ,N2O Factor (g N2O / mmBtu),Year
+Steam and Heat,,,,2023

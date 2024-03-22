@@ -9,7 +9,7 @@ describe('MobileCombustionCO2', () => {
 	beforeAll( async () => {
 		const version = new V2024();
         const spreadsheetPath = path.resolve(__dirname, '..', '..', 'resources', version.spreadsheetName);
-		underTest = new MobileCombustionCO2(spreadsheetPath, version.mobileCombustionCO2, version.outputPrefix);
+		underTest = new MobileCombustionCO2(spreadsheetPath, version.mobileCombustionCO2, version.year);
 	});
 
 	it('generate', async () => {

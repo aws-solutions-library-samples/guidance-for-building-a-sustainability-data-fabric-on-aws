@@ -1,0 +1,298 @@
+{
+	"name": "useeio:supply_chain_naics_by_ghg:impacts",
+	"description": "Imports USEEIO SupplyChainGHGEmissionFactors_v1.2_NAICS_byGHG_USD2021.csv as GHG impact factors.",
+	"type": "impacts",
+	"attributes": {
+		"type": "integration"
+	},
+	"tags": {
+		"source": "useeio"
+	},
+	"connectorConfig": {
+		"input": [
+			{
+				"name": "sif-csv-pipeline-input-connector"
+			}
+		]
+	},
+	"transformer": {
+		"transforms": [
+			{
+				"index": 0,
+				"formula": "CONCAT('useeio:supply_chain_naics_by_ghg:', :NAICS Code 2017, ':', :GHG)",
+				"outputs": [
+					{
+						"description": "Activity name.",
+						"index": 0,
+						"key": "activity:name",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 1,
+				"formula": "CONCAT('Supply Chain GHG EmissionFactors v1.2 NAICS by GHG USD 2021 for ', :NAICS Code 2017, ' (', :GHG, ').')",
+				"outputs": [
+					{
+						"description": "Activity description.",
+						"index": 0,
+						"key": "activity:description",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 2,
+				"formula": "'USEEIO'",
+				"outputs": [
+					{
+						"description": "Activity provider tag.",
+						"index": 0,
+						"key": "activity:tag:provider",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 3,
+				"formula": "'SupplyChainGHGEmissionFactors_v1.2_NAICS_byGHG_USD2021'",
+				"outputs": [
+					{
+						"description": "Activity dataset tag.",
+						"index": 0,
+						"key": "activity:tag:dataset",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 4,
+				"formula": ":NAICS Code 2017",
+				"outputs": [
+					{
+						"description": "Activity NAICS Code 2017 tag.",
+						"index": 0,
+						"key": "activity:tag:naics_code_2017",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 5,
+				"formula": ":NAICS Title 2017",
+				"outputs": [
+					{
+						"description": "Activity NAICS Title 2017 tag.",
+						"index": 0,
+						"key": "activity:tag:naics_title_2017",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 6,
+				"formula": ":GHG",
+				"outputs": [
+					{
+						"description": "Activity GHG tag.",
+						"index": 0,
+						"key": "activity:tag:ghg",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 7,
+				"formula": "'GHG emission factors'",
+				"outputs": [
+					{
+						"description": "GHG emission factors.",
+						"index": 0,
+						"key": "impact:ghg_emissions:name",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 8,
+				"formula": ":Unit",
+				"outputs": [
+					{
+						"description": "Emission factor unit.",
+						"index": 0,
+						"key": "impact:ghg_emissions:attribute:unit",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 9,
+				"formula": "'Without Margins'",
+				"outputs": [
+					{
+						"description": "Supply Chain Emission Factors without Margins.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:without_margins:key",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 10,
+				"formula": ":Without Margins",
+				"outputs": [
+					{
+						"description": "Supply Chain Emission Factors without Margins.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:without_margins:value",
+						"type": "number"
+					}
+				]
+			},
+			{
+				"index": 11,
+				"formula": "'pollutant'",
+				"outputs": [
+					{
+						"description": "Supply Chain Emission Factors without Margins type.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:without_margins:type",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 12,
+				"formula": "'Margins'",
+				"outputs": [
+					{
+						"description": "Margins of Supply Chain Emission Factors.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:margins:key",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 13,
+				"formula": ":Margins",
+				"outputs": [
+					{
+						"description": "Margins of Supply Chain Emission Factors.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:margins:value",
+						"type": "number"
+					}
+				]
+			},
+			{
+				"index": 14,
+				"formula": "'pollutant'",
+				"outputs": [
+					{
+						"description": "Margins of Supply Chain Emission Factors type.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:margins:type",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 15,
+				"formula": "'With Margins'",
+				"outputs": [
+					{
+						"description": "Supply Chain Emission Factors with Margins.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:with_margins:key",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 16,
+				"formula": ":With Margins",
+				"outputs": [
+					{
+						"description": "Supply Chain Emission Factors with Margins.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:with_margins:value",
+						"type": "number"
+					}
+				]
+			},
+			{
+				"index": 17,
+				"formula": "'pollutant'",
+				"outputs": [
+					{
+						"description": "Supply Chain Emission Factors with Margins type.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:with_margins:type",
+						"type": "string"
+					}
+				]
+			}
+		],
+		"parameters": [
+			{
+				"index": 0,
+				"key": "NAICS Code 2017",
+				"label": "NAICS Code 2017",
+				"type": "string"
+			},
+			{
+				"index": 1,
+				"key": "NAICS Title 2017",
+				"label": "NAICS Title 2017",
+				"type": "string"
+			},
+			{
+				"index": 2,
+				"key": "GHG",
+				"label": "GHG",
+				"type": "string"
+			},
+			{
+				"index": 3,
+				"key": "Unit",
+				"label": "Unit",
+				"type": "string"
+			},
+			{
+				"index": 4,
+				"key": "Without Margins",
+				"label": "Supply Chain Emission Factors without Margins",
+				"type": "number"
+			},
+			{
+				"index": 5,
+				"key": "Margins",
+				"label": "Margins of Supply Chain Emission Factors",
+				"type": "number"
+			},
+			{
+				"index": 6,
+				"key": "With Margins",
+				"label": "Supply Chain Emission Factors with Margins",
+				"type": "number"
+			},
+			{
+				"index": 7,
+				"key": "Unit",
+				"label": "Unit",
+				"type": "string"
+			},
+			{
+				"index": 8,
+				"key": "Reference USEEIO Code",
+				"label": "Reference USEEIO Code",
+				"type": "string"
+			}
+		]
+	}
+}

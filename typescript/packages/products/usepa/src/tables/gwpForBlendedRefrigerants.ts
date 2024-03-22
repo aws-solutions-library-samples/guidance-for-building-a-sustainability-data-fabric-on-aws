@@ -13,11 +13,12 @@ interface Item {
 	ashrae: string;
 	gwp100: number;
 	blendComposition: string;
+	year: number;
 }
 
 export class GWPForBlendedRefrigerants extends BaseUSEPA {
-	public constructor(sourceFile: string, cellReferences: CellReferences, outputPrefix: string) {
-		super(sourceFile, cellReferences, outputPrefix);
+	public constructor(sourceFile: string, cellReferences: CellReferences, year: number) {
+		super(sourceFile, cellReferences, year);
 	}
 
 	private async saveAsCsv(): Promise<string> {
@@ -31,17 +32,19 @@ export class GWPForBlendedRefrigerants extends BaseUSEPA {
 				ashrae: d['ASHRAE #'],
 				gwp100: d['100-year GWP'],
 				blendComposition: d['Blend Composition'],
+				year: this.year,
 			});
 		});
 
 		// output as csv
-		const csvPath = path.resolve(__dirname, '..', '..', 'generatedResources', this.outputPrefix, 'gwp-for-blended-refrigerants.csv');
+		const csvPath = path.resolve(__dirname, '..', '..', 'generatedResources', this.year.toString(), 'gwp-for-blended-refrigerants.csv');
 		const writer = createObjectCsvWriter({
 			path: csvPath,
 			header: [
-				{ id: 'ashrae', title: 'ASHRAE #' },
+				{ id: 'ashrae', title: 'ASHRAE' },
 				{ id: 'gwp100', title: '100-year GWP' },
 				{ id: 'blendComposition', title: 'Blend Composition' },
+				{ id: 'year', title: 'Year' },
 			],
 		});
 

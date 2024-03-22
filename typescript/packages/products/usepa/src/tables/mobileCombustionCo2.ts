@@ -13,11 +13,12 @@ interface Item {
 	fuelType: string;
 	kgCo2PerUnit: number;
 	unit: string;
+	year: number;
 }
 
 export class MobileCombustionCO2 extends BaseUSEPA {
-	public constructor(sourceFile: string, cellReferences: CellReferences, outputPrefix: string) {
-		super(sourceFile, cellReferences, outputPrefix);
+	public constructor(sourceFile: string, cellReferences: CellReferences, year: number) {
+		super(sourceFile, cellReferences, year);
 	}
 
 	private async saveAsCsv(): Promise<string> {
@@ -29,19 +30,21 @@ export class MobileCombustionCO2 extends BaseUSEPA {
 		gwp_data.forEach((d) => {
 			items.push({
 				fuelType: d['Fuel Type'],
-				kgCo2PerUnit: d['kg CO2 per unitas'],
+				kgCo2PerUnit: d['kg CO2 per unit'],
 				unit: d['Unit'],
+				year: this.year,
 			});
 		});
 
 		// output as csv
-		const csvPath = path.resolve(__dirname, '..', '..', 'generatedResources', this.outputPrefix, 'mobile-combustion-co2.csv');
+		const csvPath = path.resolve(__dirname, '..', '..', 'generatedResources', this.year.toString(), 'mobile-combustion-co2.csv');
 		const writer = createObjectCsvWriter({
 			path: csvPath,
 			header: [
 				{ id: 'fuelType', title: 'Fuel Type' },
-				{ id: 'kgCo2PerUnit', title: 'kg CO2 per unitas' },
+				{ id: 'kgCo2PerUnit', title: 'kg CO2 per unit' },
 				{ id: 'unit', title: 'Unit' },
+				{ id: 'year', title: 'Year' },
 			],
 		});
 

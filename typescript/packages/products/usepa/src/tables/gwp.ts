@@ -13,11 +13,12 @@ interface Item {
 	name: string;
 	formula?: string;
 	gwp100: number;
+	year: number;
 }
 
 export class GWP extends BaseUSEPA {
-	public constructor(sourceFile: string, cellReferences: CellReferences, outputPrefix: string) {
-		super(sourceFile, cellReferences, outputPrefix);
+	public constructor(sourceFile: string, cellReferences: CellReferences, year: number) {
+		super(sourceFile, cellReferences, year);
 	}
 
 	private async saveAsCsv(): Promise<string> {
@@ -31,17 +32,19 @@ export class GWP extends BaseUSEPA {
 				name: d['Industrial Designation or \r\nCommon Name '],
 				formula: d['Chemical Formula '],
 				gwp100: d['100-Year GWP'],
+				year: this.year,
 			});
 		});
 
 		// output as csv
-		const csvPath = path.resolve(__dirname, '..', '..', 'generatedResources', this.outputPrefix, 'gwp.csv');
+		const csvPath = path.resolve(__dirname, '..', '..', 'generatedResources', this.year.toString(), 'gwp.csv');
 		const writer = createObjectCsvWriter({
 			path: csvPath,
 			header: [
 				{ id: 'name', title: 'Industrial Designation or Common Name' },
 				{ id: 'formula', title: 'Chemical Formula' },
 				{ id: 'gwp100', title: '100-Year GWP' },
+				{ id: 'year', title: 'Year' },
 			],
 		});
 

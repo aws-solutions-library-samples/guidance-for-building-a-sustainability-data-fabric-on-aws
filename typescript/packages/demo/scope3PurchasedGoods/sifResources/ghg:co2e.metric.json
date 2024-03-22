@@ -1,0 +1,11 @@
+{
+	"name": "ghg:co2e",
+	"summary": "Total of CO₂e from all scopes",
+	"aggregationType": "sum",
+	"tags": {
+		"scope": "all",
+		"category": "all",
+		"subcategory": "all",
+		"gas": "co2e"
+	}
+}

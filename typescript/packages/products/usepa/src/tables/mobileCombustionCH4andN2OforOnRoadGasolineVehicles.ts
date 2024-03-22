@@ -14,11 +14,12 @@ interface Item {
 	modelYear: number;
 	ch4: number;
 	n2o: number;
+	year: number;
 }
 
 export class MobileCombustionCH4andN2OforOnRoadGasolineVehicles extends BaseUSEPA {
-	public constructor(sourceFile: string, cellReferences: CellReferences, outputPrefix: string) {
-		super(sourceFile, cellReferences, outputPrefix);
+	public constructor(sourceFile: string, cellReferences: CellReferences, year: number) {
+		super(sourceFile, cellReferences, year);
 	}
 
 	private async saveAsCsv(): Promise<string> {
@@ -45,6 +46,7 @@ export class MobileCombustionCH4andN2OforOnRoadGasolineVehicles extends BaseUSEP
 					modelYear,
 					ch4: d[ch4ColumnName],
 					n2o: d[n2oColumnName],
+					year: this.year,
 				});
 			} else {
 				// modelYear is a range, therefore add individual entries to make it easier on the downstream consumers of this data
@@ -64,13 +66,14 @@ export class MobileCombustionCH4andN2OforOnRoadGasolineVehicles extends BaseUSEP
 						modelYear: year,
 						ch4: d[ch4ColumnName],
 						n2o: d[n2oColumnName],
+						year: this.year,
 					});
 				}
 			}
 		});
 
 		// output as csv
-		const csvPath = path.resolve(__dirname, '..', '..', 'generatedResources', this.outputPrefix, 'mobile-combustion-ch4-and-n2O-for-on-road-gasoline-vehicles.csv');
+		const csvPath = path.resolve(__dirname, '..', '..', 'generatedResources', this.year.toString(), 'mobile-combustion-ch4-and-n2O-for-on-road-gasoline-vehicles.csv');
 		const writer = createObjectCsvWriter({
 			path: csvPath,
 			header: [
@@ -78,6 +81,7 @@ export class MobileCombustionCH4andN2OforOnRoadGasolineVehicles extends BaseUSEP
 				{ id: 'modelYear', title: 'Model Year' },
 				{ id: 'ch4', title: 'CH4 Factor (g CH4 / vehicle-mile)' },
 				{ id: 'n2o', title: 'N2O Factor (g N2O / vehicle-mile)' },
+				{ id: 'year', title: 'Year' },
 			],
 		});
 

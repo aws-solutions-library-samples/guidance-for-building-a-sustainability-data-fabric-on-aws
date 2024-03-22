@@ -10,7 +10,7 @@ describe('GWP', () => {
 	beforeAll( async () => {
 		const version = new V2024();
         const spreadsheetPath = path.resolve(__dirname, '..', '..', 'resources', version.spreadsheetName);
-		underTest = new GWP(spreadsheetPath, version.gwp, version.outputPrefix);
+		underTest = new GWP(spreadsheetPath, version.gwp, version.year);
 	});
 
 	it('generate', async () => {

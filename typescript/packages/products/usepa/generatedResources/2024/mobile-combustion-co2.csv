@@ -1,11 +1,11 @@
-﻿Fuel Type,kg CO2 per unitas,Unit
-Aviation Gasoline,,gallon
-Biodiesel (100%),,gallon
-Compressed Natural Gas (CNG),,scf
-Diesel Fuel,,gallon
-Ethanol (100%),,gallon
-Kerosene-Type Jet Fuel,,gallon
-Liquefied Natural Gas (LNG),,gallon
-Liquefied Petroleum Gases (LPG),,gallon
-Motor Gasoline,,gallon
-Residual Fuel Oil,,gallon
+﻿Fuel Type,kg CO2 per unit,Unit,Year
+Aviation Gasoline,8.31,gallon,2024
+Biodiesel (100%),9.45,gallon,2024
+Compressed Natural Gas (CNG),0.05444,scf,2024
+Diesel Fuel,10.21,gallon,2024
+Ethanol (100%),5.75,gallon,2024
+Kerosene-Type Jet Fuel,9.75,gallon,2024
+Liquefied Natural Gas (LNG),4.5,gallon,2024
+Liquefied Petroleum Gases (LPG),5.68,gallon,2024
+Motor Gasoline,8.78,gallon,2024
+Residual Fuel Oil,11.27,gallon,2024

@@ -9,7 +9,7 @@ describe('Electricity', () => {
 	beforeAll( async () => {
 		const version = new V2024();
         const spreadsheetPath = path.resolve(__dirname, '..', '..', 'resources', version.spreadsheetName);
-		underTest = new Electricity(spreadsheetPath, version.electricity, version.outputPrefix);
+		underTest = new Electricity(spreadsheetPath, version.electricity, version.year);
 	});
 
 	it('generate', async () => {

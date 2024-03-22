@@ -17,11 +17,12 @@ interface Item {
 	composted: number;
 	anaerobicallyDigestedDry: number;
 	anaerobicallyDigestedWet: number;
+	year: number;
 }
 
 export class Scope3Category5WasteGeneratedinOperationsandCategory12EndofLifeTreatmentofSoldProducts extends BaseUSEPA {
-	public constructor(sourceFile: string, cellReferences: CellReferences, outputPrefix: string) {
-		super(sourceFile, cellReferences, outputPrefix);
+	public constructor(sourceFile: string, cellReferences: CellReferences, year: number) {
+		super(sourceFile, cellReferences, year);
 	}
 
 	private async saveAsCsv(): Promise<string> {
@@ -47,11 +48,12 @@ export class Scope3Category5WasteGeneratedinOperationsandCategory12EndofLifeTrea
 				composted: extractNumber(d['CompostedD']),
 				anaerobicallyDigestedDry: extractNumber(d['Anaerobically Digested (Dry Digestate with Curing)']),
 				anaerobicallyDigestedWet: extractNumber(d['Anaerobically Digested (Wet  Digestate with Curing)']),
+				year: this.year,
 			});
 		});
 
 		// output as csv
-		const csvPath = path.resolve(__dirname, '..', '..', 'generatedResources', this.outputPrefix, 'scope-3-category-5-waste-generated-in-operations-and-category-12-end-of-life-treatment-of-sold-products.csv');
+		const csvPath = path.resolve(__dirname, '..', '..', 'generatedResources', this.year.toString(), 'scope-3-category-5-waste-generated-in-operations-and-category-12-end-of-life-treatment-of-sold-products.csv');
 		const writer = createObjectCsvWriter({
 			path: csvPath,
 			header: [
@@ -62,6 +64,7 @@ export class Scope3Category5WasteGeneratedinOperationsandCategory12EndofLifeTrea
 				{ id: 'composted', title: 'Composted (Metric Tons CO2e / Short Ton Material)' },
 				{ id: 'anaerobicallyDigestedDry', title: 'Anaerobically Digested (Dry Digestate with Curing (Metric Tons CO2e / Short Ton Material))' },
 				{ id: 'anaerobicallyDigestedWet', title: 'Anaerobically Digested (Wet  Digestate with Curing) (Metric Tons CO2e / Short Ton Material)' },
+				{ id: 'year', title: 'Year' },
 			],
 		});
 

@@ -1,0 +1,108 @@
+{
+    "name": "eiolca:naics:materials:impacts",
+    "description": "Creates impacts representing EIO-LCA mappings.",
+    "type": "impacts",
+    "connectorConfig": {
+        "input": [
+            {
+                "name": "sif-csv-pipeline-input-connector"
+            }
+        ]
+    },
+    "transformer": {
+        "transforms": [
+            {
+                "index": 0,
+                "formula": "CONCAT('eiolca:', :material_code)",
+                "outputs": [
+                    {
+                        "index": 0,
+                        "key": "activity:name",
+                        "type": "string"
+                    }
+                ]
+            },
+            {
+                "index": 1,
+                "formula": "'ghg_emissions'",
+                "outputs": [
+                    {
+                        "index": 0,
+						"key": "impact:ghg_emissions:name",
+                        "type": "string"
+                    }
+                ]
+            },
+            {
+                "index": 2,
+                "formula": "'CO₂e'",
+                "outputs": [
+                    {
+                        "index": 0,
+						"key": "impact:ghg_emissions:component:co2e:key",
+                        "type": "string"
+                    }
+                ]
+            },
+            {
+                "index": 3,
+                "formula": "'pollutant'",
+                "outputs": [
+                    {
+                        "index": 0,
+						"key": "impact:ghg_emissions:component:co2e:type",
+                        "type": "string"
+                    }
+                ]
+            },
+            {
+                "index": 4,
+                "formula": "SWITCH(:chosen_value,1,:co2e_1,2,:co2e_2,3,:co2e_3,4,:co2e_4,5,:co2e_5)",
+                "outputs": [
+                    {
+                        "index": 0,
+						"key": "impact:ghg_emissions:component:co2e:value",
+                        "type": "number"
+                    }
+                ]
+            }
+        ],
+        "parameters": [
+            {
+                "index": 0,
+                "key": "material_code",
+                "type": "string"
+            },
+            {
+                "index": 1,
+                "key": "chosen_value",
+                "type": "number"
+            },
+            {
+                "index": 2,
+                "key": "co2e_1",
+                "type": "number"
+            },
+            {
+                "index": 3,
+                "key": "co2e_2",
+                "type": "number"
+            },
+            {
+                "index": 4,
+                "key": "co2e_3",
+                "type": "number"
+            },
+            {
+                "index": 5,
+                "key": "co2e_4",
+                "type": "number"
+            },
+            {
+                "index": 6,
+                "key": "co2e_5",
+                "type": "number"
+            }
+        ]
+    }
+}

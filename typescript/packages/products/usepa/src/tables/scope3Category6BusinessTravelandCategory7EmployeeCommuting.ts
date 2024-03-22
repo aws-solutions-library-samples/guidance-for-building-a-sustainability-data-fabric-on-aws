@@ -15,11 +15,12 @@ interface Item {
 	ch4: number;
 	n2o: number;
 	units: string;
+	year: number;
 }
 
 export class Scope3Category6BusinessTravelandCategory7EmployeeCommuting extends BaseUSEPA {
-	public constructor(sourceFile: string, cellReferences: CellReferences, outputPrefix: string) {
-		super(sourceFile, cellReferences, outputPrefix);
+	public constructor(sourceFile: string, cellReferences: CellReferences, year: number) {
+		super(sourceFile, cellReferences, year);
 	}
 
 	private async saveAsCsv(): Promise<string> {
@@ -53,11 +54,12 @@ export class Scope3Category6BusinessTravelandCategory7EmployeeCommuting extends 
 				ch4: d['CH4 Factor \r\n(g CH4 / unit)'],
 				n2o: d['N2O Factor \r\n(g N2O / unit)'],
 				units: d['Units'],
+				year: this.year,
 			});
 		});
 
 		// output as csv
-		const csvPath = path.resolve(__dirname, '..', '..', 'generatedResources', this.outputPrefix, 'scope3-category-6-business-travel-and-category-7-employee-commuting.csv');
+		const csvPath = path.resolve(__dirname, '..', '..', 'generatedResources', this.year.toString(), 'scope-3-category-6-business-travel-and-category-7-employee-commuting.csv');
 		const writer = createObjectCsvWriter({
 			path: csvPath,
 			header: [
@@ -66,6 +68,7 @@ export class Scope3Category6BusinessTravelandCategory7EmployeeCommuting extends 
 				{ id: 'ch4', title: 'CH4 Factor (g CH4 / unit)' },
 				{ id: 'n2o', title: 'N2O Factor (g N2O / unit)' },
 				{ id: 'units', title: 'Units' },
+				{ id: 'year', title: 'Year' },
 			],
 		});
 

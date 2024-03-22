@@ -12,19 +12,26 @@ const __dirname = path.dirname(__filename);
 interface Table1Item {
 	category: string;
 	fuelType: string;
-	hhv?: number;
-	hhvUnit?: string;
-	co2Mmbtu?: number;
-	ch4Mmbtu?: number;
-	n2oMmbtu?: number;
-	co2Ton?: number;
-	ch4Ton?: number;
-	n2oTon?: number;
+	hhv: number;
+	hhvUnit: string;
+	co2Energy: number;
+	co2EnergyUnit: string;
+	ch4Energy: number;
+	ch4EnergyUnit: string;
+	n2oEnergy: number;
+	n2oEnergyUnit: string;
+	co2: number;
+	co2Unit: string;
+	ch4: number;
+	ch4Unit: string;
+	n2o: number;
+	n2oUnit: string;
+	year: number;
 }
 
 export class StationaryCombustion extends BaseUSEPA {
-	public constructor(sourceFile: string, cellReferences: CellReferences, outputPrefix: string) {
-		super(sourceFile, cellReferences, outputPrefix);
+	public constructor(sourceFile: string, cellReferences: CellReferences, year: number) {
+		super(sourceFile, cellReferences, year);
 	}
 
 	private async saveAsCsv(): Promise<string> {
@@ -32,8 +39,7 @@ export class StationaryCombustion extends BaseUSEPA {
 		this.worksheet['!ref'] = this.cellReferences.data;
 		const table1_data = xlsx.utils.sheet_to_json(this.worksheet);
 
-		let category = '?';
-		let hhvUnit = '?';
+		let category, hhvUnit, co2EnergyUnit, ch4EnergyUnit, n2oEnergyUnit, co2Unit, ch4Unit, n2oUnit;
 		const items: Table1Item[] = [];
 		table1_data.forEach((d) => {
 			const keys = Object.keys(d);
@@ -48,21 +54,34 @@ export class StationaryCombustion extends BaseUSEPA {
 						fuelType: d['Fuel Type'],
 						hhv: d['Heat Content (HHV)'],
 						hhvUnit: d['Heat Content (HHV)'] ? hhvUnit : undefined,
-						co2Mmbtu: d['CO2 Factor'],
-						ch4Mmbtu: d['CH4 Factor'],
-						n2oMmbtu: d['N2O Factor'],
-						co2Ton: d['CO2 Factor_1'],
-						ch4Ton: d['CH4 Factor_1'],
-						n2oTon: d['N2O Factor_1'],
+						co2Energy: d['CO2 Factor'],
+						co2EnergyUnit: d['CO2 Factor'] ? co2EnergyUnit : undefined,
+						ch4Energy: d['CH4 Factor'],
+						ch4EnergyUnit: d['CH4 Factor'] ? ch4EnergyUnit : undefined,
+						n2oEnergy: d['N2O Factor'],
+						n2oEnergyUnit: d['N2O Factor'] ? n2oEnergyUnit : undefined,
+						co2: d['CO2 Factor_1'],
+						co2Unit: d['CO2 Factor_1'] ? co2Unit : undefined,
+						ch4: d['CH4 Factor_1'],
+						ch4Unit: d['CH4 Factor_1'] ? ch4Unit : undefined,
+						n2o: d['N2O Factor_1'],
+						n2oUnit: d['N2O Factor_1'] ? n2oUnit : undefined,
+						year: this.year,
 					});
 				}
 			} else {
-				hhvUnit = d['Heat Content (HHV)'];
+				hhvUnit = d['Energy Content (HHV)'];
+				co2EnergyUnit = d['CO2 Factor'];
+				ch4EnergyUnit = d['CH4 Factor)'];
+				n2oEnergyUnit = d['N2O Factor'];
+				co2Unit = d['CO2 Factor_1'];
+				ch4Unit = d['CH4 Factor_1'];
+				n2oUnit = d['N2O Factor_1'];
 			}
 		});
 
 		// output as csv
-		const csvPath = path.resolve(__dirname, '..', '..', 'generatedResources', this.outputPrefix, 'stationary-combustion.csv');
+		const csvPath = path.resolve(__dirname, '..', '..', 'generatedResources', this.year.toString(), 'stationary-combustion.csv');
 		const writer = createObjectCsvWriter({
 			path: csvPath,
 			header: [
@@ -70,12 +89,19 @@ export class StationaryCombustion extends BaseUSEPA {
 				{ id: 'fuelType', title: 'Fuel Type' },
 				{ id: 'hhv', title: 'Heat Content (HHV)' },
 				{ id: 'hhvUnit', title: 'Heat Content (HHV) Unit' },
-				{ id: 'co2Mmbtu', title: 'CO2 Factor (kg CO2 per mmBtu)' },
-				{ id: 'ch4Mmbtu', title: 'CH4 Factor (g CO2 per mmBtu)' },
-				{ id: 'n2oMmbtu', title: 'N2O Factor (g CO2 per mmBtu)' },
-				{ id: 'co2Ton', title: 'CO2 Factor (kg CO2 per short ton)' },
-				{ id: 'ch4Ton', title: 'CH4 Factor (g CO2 per short ton)' },
-				{ id: 'n2oTon', title: 'N2O Factor (g CO2 per short ton)' },
+				{ id: 'co2Energy', title: 'CO2 Factor Energy' },
+				{ id: 'co2EnergyUnit', title: 'CO2 Factor Energy Unit' },
+				{ id: 'ch4Energy', title: 'CH4 Factor Energy' },
+				{ id: 'ch4EnergyUnit', title: 'CH4 Factor Energy Unit' },
+				{ id: 'n2oEnergy', title: 'N2O Factor Energy' },
+				{ id: 'n2oEnergyUnit', title: 'N2O Factor Energy Unit' },
+				{ id: 'co2', title: 'CO2 Factor' },
+				{ id: 'co2Unit', title: 'CO2 Factor Unit' },
+				{ id: 'ch4', title: 'CH4 Factor' },
+				{ id: 'ch4Unit', title: 'CH4 Factor Unit' },
+				{ id: 'n2o', title: 'N2O Factor' },
+				{ id: 'n2oUnit', title: 'N2O Factor Unit' },
+				{ id: 'year', title: 'Year' },
 			],
 		});
 

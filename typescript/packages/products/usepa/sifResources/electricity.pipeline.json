@@ -1,0 +1,437 @@
+{
+	"name": "usepa:electricity:impacts",
+	"description": "Imports USEPA electricity (table 6) GHG impact factors.",
+	"type": "impacts",
+	"attributes": {
+		"type": "integration"
+	},
+	"tags": {
+		"source": "usepa"
+	},
+	"connectorConfig": {
+		"input": [
+			{
+				"name": "sif-csv-pipeline-input-connector"
+			}
+		]
+	},
+	"transformer": {
+		"transforms": [
+			{
+				"index": 0,
+				"formula": "CONCAT('usepa:electricity:', :eGRID Subregion Acronym)",
+				"outputs": [
+					{
+						"description": "Activity name.",
+						"index": 0,
+						"key": "activity:name",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 1,
+				"formula": "CONCAT('USEPA electricity emission factors for ', :eGRID Subregion Name)",
+				"outputs": [
+					{
+						"description": "Activity description.",
+						"index": 0,
+						"key": "activity:description",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 2,
+				"formula": "'US EPA'",
+				"outputs": [
+					{
+						"description": "Activity provider tag.",
+						"index": 0,
+						"key": "activity:tag:provider",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 3,
+				"formula": "'Electricity'",
+				"outputs": [
+					{
+						"description": "Activity dataset tag.",
+						"index": 0,
+						"key": "activity:tag:dataset",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 4,
+				"formula": ":eGRID Subregion Acronym",
+				"outputs": [
+					{
+						"description": "Activity eGRID subregion acronym tag.",
+						"index": 0,
+						"key": "activity:tag:egrid_subregion_acronym",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 5,
+				"formula": ":Year",
+				"outputs": [
+					{
+						"description": "Activity version tag.",
+						"index": 0,
+						"key": "activity:tag:version",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 6,
+				"formula": ":eGRID Subregion Name",
+				"outputs": [
+					{
+						"description": "Activity eGRID subregion name tag.",
+						"index": 0,
+						"key": "activity:attribute:egrid_subregion_name",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 7,
+				"formula": "'Total output emission factors'",
+				"outputs": [
+					{
+						"description": "Total output emission factors.",
+						"index": 0,
+						"key": "impact:total_output_emission_factors:name",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 8,
+				"formula": "'lb / MWh'",
+				"outputs": [
+					{
+						"description": "Emission factor unit.",
+						"index": 0,
+						"key": "impact:total_output_emission_factors:attribute:unit",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 9,
+				"formula": "'CO2'",
+				"outputs": [
+					{
+						"description": "CO₂ factor.",
+						"index": 0,
+						"key": "impact:total_output_emission_factors:component:co2:key",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 10,
+				"formula": ":Total Output CO2 Factor",
+				"outputs": [
+					{
+						"description": "CO₂ factor.",
+						"index": 0,
+						"key": "impact:total_output_emission_factors:component:co2:value",
+						"type": "number"
+					}
+				]
+			},
+			{
+				"index": 11,
+				"formula": "'pollutant'",
+				"outputs": [
+					{
+						"description": "CO₂ factor type.",
+						"index": 0,
+						"key": "impact:total_output_emission_factors:component:co2:type",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 12,
+				"formula": "'CH4'",
+				"outputs": [
+					{
+						"description": "CH₄ factor.",
+						"index": 0,
+						"key": "impact:total_output_emission_factors:component:ch4:key",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 13,
+				"formula": ":Total Output CH4 Factor",
+				"outputs": [
+					{
+						"description": "CH₄ factor.",
+						"index": 0,
+						"key": "impact:total_output_emission_factors:component:ch4:value",
+						"type": "number"
+					}
+				]
+			},
+			{
+				"index": 14,
+				"formula": "'pollutant'",
+				"outputs": [
+					{
+						"description": "CH₄ factor type.",
+						"index": 0,
+						"key": "impact:total_output_emission_factors:component:ch4:type",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 15,
+				"formula": "'N2O'",
+				"outputs": [
+					{
+						"description": "N₂O factor.",
+						"index": 0,
+						"key": "impact:total_output_emission_factors:component:n2o:key",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 16,
+				"formula": ":Total Output N2O Factor",
+				"outputs": [
+					{
+						"description": "N₂O factor.",
+						"index": 0,
+						"key": "impact:total_output_emission_factors:component:n2o:value",
+						"type": "number"
+					}
+				]
+			},
+			{
+				"index": 17,
+				"formula": "'pollutant'",
+				"outputs": [
+					{
+						"description": "N₂O factor type.",
+						"index": 0,
+						"key": "impact:total_output_emission_factors:component:n2o:type",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 18,
+				"formula": "'Non baseload emission factors'",
+				"outputs": [
+					{
+						"description": "Non baseload emission factors.",
+						"index": 0,
+						"key": "impact:non_baseload_emission_factors:name",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 19,
+				"formula": "'lb / MWh'",
+				"outputs": [
+					{
+						"description": "Emission factor unit.",
+						"index": 0,
+						"key": "impact:non_baseload_emission_factors:attribute:unit",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 20,
+				"formula": "'CO2'",
+				"outputs": [
+					{
+						"description": "CO₂ factor.",
+						"index": 0,
+						"key": "impact:non_baseload_emission_factors:component:co2:key",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 21,
+				"formula": ":Non baseload CO2 Factor",
+				"outputs": [
+					{
+						"description": "CO₂ factor.",
+						"index": 0,
+						"key": "impact:non_baseload_emission_factors:component:co2:value",
+						"type": "number"
+					}
+				]
+			},
+			{
+				"index": 22,
+				"formula": "'pollutant'",
+				"outputs": [
+					{
+						"description": "CO₂ factor type.",
+						"index": 0,
+						"key": "impact:non_baseload_emission_factors:component:co2:type",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 23,
+				"formula": "'CH4'",
+				"outputs": [
+					{
+						"description": "CH₄ factor.",
+						"index": 0,
+						"key": "impact:non_baseload_emission_factors:component:ch4:key",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 24,
+				"formula": ":Non baseload CH4 Factor",
+				"outputs": [
+					{
+						"description": "CH₄ factor.",
+						"index": 0,
+						"key": "impact:non_baseload_emission_factors:component:ch4:value",
+						"type": "number"
+					}
+				]
+			},
+			{
+				"index": 25,
+				"formula": "'pollutant'",
+				"outputs": [
+					{
+						"description": "CH₄ factor type.",
+						"index": 0,
+						"key": "impact:non_baseload_emission_factors:component:ch4:type",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 26,
+				"formula": "'N2O'",
+				"outputs": [
+					{
+						"description": "N₂O factor.",
+						"index": 0,
+						"key": "impact:non_baseload_emission_factors:component:n2o:key",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 27,
+				"formula": ":Non baseload N2O Factor",
+				"outputs": [
+					{
+						"description": "N₂O factor.",
+						"index": 0,
+						"key": "impact:non_baseload_emission_factors:component:n2o:value",
+						"type": "number"
+					}
+				]
+			},
+			{
+				"index": 28,
+				"formula": "'pollutant'",
+				"outputs": [
+					{
+						"description": "N₂O factor type.",
+						"index": 0,
+						"key": "impact:non_baseload_emission_factors:component:n2o:type",
+						"type": "string"
+					}
+				]
+			}
+
+
+
+		],
+		"parameters": [
+			{
+				"index": 0,
+				"key": "eGRID Subregion Acronym",
+				"label": "eGRID Subregion Acronym",
+				"type": "string"
+			},
+			{
+				"index": 1,
+				"key": "eGRID Subregion Name",
+				"label": "eGRID Subregion Name",
+				"type": "string"
+			},
+			{
+				"index": 2,
+				"key": "Total Output CO2 Factor",
+				"label": "Total Output CO2 Factor",
+				"type": "number"
+			},
+			{
+				"index": 3,
+				"key": "Total Output CH4 Factor",
+				"label": "Total Output CH4 Factor",
+				"type": "string"
+			},
+			{
+				"index": 4,
+				"key": "Total Output N2O Factor",
+				"label": "Total Output N2O Factor",
+				"type": "string"
+			},
+			{
+				"index": 5,
+				"key": "Non Baseload CO2 Factor",
+				"label": "Non Baseload CO2 Factor",
+				"type": "number"
+			},
+			{
+				"index": 6,
+				"key": "Non Baseload CH4 Factor",
+				"label": "Non Baseload CH4 Factor",
+				"type": "string"
+			},
+			{
+				"index": 7,
+				"key": "Non Baseload N2O Factor",
+				"label": "Non- Baseload N2O Factor",
+				"type": "string"
+			},
+			{
+				"index": 8,
+				"key": "Year",
+				"label": "Year",
+				"type": "string"
+			}
+		]
+	}
+}

@@ -1,0 +1,12 @@
+{
+	"name": "ghg:co2e:scope3:purchased_goods_services",
+	"summary": "Total scope 3 CO₂e from purchased goods and services",
+	"aggregationType": "sum",
+	"outputMetrics": ["ghg:co2e:scope3"],
+	"tags": {
+		"scope": "3",
+		"category": "purchased_goods_services",
+		"subcategory": "all",
+		"gas": "co2e"
+	}
+}

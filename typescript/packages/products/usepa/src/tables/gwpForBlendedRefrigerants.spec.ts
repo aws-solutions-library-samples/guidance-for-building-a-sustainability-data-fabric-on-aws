@@ -11,7 +11,7 @@ describe('GWPForBlendedRefrigerants', () => {
 	beforeAll( async () => {
 		const version = new V2024();
         const spreadsheetPath = path.resolve(__dirname, '..', '..', 'resources', version.spreadsheetName);
-		underTest = new GWPForBlendedRefrigerants(spreadsheetPath, version.gwpForBlendedRefrigerants, version.outputPrefix);
+		underTest = new GWPForBlendedRefrigerants(spreadsheetPath, version.gwpForBlendedRefrigerants, version.year);
 	});
 
 	it('generate', async () => {

@@ -1,6 +1,6 @@
 export interface VersionStrategy {
     spreadsheetName: string;
-	outputPrefix: string;
+	year: number;
 
     stationaryCombustion:CellReferences;
 	mobileCombustionCO2:CellReferences;
@@ -23,7 +23,7 @@ export interface CellReferences {
 }
 
 abstract class BaseVersion implements VersionStrategy {
-	outputPrefix: string;
+	year: number;
     spreadsheetName: string;
     stationaryCombustion:CellReferences;
 	mobileCombustionCO2:CellReferences;
@@ -43,7 +43,7 @@ export class V2023 extends BaseVersion {
 	public constructor() {
 		super();
 		this.spreadsheetName = 'ghg-emission-factors-hub-2023.xlsx';
-		this.outputPrefix = '2023';
+		this.year = 2023;
 
 		this.stationaryCombustion = {
 			data: 'C14:J89',
@@ -113,7 +113,7 @@ export class V2024 extends BaseVersion {
 	public constructor() {
 		super();
 		this.spreadsheetName = 'ghg-emission-factors-hub-2024.xlsx';
-		this.outputPrefix = '2024';
+		this.year = 2024;
 
 		this.stationaryCombustion = {
 			data: 'C15:J90',

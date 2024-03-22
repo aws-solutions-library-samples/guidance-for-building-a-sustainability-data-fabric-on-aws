@@ -11,7 +11,7 @@ describe('SteamAndHeat', () => {
 	beforeAll( async () => {
 		const version = new V2024();
         const spreadsheetPath = path.resolve(__dirname, '..', '..', 'resources', version.spreadsheetName);
-		underTest = new SteamAndHeat(spreadsheetPath, version.steamAndHeat, version.outputPrefix);
+		underTest = new SteamAndHeat(spreadsheetPath, version.steamAndHeat, version.year);
 	});
 
 	it('generate', async () => {

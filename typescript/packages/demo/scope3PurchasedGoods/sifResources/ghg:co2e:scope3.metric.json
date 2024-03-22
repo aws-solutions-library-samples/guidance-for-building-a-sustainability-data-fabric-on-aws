@@ -1,0 +1,12 @@
+{
+	"name": "ghg:co2e:scope3",
+	"summary": "Total scope 3 CO₂e",
+	"aggregationType": "sum",
+	"outputMetrics": ["ghg:co2e"],
+	"tags": {
+		"scope": "3",
+		"category": "all",
+		"subcategory": "all",
+		"gas": "co2e"
+	}
+}

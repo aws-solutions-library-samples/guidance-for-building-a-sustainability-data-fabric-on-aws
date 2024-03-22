@@ -1,0 +1,392 @@
+{
+	"name": "usepa:scope_3_category_5_waste_generated_in_operations_and_category_12_end_of_life_treatment_of_sold_products:impacts",
+	"description": "Imports USEPA Scope 3 Category 5: Waste Generated in Operations and Category 12: End-of-Life Treatment of Sold Products (table 9) GHG impact factors.",
+	"type": "impacts",
+	"attributes": {
+		"type": "integration"
+	},
+	"tags": {
+		"source": "usepa"
+	},
+	"connectorConfig": {
+		"input": [
+			{
+				"name": "sif-csv-pipeline-input-connector"
+			}
+		]
+	},
+	"transformer": {
+		"transforms": [
+			{
+				"index": 0,
+				"formula": "CONCAT('usepa:scope_3_category_5_waste_generated_in_operations_and_category_12_end_of_life_treatment_of_sold_products:', :Material)",
+				"outputs": [
+					{
+						"description": "Activity name.",
+						"index": 0,
+						"key": "activity:name",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 1,
+				"formula": "CONCAT('USEPA Scope 3 Category 5: Waste Generated in Operations and Category 12: End-of-Life Treatment of Sold Products emission factors for ', :Material)",
+				"outputs": [
+					{
+						"description": "Activity description.",
+						"index": 0,
+						"key": "activity:description",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 2,
+				"formula": "'US EPA'",
+				"outputs": [
+					{
+						"description": "Activity provider tag.",
+						"index": 0,
+						"key": "activity:tag:provider",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 3,
+				"formula": "'Scope 3 Category 5: Waste Generated in Operations and Category 12: End-of-Life Treatment of Sold Products'",
+				"outputs": [
+					{
+						"description": "Activity dataset tag.",
+						"index": 0,
+						"key": "activity:tag:dataset",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 4,
+				"formula": ":Material",
+				"outputs": [
+					{
+						"description": "Activity material tag.",
+						"index": 0,
+						"key": "activity:tag:material",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 5,
+				"formula": ":Year",
+				"outputs": [
+					{
+						"description": "Activity version tag.",
+						"index": 0,
+						"key": "activity:tag:version",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 6,
+				"formula": "'CO₂e emission factors'",
+				"outputs": [
+					{
+						"description": "CO₂e emission factors.",
+						"index": 0,
+						"key": "impact:co2e_emissions:name",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 7,
+				"formula": "'Metric Tons CO2e / Short Ton Material'",
+				"outputs": [
+					{
+						"description": "Emission factor unit.",
+						"index": 0,
+						"key": "impact:co2e_emissions:attribute:unit",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 8,
+				"formula": "'Recycled'",
+				"outputs": [
+					{
+						"description": "Recycled factor.",
+						"index": 0,
+						"key": "impact:co2e_emissions:component:recycled:key",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 9,
+				"formula": ":Recycled",
+				"outputs": [
+					{
+						"description": "Recycled factor.",
+						"index": 0,
+						"key": "impact:co2e_emissions:component:recycled:value",
+						"type": "number"
+					}
+				]
+			},
+			{
+				"index": 10,
+				"formula": "'pollutant'",
+				"outputs": [
+					{
+						"description": "Recycled factor type.",
+						"index": 0,
+						"key": "impact:co2e_emissions:component:recycled:type",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 11,
+				"formula": "'Landfilled'",
+				"outputs": [
+					{
+						"description": "Landfilled factor.",
+						"index": 0,
+						"key": "impact:co2e_emissions:component:landfilled:key",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 12,
+				"formula": ":Landfilled",
+				"outputs": [
+					{
+						"description": "Landfilled factor.",
+						"index": 0,
+						"key": "impact:co2e_emissions:component:landfilled:value",
+						"type": "number"
+					}
+				]
+			},
+			{
+				"index": 13,
+				"formula": "'pollutant'",
+				"outputs": [
+					{
+						"description": "Landfilled factor type.",
+						"index": 0,
+						"key": "impact:co2e_emissions:component:landfilled:type",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 14,
+				"formula": "'Combusted'",
+				"outputs": [
+					{
+						"description": "Combusted factor.",
+						"index": 0,
+						"key": "impact:co2e_emissions:component:combusted:key",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 15,
+				"formula": ":Combusted",
+				"outputs": [
+					{
+						"description": "Combusted factor.",
+						"index": 0,
+						"key": "impact:co2e_emissions:component:combusted:value",
+						"type": "number"
+					}
+				]
+			},
+			{
+				"index": 16,
+				"formula": "'pollutant'",
+				"outputs": [
+					{
+						"description": "Combusted factor type.",
+						"index": 0,
+						"key": "impact:co2e_emissions:component:combusted:type",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 17,
+				"formula": "'Composted'",
+				"outputs": [
+					{
+						"description": "Composted factor.",
+						"index": 0,
+						"key": "impact:co2e_emissions:component:composted:key",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 18,
+				"formula": ":Composted",
+				"outputs": [
+					{
+						"description": "Composted factor.",
+						"index": 0,
+						"key": "impact:co2e_emissions:component:composted:value",
+						"type": "number"
+					}
+				]
+			},
+			{
+				"index": 19,
+				"formula": "'pollutant'",
+				"outputs": [
+					{
+						"description": "Composted factor type.",
+						"index": 0,
+						"key": "impact:co2e_emissions:component:composted:type",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 20,
+				"formula": "'Anaerobically Digested Dry'",
+				"outputs": [
+					{
+						"description": "Anaerobically Digested Dry factor.",
+						"index": 0,
+						"key": "impact:co2e_emissions:component:anaerobically_digested_dry:key",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 21,
+				"formula": ":Anaerobically Digested Dry",
+				"outputs": [
+					{
+						"description": "Anaerobically Digested Dry factor.",
+						"index": 0,
+						"key": "impact:co2e_emissions:component:anaerobically_digested_dry:value",
+						"type": "number"
+					}
+				]
+			},
+			{
+				"index": 22,
+				"formula": "'pollutant'",
+				"outputs": [
+					{
+						"description": "Anaerobically Digested Dry factor type.",
+						"index": 0,
+						"key": "impact:co2e_emissions:component:anaerobically_digested_dry:type",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 23,
+				"formula": "'Anaerobically Digested Wet'",
+				"outputs": [
+					{
+						"description": "Anaerobically Digested Wet factor.",
+						"index": 0,
+						"key": "impact:co2e_emissions:component:anaerobically_digested_wet:key",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 24,
+				"formula": ":Anaerobically Digested Wet",
+				"outputs": [
+					{
+						"description": "Anaerobically Digested Wet factor.",
+						"index": 0,
+						"key": "impact:co2e_emissions:component:anaerobically_digested_wet:value",
+						"type": "number"
+					}
+				]
+			},
+			{
+				"index": 25,
+				"formula": "'pollutant'",
+				"outputs": [
+					{
+						"description": "Anaerobically Digested Wet factor type.",
+						"index": 0,
+						"key": "impact:co2e_emissions:component:anaerobically_digested_wet:type",
+						"type": "string"
+					}
+				]
+			}
+
+		],
+		"parameters": [
+			{
+				"index": 0,
+				"key": "Material",
+				"label": "Material",
+				"type": "string"
+			},
+			{
+				"index": 1,
+				"key": "Recycled",
+				"label": "Recycled",
+				"type": "number"
+			},
+			{
+				"index": 2,
+				"key": "Landfilled",
+				"label": "Landfilled",
+				"type": "number"
+			},
+			{
+				"index": 3,
+				"key": "Combusted",
+				"label": "Combusted",
+				"type": "number"
+			},
+			{
+				"index": 4,
+				"key": "Composted",
+				"label": "Composted",
+				"type": "number"
+			},
+			{
+				"index": 5,
+				"key": "Anaerobically Digested Dry",
+				"label": "Anaerobically Digested Dry",
+				"type": "number"
+			},
+			{
+				"index": 6,
+				"key": "Anaerobically Digested Wet",
+				"label": "Anaerobically Digested Wet",
+				"type": "number"
+			},
+			{
+				"index": 7,
+				"key": "Year",
+				"label": "Year",
+				"type": "string"
+			}
+		]
+	}
+}

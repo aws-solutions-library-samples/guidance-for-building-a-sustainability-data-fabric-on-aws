@@ -1,0 +1,270 @@
+{
+	"name": "usepa:scope_3_category_6_business_travel_and_category_7_employee_commuting:impacts",
+	"description": "Imports USEPA Scope 3 Category 6: Business Travel and Category 7: Employee Commuting (table 10) GHG impact factors.",
+	"type": "impacts",
+	"attributes": {
+		"type": "integration"
+	},
+	"tags": {
+		"source": "usepa"
+	},
+	"connectorConfig": {
+		"input": [
+			{
+				"name": "sif-csv-pipeline-input-connector"
+			}
+		]
+	},
+	"transformer": {
+		"transforms": [
+			{
+				"index": 0,
+				"formula": "CONCAT('usepa:scope_3_category_6_business_travel_and_category_7_employee_commuting:', :Vehicle Type)",
+				"outputs": [
+					{
+						"description": "Activity name.",
+						"index": 0,
+						"key": "activity:name",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 1,
+				"formula": "CONCAT('USEPA Scope 3 Category 6: Business Travel and Category 7: Employee Commuting  emission factors for ', :Vehicle Type)",
+				"outputs": [
+					{
+						"description": "Activity description.",
+						"index": 0,
+						"key": "activity:description",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 2,
+				"formula": "'US EPA'",
+				"outputs": [
+					{
+						"description": "Activity provider tag.",
+						"index": 0,
+						"key": "activity:tag:provider",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 3,
+				"formula": "'Scope 3 Category 6: Business Travel and Category 7: Employee Commuting '",
+				"outputs": [
+					{
+						"description": "Activity dataset tag.",
+						"index": 0,
+						"key": "activity:tag:dataset",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 4,
+				"formula": ":Vehicle Type",
+				"outputs": [
+					{
+						"description": "Activity vehicle type tag.",
+						"index": 0,
+						"key": "activity:tag:vehicle_type",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 5,
+				"formula": ":Year",
+				"outputs": [
+					{
+						"description": "Activity version tag.",
+						"index": 0,
+						"key": "activity:tag:version",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 6,
+				"formula": "'GHG emission factors'",
+				"outputs": [
+					{
+						"description": "GHG emission factors.",
+						"index": 0,
+						"key": "impact:ghg_emissions:name",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 7,
+				"formula": ":Units",
+				"outputs": [
+					{
+						"description": "Emission factor unit.",
+						"index": 0,
+						"key": "impact:ghg_emissions:attribute:unit",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 8,
+				"formula": "'CO2'",
+				"outputs": [
+					{
+						"description": "CO₂ factor.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:co2:key",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 9,
+				"formula": ":CO2 Factor",
+				"outputs": [
+					{
+						"description": "CO₂ factor.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:co2:value",
+						"type": "number"
+					}
+				]
+			},
+			{
+				"index": 10,
+				"formula": "'pollutant'",
+				"outputs": [
+					{
+						"description": "CO₂ factor type.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:co2:type",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 11,
+				"formula": "'CH4'",
+				"outputs": [
+					{
+						"description": "CH₄ factor.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:ch4:key",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 12,
+				"formula": ":CH4 Factor",
+				"outputs": [
+					{
+						"description": "CH₄ factor.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:ch4:value",
+						"type": "number"
+					}
+				]
+			},
+			{
+				"index": 13,
+				"formula": "'pollutant'",
+				"outputs": [
+					{
+						"description": "CH₄ factor type.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:ch4:type",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 14,
+				"formula": "'N2O'",
+				"outputs": [
+					{
+						"description": "N₂O factor.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:n2o:key",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 15,
+				"formula": ":N2O Factor",
+				"outputs": [
+					{
+						"description": "N₂O factor.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:n2o:value",
+						"type": "number"
+					}
+				]
+			},
+			{
+				"index": 16,
+				"formula": "'pollutant'",
+				"outputs": [
+					{
+						"description": "N₂O factor type.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:n2o:type",
+						"type": "string"
+					}
+				]
+			}
+
+
+		],
+		"parameters": [
+			{
+				"index": 0,
+				"key": "Vehicle Type",
+				"label": "Vehicle Type",
+				"type": "string"
+			},
+			{
+				"index": 1,
+				"key": "CO2 Factor",
+				"label": "CO2 Factor",
+				"type": "number"
+			},
+			{
+				"index": 2,
+				"key": "CH4 Factor",
+				"label": "CH4 Factor",
+				"type": "number"
+			},
+			{
+				"index": 3,
+				"key": "N2O Factor",
+				"label": "N2O Factor",
+				"type": "number"
+			},
+			{
+				"index": 4,
+				"key": "Units",
+				"label": "Units",
+				"type": "number"
+			},
+			{
+				"index": 5,
+				"key": "Year",
+				"label": "Year",
+				"type": "string"
+			}
+		]
+	}
+}

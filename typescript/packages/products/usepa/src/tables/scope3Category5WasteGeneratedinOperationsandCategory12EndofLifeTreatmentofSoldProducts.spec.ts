@@ -9,7 +9,7 @@ describe('Scope3Category5WasteGeneratedinOperationsandCategory12EndofLifeTreatme
 	beforeAll( async () => {
 		const version = new V2024();
         const spreadsheetPath = path.resolve(__dirname, '..', '..', 'resources', version.spreadsheetName);
-		underTest = new Scope3Category5WasteGeneratedinOperationsandCategory12EndofLifeTreatmentofSoldProducts(spreadsheetPath, version.scope3Category5WasteGeneratedinOperationsandCategory12EndofLifeTreatmentofSoldProducts, version.outputPrefix);
+		underTest = new Scope3Category5WasteGeneratedinOperationsandCategory12EndofLifeTreatmentofSoldProducts(spreadsheetPath, version.scope3Category5WasteGeneratedinOperationsandCategory12EndofLifeTreatmentofSoldProducts, version.year);
 	});
 
 	it('generate', async () => {

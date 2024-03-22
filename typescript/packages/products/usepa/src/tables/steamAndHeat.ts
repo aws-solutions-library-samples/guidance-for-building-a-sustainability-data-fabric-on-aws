@@ -14,11 +14,12 @@ interface Item {
 	co2: number;
 	ch4: number;
 	n2o: number;
+	year: number;
 }
 
 export class SteamAndHeat extends BaseUSEPA {
-	public constructor(sourceFile: string, cellReferences: CellReferences, outputPrefix: string) {
-		super(sourceFile, cellReferences, outputPrefix);
+	public constructor(sourceFile: string, cellReferences: CellReferences, year: number) {
+		super(sourceFile, cellReferences, year);
 	}
 
 	private async saveAsCsv(): Promise<string> {
@@ -33,11 +34,12 @@ export class SteamAndHeat extends BaseUSEPA {
 				co2: d['CO2 Factor \r\n(kg CO2 / mmBtu)'],
 				ch4: d['CH4 Factor \r\n(g CH4 / mmBtu) '],
 				n2o: d['N2O Factor \r\n(g N2O / mmBtu) '],
+				year: this.year,
 			});
 		});
 
 		// output as csv
-		const csvPath = path.resolve(__dirname, '..', '..', 'generatedResources', this.outputPrefix, 'steam-and-heat.csv');
+		const csvPath = path.resolve(__dirname, '..', '..', 'generatedResources', this.year.toString(), 'steam-and-heat.csv');
 		const writer = createObjectCsvWriter({
 			path: csvPath,
 			header: [
@@ -45,6 +47,7 @@ export class SteamAndHeat extends BaseUSEPA {
 				{ id: 'co2', title: 'CO2 Factor (kg CO2 / mmBtu)' },
 				{ id: 'ch4', title: 'CH4 Factor (g CH4 / mmBtu) ' },
 				{ id: 'n2o', title: 'N2O Factor (g N2O / mmBtu)' },
+				{ id: 'year', title: 'Year' },
 			],
 		});
 

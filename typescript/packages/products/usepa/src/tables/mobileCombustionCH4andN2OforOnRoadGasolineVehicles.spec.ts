@@ -10,7 +10,7 @@ describe('MobileCombustionCH4andN2OforOnRoadGasolineVehicles', () => {
 	beforeAll( async () => {
 		const version = new V2024();
         const spreadsheetPath = path.resolve(__dirname, '..', '..', 'resources', version.spreadsheetName);
-		underTest = new MobileCombustionCH4andN2OforOnRoadGasolineVehicles(spreadsheetPath, version.mobileCombustionCH4andN2OforOnRoadGasolineVehicles, version.outputPrefix);
+		underTest = new MobileCombustionCH4andN2OforOnRoadGasolineVehicles(spreadsheetPath, version.mobileCombustionCH4andN2OforOnRoadGasolineVehicles, version.year);
 	});
 
 	it('generate', async () => {

@@ -9,7 +9,7 @@ describe('Scope3Category4UpstreamTransportationandDistributionandCategory9Downst
 	beforeAll( async () => {
 		const version = new V2024();
         const spreadsheetPath = path.resolve(__dirname, '..', '..', 'resources', version.spreadsheetName);
-		underTest = new Scope3Category4UpstreamTransportationandDistributionandCategory9DownstreamTransportationandDistribution(spreadsheetPath, version.scope3Category4UpstreamTransportationandDistributionandCategory9DownstreamTransportationandDistribution, version.outputPrefix);
+		underTest = new Scope3Category4UpstreamTransportationandDistributionandCategory9DownstreamTransportationandDistribution(spreadsheetPath, version.scope3Category4UpstreamTransportationandDistributionandCategory9DownstreamTransportationandDistribution, version.year);
 	});
 
 	it('generate', async () => {
