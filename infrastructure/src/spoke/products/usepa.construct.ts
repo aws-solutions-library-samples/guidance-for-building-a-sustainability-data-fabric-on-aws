@@ -61,7 +61,7 @@ export class UsepaInfrastructureConstruct extends Construct {
 
 		const customResource = new CustomResource(this, 'UsepaPipelineSeeder', {
 			serviceToken: props.customResourceProviderToken,
-			resourceType: 'Custom::UsepaPipelineSeeder',
+			resourceType: 'Custom::GeneralPipelineSeeder',
 			properties: {
 				uniqueToken: Date.now(),
 				prefix: 'products/usepa/sifResources',
@@ -70,7 +70,5 @@ export class UsepaInfrastructureConstruct extends Construct {
 		});
 
 		customResource.node.addDependency(pipelineDefinitionDeployment);
-		// TODO: Create custom resource to call data asset module to register all of above datasets, set provenance metaform for sources, as well as setting glossary terms
-
 	}
 }

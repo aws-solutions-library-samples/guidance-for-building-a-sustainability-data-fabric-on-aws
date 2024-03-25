@@ -19,7 +19,6 @@ import { MaterialsNaicsMatchingConstruct } from './materialsNaicsMatching.constr
 import { SdfVpcConfig } from './network.construct.js';
 import { Scope3PurchasedGoodsConstruct } from './scope3PurchaseGoods.construct.js';
 import { WebsiteConstruct } from './website.construct.js';
-import { WorkflowConstruct } from './workflow.construct.js';
 import { StringParameter } from 'aws-cdk-lib/aws-ssm';
 import { crHubProviderServiceTokenParameter } from '../common.stack.js';
 
@@ -53,25 +52,21 @@ export class SpokeDemoInfrastructureStack extends Stack {
 		// 5 - Mapping materials to EEIO emission factors
 		// 6 - Publishing matched material NAICS to DF
 		const materialsNaicsMatching = new MaterialsNaicsMatchingConstruct(this, 'MaterialsNaicsMatching', {
-			bucketName: props.bucketName
+			bucketName: props.bucketName,
+			customResourceProviderToken
 		});
 
 		// 10 - Scope 3 purchased goods & services
 		const scope3PurchasedGoods = new Scope3PurchasedGoodsConstruct(this, 'Scope3PurchasedGoods', {
-			bucketName: props.bucketName
+			bucketName: props.bucketName,
+			customResourceProviderToken
 		});
 
 		// deploy the website
 		new WebsiteConstruct(this, 'Website', {});
 		this.websiteNags();
 
-		// once all infrastructure is deployed, deploy the worklow.construct and kick off an execution of the step function to process the remainder of the flow
-		const workflow = new WorkflowConstruct(this, 'Workflow', {
-			bucketName: props.bucketName
-		});
-		workflow.node.addDependency(datagen);
-		workflow.node.addDependency(materialsNaicsMatching);
-		workflow.node.addDependency(scope3PurchasedGoods);
+
 	}
 
 	private datagenNags() {

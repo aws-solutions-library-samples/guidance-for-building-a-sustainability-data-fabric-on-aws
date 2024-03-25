@@ -283,12 +283,6 @@
 			},
 			{
 				"index": 7,
-				"key": "Unit",
-				"label": "Unit",
-				"type": "string"
-			},
-			{
-				"index": 8,
 				"key": "Reference USEEIO Code",
 				"label": "Reference USEEIO Code",
 				"type": "string"

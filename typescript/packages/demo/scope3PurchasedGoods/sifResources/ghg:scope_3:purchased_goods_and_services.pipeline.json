@@ -44,7 +44,7 @@
 				]
 			},
 			{
-				"index": 4,
+				"index": 2,
 				"formula": ":materialCode",
 				"outputs": [
 					{
@@ -57,7 +57,7 @@
 				]
 			},
 			{
-				"index": 5,
+				"index": 3,
 				"formula": ":totalValue",
 				"outputs": [
 					{
@@ -70,7 +70,7 @@
 				]
 			},
 			{
-				"index": 6,
+				"index": 4,
 				"formula": ":currencyCode",
 				"outputs": [
 					{
@@ -83,7 +83,7 @@
 				]
 			},
 			{
-				"index": 7,
+				"index": 5,
 				"formula": "set :activity_name = CONCAT('eiolca:', :material_code)\n#impact(:activity_name, 'ghg_emissions', 'co2e')",
 				"outputs": [
 					{
@@ -92,7 +92,9 @@
 						"key": "co2e",
 						"label": "CO₂e",
 						"type": "number",
-						"metrics": ["ghg:co2e:scope3:purchased_goods_services"]
+						"metrics": [
+							"ghg:co2e:scope3:purchased_goods_services"
+						]
 					}
 				]
 			}

@@ -26,6 +26,7 @@ import { CommonInfrastructureStack } from './spoke/common.stack.js';
 import { CommonHubInfrastructureStack } from './hub/common.stack.js';
 import { HubProductInfrastructureStack } from './hub/products/product.stack.js';
 import { HubDemoInfrastructureStack } from './hub/demo/demo.stack.js';
+import { SpokeWorkflowInfrastructureStack } from './spoke/workflow/workflow.stack.js';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const __filename: string = fileURLToPath(import.meta.url);
@@ -167,4 +168,16 @@ hubProductInfrastructureStack.addDependency(products);
 hubDemoInfrastructureStack.addDependency(commonHubInfrastructureStack);
 // hubDemoInfrastructureStack.addDependency(demos);
 
-stackSuppressions([products, demos], commonCdkNagRules);
+
+const spokeWorkflowInfrastructureStack = new SpokeWorkflowInfrastructureStack(app, 'SdfSpokeWorkflowStack', {
+	stackName: 'sdf-workflow-spoke',
+	bucketName: spokeBucketName,
+	environment,
+	tenantId,
+	env: spokeEnvironment,
+	sifAdminEmailAddress
+});
+
+stackSuppressions([products, demos, spokeWorkflowInfrastructureStack], commonCdkNagRules);
+
+

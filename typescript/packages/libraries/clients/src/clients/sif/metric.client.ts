@@ -14,7 +14,7 @@
 import { Invoker, LambdaApiGatewayEventBuilder } from '../../common/invoker.js';
 
 import { ClientServiceBase } from '../../common/common.js';
-import type { Metric, MetricList, MetricQueue } from './metric.models.js';
+import type { Metric, MetricList, MetricQueue, NewMetric } from './metric.models.js';
 import type { LambdaRequestContext } from '../../common/models.js';
 import type { BaseLogger } from 'pino';
 
@@ -28,6 +28,27 @@ export class MetricClient extends ClientServiceBase {
 		this.lambdaInvoker = lambdaInvoker;
 		this.metricFunctionName = metricFunctionName;
 		this.log = log;
+	}
+
+	public async create(newMetric: NewMetric, requestContext?: LambdaRequestContext): Promise<Metric> {
+		this.log.info(`MetricClient > getById > in > newMetric: ${newMetric}`);
+
+		const additionalHeaders = {};
+
+		if (requestContext?.authorizer?.claims?.groupContextId) {
+			additionalHeaders['x-groupcontextid'] = requestContext.authorizer.claims.groupContextId;
+		}
+
+		const event: LambdaApiGatewayEventBuilder = new LambdaApiGatewayEventBuilder()
+			.setMethod('POST')
+			.setRequestContext(requestContext)
+			.setHeaders(super.buildHeaders(additionalHeaders))
+			.setPath(`metrics`)
+			.setBody(newMetric);
+
+		const result = await this.lambdaInvoker.invoke(this.metricFunctionName, event);
+		this.log.info(`MetricClient > getById > exit > result: ${JSON.stringify(result)}`);
+		return result.body as Metric;
 	}
 
 	public async getById(metricId: string, version?: number, requestContext?: LambdaRequestContext): Promise<Metric> {
@@ -111,7 +132,7 @@ export class MetricClient extends ClientServiceBase {
 			.setPath('/metrics')
 			.setQueryStringParameters({
 				name: metricName,
-				includeParentGroups: 'true',
+				includeParentGroups: 'true'
 			})
 			.setRequestContext(requestContext)
 			.setHeaders(super.buildHeaders(additionalHeaders));

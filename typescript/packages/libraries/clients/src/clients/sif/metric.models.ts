@@ -23,6 +23,8 @@ export interface Metric {
 	version: number;
 }
 
+export type NewMetric = Omit<Metric, 'id'>
+
 export type MetricQueue = { order: number, metric: string }[]
 
 export interface InputPipeline {

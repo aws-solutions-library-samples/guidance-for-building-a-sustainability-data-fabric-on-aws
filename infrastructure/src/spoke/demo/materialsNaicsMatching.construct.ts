@@ -12,15 +12,51 @@
  */
 
 import { Construct } from 'constructs';
+import { Bucket } from 'aws-cdk-lib/aws-s3';
+import path from 'path';
+import { BucketDeployment, Source } from 'aws-cdk-lib/aws-s3-deployment';
+import { CustomResource } from 'aws-cdk-lib';
+import { fileURLToPath } from 'url';
 
 export type MaterialsNaicsMatchingProps = {
 	bucketName: string;
+	customResourceProviderToken: string;
 };
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export class MaterialsNaicsMatchingConstruct extends Construct {
 	constructor(scope: Construct, id: string, props: MaterialsNaicsMatchingProps) {
 		super(scope, id);
 
 		// TODO: Create custom resource to call SIF to create the CaML pipeline definitions
+
+		const bucket = Bucket.fromBucketName(this, 'Bucket', props.bucketName);
+
+		let dataPath = path.join(__dirname, '..', '..', '..', '..', 'typescript', 'packages', 'demo', 'materialsNaicsMatching', 'resources');
+		const resourceDeployment = new BucketDeployment(this, 'MaterialsNaicsMatchingResourceDeployment', {
+			sources: [Source.asset(dataPath)],
+			destinationBucket: bucket,
+			destinationKeyPrefix: 'demo/materialsNaicsMatching/resources/'
+		});
+
+		const sifResourcesDeployment = new BucketDeployment(this, 'MaterialsNaicsMatchingSifResourceDeployment', {
+			sources: [Source.asset(dataPath)],
+			destinationBucket: bucket,
+			destinationKeyPrefix: 'demo/materialsNaicsMatching/sifResources/'
+		});
+
+		const customResource = new CustomResource(this, 'MaterialsNaicsMatchingSeeder', {
+			serviceToken: props.customResourceProviderToken,
+			resourceType: 'Custom::GeneralPipelineSeeder',
+			properties: {
+				uniqueToken: Date.now(),
+				prefix: 'demo/materialsNaicsMatching/sifResources',
+				bucket: props.bucketName
+			}
+		});
+
+		customResource.node.addDependency(sifResourcesDeployment);
 	}
 }

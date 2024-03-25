@@ -325,6 +325,12 @@
 			"projectFolder": "typescript/packages/libraries/deployment-helper-spoke",
 			"reviewCategory": "production",
 			"shouldPublish": true
+		},
+		{
+			"packageName": "@df-sustainability/workflow",
+			"projectFolder": "typescript/packages/apps/workflow",
+			"reviewCategory": "production",
+			"shouldPublish": true
 		}
 		// {
 		//   /**

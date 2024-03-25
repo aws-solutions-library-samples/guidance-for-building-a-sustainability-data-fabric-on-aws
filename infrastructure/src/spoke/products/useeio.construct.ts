@@ -16,30 +16,49 @@ import { BucketDeployment, Source } from 'aws-cdk-lib/aws-s3-deployment';
 import { Construct } from 'constructs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { CustomResource } from 'aws-cdk-lib';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export type UseeioProperties = {
-	bucketName: string;
+  bucketName: string;
+  customResourceProviderToken: string;
 };
 
 export class UseeioInfrastructureConstruct extends Construct {
-	readonly vpcId: string;
+  readonly vpcId: string;
 
-	constructor(scope: Construct, id: string, props: UseeioProperties) {
-		super(scope, id);
+  constructor(scope: Construct, id: string, props: UseeioProperties) {
+    super(scope, id);
 
-		const bucket = Bucket.fromBucketName(this, 'Bucket', props.bucketName);
+    const bucket = Bucket.fromBucketName(this, 'Bucket', props.bucketName);
 
-		// Upload Useeio data and provenance to S3
-		let dataPath = path.join(__dirname, '..', '..', '..', '..', 'typescript', 'packages', 'products', 'useeio', 'resources');
-		new BucketDeployment(this, 'UseeioSourceDeployment', {
-			sources: [Source.asset(dataPath)],
-			destinationBucket: bucket,
-			destinationKeyPrefix: 'products/useeio/resources'
-		});
+    // Upload Useeio data and provenance to S3
+    let dataPath = path.join(__dirname, '..', '..', '..', '..', 'typescript', 'packages', 'products', 'useeio', 'resources');
+    new BucketDeployment(this, 'UseeioSourceDeployment', {
+      sources: [Source.asset(dataPath)],
+      destinationBucket: bucket,
+      destinationKeyPrefix: 'products/useeio/resources'
+    });
 
-		// TODO: Create custom resource to call data asset module to register all of above datasets, set provenance metaform for sources, as well as setting glossary terms
-	}
+    dataPath = path.join(__dirname, '..', '..', '..', '..', 'typescript', 'packages', 'products', 'useeio', 'sifResources');
+    const pipelineDefinitionDeployment = new BucketDeployment(this, 'UseeioPipelineDefinitionDeployment', {
+      sources: [Source.asset(dataPath)],
+      destinationBucket: bucket,
+      destinationKeyPrefix: 'products/useeio/sifResources'
+    });
+
+    const customResource = new CustomResource(this, 'UseeioPipelineSeeder', {
+      serviceToken: props.customResourceProviderToken,
+      resourceType: 'Custom::GeneralPipelineSeeder',
+      properties: {
+        uniqueToken: Date.now(),
+        prefix: 'products/useeio/sifResources',
+        bucket: props.bucketName
+      }
+    });
+
+    customResource.node.addDependency(pipelineDefinitionDeployment);
+  }
 }

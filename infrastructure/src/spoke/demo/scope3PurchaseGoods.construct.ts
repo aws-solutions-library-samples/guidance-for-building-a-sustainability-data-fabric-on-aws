@@ -12,15 +12,43 @@
  */
 
 import { Construct } from 'constructs';
+import { CustomResource } from 'aws-cdk-lib';
+import path from 'path';
+import { BucketDeployment, Source } from 'aws-cdk-lib/aws-s3-deployment';
+import { Bucket } from 'aws-cdk-lib/aws-s3';
+import { fileURLToPath } from 'url';
 
 export type Scope3PurchasedGoodsProps = {
 	bucketName: string;
+	customResourceProviderToken: string;
 };
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export class Scope3PurchasedGoodsConstruct extends Construct {
 	constructor(scope: Construct, id: string, props: Scope3PurchasedGoodsProps) {
 		super(scope, id);
 
-		// TODO: Create custom resource to call SIF to import the pipeline definitions
+		const bucket = Bucket.fromBucketName(this, 'Bucket', props.bucketName);
+
+		let dataPath = path.join(__dirname, '..', '..', '..', '..', 'typescript', 'packages', 'demo', 'scope3PurchasedGoods', 'sifResources');
+		const resourceDeployment = new BucketDeployment(this, 'Scope3PurchasedGoodsResourceDeployment', {
+			sources: [Source.asset(dataPath)],
+			destinationBucket: bucket,
+			destinationKeyPrefix: 'demo/scope3PurchasedGoods/sifResources/'
+		});
+
+		const customResource = new CustomResource(this, 'Scope3PurchasedGoodsSeeder', {
+			serviceToken: props.customResourceProviderToken,
+			resourceType: 'Custom::GeneralPipelineSeeder',
+			properties: {
+				uniqueToken: Date.now(),
+				prefix: 'demo/scope3PurchasedGoods/sifResources',
+				bucket: props.bucketName
+			}
+		});
+
+		customResource.node.addDependency(resourceDeployment);
 	}
 }

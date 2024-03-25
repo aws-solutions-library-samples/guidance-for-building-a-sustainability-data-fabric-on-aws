@@ -17,16 +17,15 @@ import { S3Client } from '@aws-sdk/client-s3';
 import { GlueClient } from '@aws-sdk/client-glue';
 import { CustomResourceManager } from '../customResources/customResource.manager.js';
 import { SecretsManagerClient } from '@aws-sdk/client-secrets-manager';
-import { Invoker, PipelineClient } from '@df-sustainability/clients';
+import { Invoker, MetricClient, PipelineClient } from '@df-sustainability/clients';
 import { LambdaClient } from '@aws-sdk/client-lambda';
 import type { Cradle } from '@fastify/awilix';
 import type { Logger } from 'pino';
 import { pino } from 'pino';
 import pretty from 'pino-pretty';
-import { UsepaPipelineSeeder } from '../seeders/useepaPipeline.js';
+import { GeneralPipelineSeeder } from '../seeders/generalPipeline.js';
 
 const { captureAWSv3Client } = pkg;
-
 
 const container = createContainer({
 	injectionMode: 'PROXY'
@@ -49,7 +48,8 @@ declare module '@fastify/awilix' {
 		lambdaClient: LambdaClient;
 		customResourceManager: CustomResourceManager;
 		pipelineClient: PipelineClient;
-		usepaPipelineSeeder: UsepaPipelineSeeder;
+		metricClient: MetricClient;
+		generalPipelineSeeder: GeneralPipelineSeeder;
 	}
 }
 
@@ -121,13 +121,16 @@ container.register({
 	secretsManagerClient: asFunction(() => SecretsManagerClientFactory.create(awsRegion), {
 		...commonInjectionOptions
 	}),
-	customResourceManager: asFunction((container: Cradle) => new CustomResourceManager(logger, container.usepaPipelineSeeder), {
+	customResourceManager: asFunction((container: Cradle) => new CustomResourceManager(logger, container.generalPipelineSeeder), {
 		...commonInjectionOptions
 	}),
 	pipelineClient: asFunction((container: Cradle) => new PipelineClient(logger, container.invoker, pipelineFunctionName), {
 		...commonInjectionOptions
 	}),
-	usepaPipelineSeeder: asFunction((container: Cradle) => new UsepaPipelineSeeder(logger, container.s3Client, container.pipelineClient, adminEmailAddress), {
+	metricClient: asFunction((container: Cradle) => new MetricClient(logger, container.invoker, pipelineFunctionName), {
+		...commonInjectionOptions
+	}),
+	generalPipelineSeeder: asFunction((container: Cradle) => new GeneralPipelineSeeder(logger, container.s3Client, container.pipelineClient, adminEmailAddress, container.metricClient), {
 		...commonInjectionOptions
 	})
 });
