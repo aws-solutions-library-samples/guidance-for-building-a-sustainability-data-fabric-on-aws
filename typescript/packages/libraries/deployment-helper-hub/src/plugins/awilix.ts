@@ -25,6 +25,7 @@ import { pino } from 'pino';
 import pretty from 'pino-pretty';
 import { UsepaProductSeeder } from '../seeders/useepaProduct.js';
 import { GeneralProductSeeder } from '../seeders/generalProduct';
+import { RedshiftProductSeeder } from '../seeders/redshiftProduct';
 
 const { captureAWSv3Client } = pkg;
 
@@ -52,6 +53,7 @@ declare module '@fastify/awilix' {
 		customResourceManager: CustomResourceManager;
 		usepaProductSeeder: UsepaProductSeeder;
 		generalProductSeeder: GeneralProductSeeder;
+		redshiftProductSeeder: RedshiftProductSeeder;
 	}
 }
 
@@ -83,6 +85,10 @@ class LambdaClientFactory {
 	}
 }
 
+export const getDomainNamespace = (domain: { name: string, id: string }) => {
+	return `df.${domain.name.replace(' ', '_')}-${domain.id}`;
+};
+
 export interface DataZoneMetadata {
 	domainId: string;
 	domainName: string;
@@ -105,7 +111,7 @@ const redshiftEnvironmentId = process.env['DATAZONE_REDSHIFT_ENVIRONMENT_ID'];
 const domainName = process.env['DATAZONE_DOMAIN_NAME'];
 const adminEmailAddress = process.env['SIF_ADMINISTRATOR_EMAIL'];
 
-const metadata: DataZoneMetadata = { domainId, projectId, athenaEnvironmentId, redshiftEnvironmentId, domainName, region: awsRegion, spokeAccountId, roleArn };
+const dataZoneMetadata: DataZoneMetadata = { domainId, projectId, athenaEnvironmentId, redshiftEnvironmentId, domainName, region: awsRegion, spokeAccountId, roleArn };
 
 const commonInjectionOptions = {
 	lifetime: Lifetime.SINGLETON
@@ -134,16 +140,19 @@ container.register({
 	secretsManagerClient: asFunction(() => SecretsManagerClientFactory.create(awsRegion), {
 		...commonInjectionOptions
 	}),
-	customResourceManager: asFunction((container: Cradle) => new CustomResourceManager(logger, container.usepaProductSeeder, container.generalProductSeeder), {
+	customResourceManager: asFunction((container: Cradle) => new CustomResourceManager(logger, container.usepaProductSeeder, container.generalProductSeeder, container.redshiftProductSeeder), {
 		...commonInjectionOptions
 	}),
 	dataAssetClient: asFunction((container: Cradle) => new DataAssetClient(logger, container.invoker, dataAssetFunctionName), {
 		...commonInjectionOptions
 	}),
-	usepaProductSeeder: asFunction((container: Cradle) => new UsepaProductSeeder(logger, container.s3Client, container.dataAssetClient, metadata, dfRequestContext), {
+	usepaProductSeeder: asFunction((container: Cradle) => new UsepaProductSeeder(logger, container.s3Client, container.dataAssetClient, dataZoneMetadata, dfRequestContext), {
 		...commonInjectionOptions
 	}),
-	generalProductSeeder: asFunction((container: Cradle) => new GeneralProductSeeder(logger, container.s3Client, container.dataAssetClient, metadata, dfRequestContext), {
+	redshiftProductSeeder: asFunction((container: Cradle) => new RedshiftProductSeeder(logger, container.secretsManagerClient, dataZoneMetadata, container.dataAssetClient, dfRequestContext), {
+		...commonInjectionOptions
+	}),
+	generalProductSeeder: asFunction((container: Cradle) => new GeneralProductSeeder(logger, container.s3Client, container.dataAssetClient, dataZoneMetadata, dfRequestContext), {
 		...commonInjectionOptions
 	})
 });

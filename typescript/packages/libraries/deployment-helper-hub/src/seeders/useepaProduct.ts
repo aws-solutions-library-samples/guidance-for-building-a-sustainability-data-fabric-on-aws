@@ -4,8 +4,7 @@ import type { CustomResource } from '../customResources/customResource.js';
 import type { CustomResourceEvent } from '../customResources/customResource.model.js';
 // @ts-ignore
 import ow from 'ow';
-import type { DataAssetClient, NewDataAssetTaskResource, OpenLineageInput } from '@df-sustainability/clients';
-import { DFLambdaRequestContext, getLambdaRequestContext } from '@df-sustainability/clients';
+import type { DataAssetClient, DFLambdaRequestContext, NewDataAssetTaskResource, OpenLineageInput } from '@df-sustainability/clients';
 import type { DataZoneMetadata } from '../plugins/awilix';
 import type { BaseLogger } from 'pino';
 
@@ -19,13 +18,7 @@ export class UsepaProductSeeder implements CustomResource {
 
 		ow(customResourceEvent.ResourceProperties, ow.object.nonEmpty);
 		const { bucket, prefix } = customResourceEvent.ResourceProperties;
-
-		try {
-			await this.createAssets(bucket, prefix);
-		} catch (err) {
-			this.log.error(`ProductSeeder > create > err: ${JSON.stringify(err)}`);
-		}
-
+		await this.createAssets(bucket, prefix);
 		this.log.info(`ProductSeeder > create > exit`);
 		return Promise.resolve(undefined);
 	}
@@ -39,18 +32,10 @@ export class UsepaProductSeeder implements CustomResource {
 
 	public async update(customResourceEvent: CustomResourceEvent): Promise<unknown> {
 		this.log.info(`ProductSeeder > update > customResourceEvent: ${customResourceEvent}`);
-
 		ow(customResourceEvent.ResourceProperties, ow.object.nonEmpty);
 		const { bucket, prefix } = customResourceEvent.ResourceProperties;
-
-		try {
-			await this.createAssets(bucket, prefix);
-		} catch (err) {
-			this.log.error(`ProductSeeder > update > err: ${JSON.stringify(err)}`);
-		}
-
+		await this.createAssets(bucket, prefix);
 		this.log.info(`ProductSeeder > update > exit`);
-
 		return Promise.resolve(undefined);
 	}
 
@@ -71,7 +56,7 @@ export class UsepaProductSeeder implements CustomResource {
 				// file looks like this ghg-emission-factors-hub-2023.xlsx
 				const year = assetName.split('-').pop();
 				assetNameByYear[year] = assetName;
-				createOriginalFutures.push(this.dataAssetClient.create(newDataAssetTaskResource, getLambdaRequestContext('sdf_demo', 'sdf_demo')));
+				createOriginalFutures.push(this.dataAssetClient.create(newDataAssetTaskResource, this.requestContext));
 			}
 		}
 

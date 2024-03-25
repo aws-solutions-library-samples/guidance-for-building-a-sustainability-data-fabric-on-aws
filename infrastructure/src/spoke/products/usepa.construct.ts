@@ -52,11 +52,11 @@ export class UsepaInfrastructureConstruct extends Construct {
 
 
 		// Upload pipeline definition to create USEPA impact factor to s3
-		dataPath = path.join(__dirname, '..', '..', '..', '..', 'typescript', 'packages', 'products', 'usepa', 'pipelines');
+		dataPath = path.join(__dirname, '..', '..', '..', '..', 'typescript', 'packages', 'products', 'usepa', 'sifResources');
 		const pipelineDefinitionDeployment = new BucketDeployment(this, 'UsepaPipelineDefinitionDeployment', {
 			sources: [Source.asset(dataPath)],
 			destinationBucket: bucket,
-			destinationKeyPrefix: 'products/usepa/pipelines/'
+			destinationKeyPrefix: 'products/usepa/sifResources/'
 		});
 
 		const customResource = new CustomResource(this, 'UsepaPipelineSeeder', {
@@ -64,7 +64,7 @@ export class UsepaInfrastructureConstruct extends Construct {
 			resourceType: 'Custom::UsepaPipelineSeeder',
 			properties: {
 				uniqueToken: Date.now(),
-				prefix: 'products/usepa/pipelines',
+				prefix: 'products/usepa/sifResources',
 				bucket: props.bucketName
 			}
 		});

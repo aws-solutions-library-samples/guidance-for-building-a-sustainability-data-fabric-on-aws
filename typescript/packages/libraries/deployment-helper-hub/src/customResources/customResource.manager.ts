@@ -16,13 +16,15 @@ import type { CustomResource } from './customResource.js';
 import type { CustomResourceEvent } from './customResource.model.js';
 import type { UsepaProductSeeder } from '../seeders/useepaProduct.js';
 import type { GeneralProductSeeder } from '../seeders/generalProduct.js';
+import type { RedshiftProductSeeder } from '../seeders/redshiftProduct.js';
 
 export class CustomResourceManager {
 	private readonly customResources: { [key: string]: CustomResource };
 
-	public constructor(private readonly logger: BaseLogger, usepaProductSeeder: UsepaProductSeeder, generalProductSeeder: GeneralProductSeeder) {
+	public constructor(private readonly logger: BaseLogger, usepaProductSeeder: UsepaProductSeeder, generalProductSeeder: GeneralProductSeeder, redshiftProductSeeder: RedshiftProductSeeder) {
 		this.customResources = {
 			'Custom::UsepaProductSeeder': usepaProductSeeder,
+			'Custom::RedshiftProductSeeder': redshiftProductSeeder,
 			'Custom::GeneralProductSeeder': generalProductSeeder
 		};
 	}

@@ -26,6 +26,7 @@ import { crHubProviderServiceTokenParameter } from '../common.stack.js';
 export type DemoStackProperties = StackProps & {
 	userVpcConfig?: SdfVpcConfig;
 	bucketName: string;
+	hubAccountId: string;
 };
 
 export const redshiftUserParameter = `/df/sdfDemo/redshift/username`;
@@ -44,8 +45,10 @@ export class SpokeDemoInfrastructureStack extends Stack {
 		// 4 - SDF Demo Data Generation
 		const datagen = new DatagenInfrastructureConstruct(this, 'Datagen', {
 			userVpcConfig: props.userVpcConfig,
-			bucketName: props.bucketName
+			bucketName: props.bucketName,
+			hubAccountId: props.hubAccountId
 		});
+		this.datagenNags();
 
 		// 5 - Mapping materials to EEIO emission factors
 		// 6 - Publishing matched material NAICS to DF
@@ -69,6 +72,20 @@ export class SpokeDemoInfrastructureStack extends Stack {
 		workflow.node.addDependency(datagen);
 		workflow.node.addDependency(materialsNaicsMatching);
 		workflow.node.addDependency(scope3PurchasedGoods);
+	}
+
+	private datagenNags() {
+		NagSuppressions.addResourceSuppressionsByPath(
+			this,
+			['/SdfSpokeDemoStack/Datagen/RedshiftConfiguration/Resource'],
+			[
+				{
+					id: 'AwsSolutions-SMG4',
+					reason: 'This is a demo application and does not require secret rotation'
+				}
+			],
+			true
+		);
 	}
 
 	private websiteNags() {

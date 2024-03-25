@@ -121,6 +121,7 @@ const demos = new SpokeDemoInfrastructureStack(app, 'SdfSpokeDemoStack', {
 	stackName: 'sdf-demo-spoke',
 	description: 'Infrastructure for SDF demo.',
 	bucketName: commonInfrastructureStack.bucketName,
+	hubAccountId,
 	env: spokeEnvironment
 });
 demos.addDependency(products);
@@ -156,12 +157,14 @@ const hubDemoInfrastructureStack = new HubDemoInfrastructureStack(app, 'SdfHubDe
 	stackName: 'sdf-demo-hub',
 	bucketName: spokeBucketName,
 	description: 'Infrastructure for SDF demo.',
+	spokeAccountId,
 	env: hubEnvironment
 });
 
 hubProductInfrastructureStack.addDependency(commonHubInfrastructureStack);
 hubProductInfrastructureStack.addDependency(products);
+
 hubDemoInfrastructureStack.addDependency(commonHubInfrastructureStack);
-hubDemoInfrastructureStack.addDependency(demos);
+// hubDemoInfrastructureStack.addDependency(demos);
 
 stackSuppressions([products, demos], commonCdkNagRules);

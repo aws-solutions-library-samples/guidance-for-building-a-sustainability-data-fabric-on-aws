@@ -11,8 +11,8 @@
  *  and limitations under the License.
  */
 
-import { CustomResource, Duration } from 'aws-cdk-lib';
-import { IRole, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
+import { CustomResource, Duration, SecretValue, Stack } from 'aws-cdk-lib';
+import { AccountPrincipal, IRole, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 import { Architecture, Runtime, Tracing } from 'aws-cdk-lib/aws-lambda';
 import { NodejsFunction, OutputFormat } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { RetentionDays } from 'aws-cdk-lib/aws-logs';
@@ -25,12 +25,14 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { Network, SdfVpcConfig } from './network.construct.js';
 import { RedshiftServerless } from './redshift-serverless.construct.js';
-import { REDSHIFT_DATABASE_NAME, REDSHIFT_WORKGROUP_NAME } from './redshift/constants.js';
+import { REDSHIFT_CONFIGURATION_SECRET, REDSHIFT_CREDENTIAL_SECRET, REDSHIFT_DATABASE_NAME, REDSHIFT_WORKGROUP_NAME } from './redshift/constants.js';
 import { CopyS3Data, ExistingRedshiftServerlessProps } from './redshift/models.js';
 import { RedshiftAssociateIAMRole } from './redshift/redshift-associate-iam-role.js';
 import { createLambdaRole } from './redshift/utils/lambda.js';
 import { createLogGroup } from './redshift/utils/logs.js';
 import { createSGForEgressToAwsService } from './redshift/utils/sg.js';
+import { Secret } from 'aws-cdk-lib/aws-secretsmanager';
+import { Key } from 'aws-cdk-lib/aws-kms';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -38,6 +40,7 @@ const __dirname = path.dirname(__filename);
 export type DatagenProps = {
 	userVpcConfig?: SdfVpcConfig;
 	bucketName: string;
+	hubAccountId: string;
 };
 
 export const redshiftUserParameter = `/df/sdfDemo/redshift/username`;
@@ -52,16 +55,16 @@ export class DatagenInfrastructureConstruct extends Construct {
 		const dataBucket = Bucket.fromBucketName(this, 'DataBucket', props.bucketName);
 
 		// Upload demo data to s3. some will be pushed to redshift later
-		const demoDataPath = path.join(__dirname, '..','..', '..', '..', 'typescript', 'packages', 'demo', 'datagen', 'generatedResources');
+		const demoDataPath = path.join(__dirname, '..', '..', '..', '..', 'typescript', 'packages', 'demo', 'datagen', 'generatedResources');
 		new BucketDeployment(this, 'DemoDataDeployment', {
 			sources: [Source.asset(demoDataPath)],
 			destinationBucket: dataBucket,
-			destinationKeyPrefix: 'demo/datagen/',
+			destinationKeyPrefix: 'demo/datagen/'
 		});
 
 		// Amazon Redshift Serverless runs in a VPC
 		const network = new Network(this, 'Network', {
-			userVpcConfig: props.userVpcConfig ? props.userVpcConfig : undefined,
+			userVpcConfig: props.userVpcConfig ? props.userVpcConfig : undefined
 		});
 
 		const securityGroupForLambda = createSGForEgressToAwsService(this, 'LambdaEgressToAWSServiceSG', network.vpc);
@@ -69,13 +72,13 @@ export class DatagenInfrastructureConstruct extends Construct {
 		const redshiftServerlessWorkgroup = new RedshiftServerless(this, 'RedshiftServerlessWorkgroup', {
 			vpc: network.vpc,
 			subnetSelection: {
-				subnets: network.vpc.isolatedSubnets,
+				subnets: network.vpc.isolatedSubnets
 			},
 			securityGroupIds: securityGroupForLambda.securityGroupId,
 			baseCapacity: 8, // 8 to 512 RPUs
 			workgroupName: REDSHIFT_WORKGROUP_NAME,
 			databaseName: REDSHIFT_DATABASE_NAME,
-			dataBucket: dataBucket.bucketName,
+			dataBucket: dataBucket.bucketName
 		});
 
 		const existingRedshiftServerlessProps: ExistingRedshiftServerlessProps = {
@@ -83,19 +86,19 @@ export class DatagenInfrastructureConstruct extends Construct {
 			workgroupName: redshiftServerlessWorkgroup.workgroup.attrWorkgroupWorkgroupName,
 			namespaceId: redshiftServerlessWorkgroup.namespaceId,
 			dataAPIRoleArn: redshiftServerlessWorkgroup.redshiftDataAPIExecRole.roleArn,
-			databaseName: redshiftServerlessWorkgroup.databaseName,
+			databaseName: redshiftServerlessWorkgroup.databaseName
 		};
 
 		// Redshift requires a role with sufficient permissions to copy from S3
 		const redshiftRoleForCopyFromS3 = new Role(this, 'CopyDataFromS3Role', {
-			assumedBy: new ServicePrincipal('redshift.amazonaws.com'),
+			assumedBy: new ServicePrincipal('redshift.amazonaws.com')
 		});
 		dataBucket.grantRead(redshiftRoleForCopyFromS3);
 
 		// Custom resource to associate the IAM role required to copy from S3 to Redshift cluster
 		const crForModifyClusterIAMRoles = new RedshiftAssociateIAMRole(this, 'RedshiftAssociateS3CopyRole', {
 			serverlessRedshift: existingRedshiftServerlessProps,
-			role: redshiftRoleForCopyFromS3,
+			role: redshiftRoleForCopyFromS3
 		}).cr;
 		crForModifyClusterIAMRoles.node.addDependency(redshiftServerlessWorkgroup);
 
@@ -110,9 +113,37 @@ export class DatagenInfrastructureConstruct extends Construct {
 		crCopyFromS3.node.addDependency(redshiftServerlessWorkgroup.redshiftUserCR);
 		crCopyFromS3.node.addDependency(crForModifyClusterIAMRoles);
 
+		const redshiftConfigurationEncryptionKey = new Key(this, 'RedshiftConfigurationEncryptionKey', {
+			enableKeyRotation: true
+		});
+
+		const region = Stack.of(this).region;
+		const accountId = Stack.of(this).account;
+
+		// This contains the redshift configuration detail needed when registering the datasource in DataZone
+		const redshiftConfigurationSecret = new Secret(this, 'RedshiftConfiguration', {
+			secretName: REDSHIFT_CONFIGURATION_SECRET,
+			secretObjectValue: {
+				jdbcConnectionUrl: SecretValue.unsafePlainText(`jdbc:redshift://${REDSHIFT_WORKGROUP_NAME}.${accountId}.${region}.redshift-serverless.amazonaws.com:5439/${REDSHIFT_DATABASE_NAME}`),
+				subnetId: SecretValue.unsafePlainText(network.vpc.isolatedSubnets[0].subnetId),
+				securityGroupId: SecretValue.unsafePlainText(securityGroupForLambda.securityGroupId),
+				workgroupName: SecretValue.unsafePlainText(REDSHIFT_WORKGROUP_NAME),
+				redshiftSecretArn: SecretValue.unsafePlainText(`arn:aws:secretsmanager:${region}:${accountId}:secret:${REDSHIFT_CREDENTIAL_SECRET}`),
+				availabilityZone: SecretValue.unsafePlainText(network.vpc.isolatedSubnets[0].availabilityZone),
+				// The schema and table are set by create-redshift-schema.ts
+				path: SecretValue.unsafePlainText(`${redshiftServerlessWorkgroup.databaseName}/sustainability/golden_materials`),
+				databaseTableName: SecretValue.unsafePlainText(`sustainability.golden_materials`)
+			},
+			encryptionKey: redshiftConfigurationEncryptionKey
+		});
+		redshiftConfigurationEncryptionKey.grantDecrypt(new AccountPrincipal(props.hubAccountId));
+		redshiftConfigurationSecret.grantRead(new AccountPrincipal(props.hubAccountId));
+		redshiftConfigurationSecret.node.addDependency(redshiftServerlessWorkgroup);
+
 		// TODO: Create custom resource to call data asset module to register invoices.csv (csv), as well as setting glossary terms
 		// TODO: Create custom resource to call data asset module to register materials (redshift), as well as setting glossary terms
 	}
+
 
 	private createCopyFromS3CustomResource(dataBucket: string, workgroupDefaultAdminRole: IRole, redshiftRoleForCopyFromS3: IRole, workgroup: CfnWorkgroup, databaseName: string): CustomResource {
 		const eventHandler = this.createCopyFromS3Function();
@@ -120,7 +151,7 @@ export class DatagenInfrastructureConstruct extends Construct {
 
 		const provider = new Provider(this, 'CopyFromS3CustomResourceProvider', {
 			onEventHandler: eventHandler,
-			logRetention: RetentionDays.ONE_WEEK,
+			logRetention: RetentionDays.ONE_WEEK
 		});
 
 		const customProps: CopyS3Data = {
@@ -128,14 +159,14 @@ export class DatagenInfrastructureConstruct extends Construct {
 				workgroupName: workgroup.attrWorkgroupWorkgroupName,
 				workgroupId: workgroup.attrWorkgroupWorkgroupId,
 				dataAPIRoleArn: workgroupDefaultAdminRole.roleArn,
-				databaseName,
+				databaseName
 			},
 			dataBucket,
-			redshiftRoleForCopyFromS3: redshiftRoleForCopyFromS3.roleArn,
+			redshiftRoleForCopyFromS3: redshiftRoleForCopyFromS3.roleArn
 		};
 		const cr = new CustomResource(this, 'CopyFromS3CustomResource', {
 			serviceToken: provider.serviceToken,
-			properties: customProps,
+			properties: customProps
 		});
 
 		return cr;
@@ -161,11 +192,11 @@ export class DatagenInfrastructureConstruct extends Construct {
 				target: 'node20.11',
 				sourceMap: false,
 				sourcesContent: false,
-				banner: "import { createRequire } from 'module';const require = createRequire(import.meta.url);import { fileURLToPath } from 'url';import { dirname } from 'path';const __filename = fileURLToPath(import.meta.url);const __dirname = dirname(__filename);",
-				externalModules: ['aws-sdk'],
+				banner: 'import { createRequire } from \'module\';const require = createRequire(import.meta.url);import { fileURLToPath } from \'url\';import { dirname } from \'path\';const __filename = fileURLToPath(import.meta.url);const __dirname = dirname(__filename);',
+				externalModules: ['aws-sdk']
 			},
 			depsLockFilePath: path.join(__dirname, '../../../../common/config/rush/pnpm-lock.yaml'),
-			architecture: Architecture.ARM_64,
+			architecture: Architecture.ARM_64
 		});
 
 		return fn;

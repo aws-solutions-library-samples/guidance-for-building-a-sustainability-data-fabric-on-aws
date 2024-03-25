@@ -15,6 +15,7 @@ export const REDSHIFT_WORKGROUP_NAME = 'sdf-demo';
 export const REDSHIFT_DATABASE_NAME = 'sdf_demo';
 export const REDSHIFT_USERNAME = 'sdf_demo_user';
 
+export const REDSHIFT_CONFIGURATION_SECRET = 'sdf_redshift_configuration_secret';
 
 export const REDSHIFT_CREDENTIAL_SECRET_PARENT = '/df/sdfDemo/redshift/*';
 export const REDSHIFT_CREDENTIAL_SECRET = '/df/sdfDemo/redshift/credentials';

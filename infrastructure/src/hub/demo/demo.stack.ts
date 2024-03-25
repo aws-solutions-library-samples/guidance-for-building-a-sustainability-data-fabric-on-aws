@@ -6,6 +6,7 @@ import { crProviderServiceTokenParameter } from '../common.stack.js';
 
 export type DemoStackProperties = StackProps & {
 	bucketName: string;
+	spokeAccountId: string;
 };
 
 export class HubDemoInfrastructureStack extends Stack {
@@ -20,7 +21,8 @@ export class HubDemoInfrastructureStack extends Stack {
 
 		const datagen = new DatagenInfrastructureConstruct(this, 'Datagen', {
 			bucketName: props.bucketName,
-			customResourceProviderToken
+			customResourceProviderToken,
+			spokeAccountId: props.spokeAccountId
 		});
 
 	}

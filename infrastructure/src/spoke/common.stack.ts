@@ -184,7 +184,7 @@ export class CommonInfrastructureStack extends Stack {
 					'Action::s3:GetObject*',
 					'Action::s3:List*',
 					`Resource::<Bucket83908E77.Arn>/*`,
-					`Resource::arn:<AWS::Partition>:lambda:<AWS::Region>:<AWS::AccountId>:function:<pipelineApiFunctionNameParameter>:*`],
+					`Resource::arn:<AWS::Partition>:lambda:${Stack.of(this).region}:${Stack.of(this).account}:function:<pipelineApiFunctionNameParameter>:*`],
 				reason: 'the policy is required for the lambda to access the s3 bucket that contains reference datasets file.'
 			},
 			{

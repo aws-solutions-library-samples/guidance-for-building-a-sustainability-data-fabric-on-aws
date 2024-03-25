@@ -9,6 +9,9 @@ import { fileURLToPath } from 'url';
 import { NagSuppressions } from 'cdk-nag';
 import { Bucket } from 'aws-cdk-lib/aws-s3';
 import { StringParameter } from 'aws-cdk-lib/aws-ssm';
+import { Secret } from 'aws-cdk-lib/aws-secretsmanager';
+import { REDSHIFT_CONFIGURATION_SECRET } from '../spoke/demo/redshift/constants.js';
+import { Effect, PolicyStatement } from 'aws-cdk-lib/aws-iam';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -38,6 +41,10 @@ export class CommonHubInfrastructureStack extends Stack {
 
 		const bucket = Bucket.fromBucketArn(this, 'SpokeBucket', props.spokeBucketArn);
 
+		const redshiftConfigurationSecret = Secret.fromSecretAttributes(this, 'SpokeRedshiftConfigurationSecret', {
+			secretPartialArn: `arn:aws:secretsmanager:${Stack.of(this).region}:${props.spokeAccountId}:secret:${REDSHIFT_CONFIGURATION_SECRET}`
+		});
+
 		const dataAssetFunctionName = StringParameter.fromStringParameterAttributes(this, 'dataAssetFunctionNameParameter', {
 			parameterName: dataAssetFunctionNameParameter,
 			simpleName: false
@@ -57,6 +64,7 @@ export class CommonHubInfrastructureStack extends Stack {
 			environment: {
 				DATA_ASSET_FUNCTION_NAME: dataAssetFunctionName,
 				DATAZONE_ATHENA_ENVIRONMENT_ID: props.athenaEnvironmentId,
+				DATAZONE_REDSHIFT_ENVIRONMENT_ID: props.redshiftEnvironmentId,
 				DATAZONE_DOMAIN_ID: props.domainId,
 				DATAZONE_DOMAIN_NAME: props.domainName,
 				DATAZONE_PROJECT_ID: props.projectId,
@@ -79,6 +87,12 @@ export class CommonHubInfrastructureStack extends Stack {
 
 		bucket.grantRead(deploymentHelperLambda);
 		dataAssetLambda.grantInvoke(deploymentHelperLambda);
+		redshiftConfigurationSecret.grantRead(deploymentHelperLambda);
+		deploymentHelperLambda.addToRolePolicy(new PolicyStatement({
+			effect: Effect.ALLOW,
+			actions: ['kms:Decrypt', 'kms:CreateGrant'],
+			resources: ['*']
+		}));
 
 		const deploymentHelperResourceProvider = new cr.Provider(this, 'DeploymentHelperResourceProvider', {
 			onEventHandler: deploymentHelperLambda
@@ -136,7 +150,8 @@ export class CommonHubInfrastructureStack extends Stack {
 					'Action::s3:GetObject*',
 					'Action::s3:List*',
 					`Resource::${props.spokeBucketArn}/*`,
-					`Resource::arn:<AWS::Partition>:lambda:${Stack.of(this).region}:${Stack.of(this).account}:function:<dataAssetFunctionNameParameterParameter>:*`],
+					`Resource::arn:<AWS::Partition>:lambda:${Stack.of(this).region}:${Stack.of(this).account}:function:<dataAssetFunctionNameParameterParameter>:*`
+				],
 				reason: 'the policy is required for the lambda to access the s3 bucket that contains reference datasets file.'
 			},
 			{
