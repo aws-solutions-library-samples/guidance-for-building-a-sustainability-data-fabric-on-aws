@@ -20,6 +20,22 @@ export class TriggerPipelineService {
 
     const pipelineDefinitionFiles = await this.s3Client.send(new ListObjectsCommand({ Bucket: this.bucketName, Prefix: event.useeio.sifResourcesPrefix }));
 
+    const executions: ExecutionDetail[] = [];
+    for (const object of pipelineDefinitionFiles.Contents ?? []) {
+      const uploadFileKey = object.Key!.replace('pipeline.json', 'csv').replace(event.useeio.sifResourcesPrefix, event.useeio.resourcesPrefix);
+      const pipelineExecution = await this.createPipelineExecution(object.Key!, uploadFileKey);
+      if (!pipelineExecution) {
+        executions.push(pipelineExecution!);
+      }
+    }
+
+    this.log.info(`TriggerPipelineService > process > exit:`);
+    return executions;
+  }
+
+
+  private async createPipelineExecution(pipelineDefinitionKey: string, fileUploadKey: string): Promise<ExecutionDetail | undefined> {
+
     const securityContext = {
       authorizer: {
         claims: {
@@ -30,35 +46,32 @@ export class TriggerPipelineService {
       }
     };
 
-    const executions: ExecutionDetail[] = [];
+    const createNewPipelineResource: NewPipeline = JSON.parse(await (await this.s3Client.send(new GetObjectCommand({ Bucket: this.bucketName, Key: pipelineDefinitionKey }))).Body!.transformToString());
 
-    for (const object of pipelineDefinitionFiles.Contents ?? []) {
-      const createNewPipelineResource: NewPipeline = JSON.parse(await (await this.s3Client.send(new GetObjectCommand({ Bucket: this.bucketName, Key: object.Key! }))).Body!.transformToString());
-      const existingPipeline = await this.pipelineClient.getByAlias(createNewPipelineResource.name, securityContext);
+    // get the pipeline detail based on the pipeline name
+    const existingPipeline = await this.pipelineClient.getByAlias(createNewPipelineResource.name, securityContext);
 
-      if (existingPipeline) {
-        const execution = await this.executionClient.create(existingPipeline!.id, { actionType: 'create', mode: 'job', expiration: 600 }, securityContext);
-        const uploadFile = await this.s3Client.send(new GetObjectCommand(
-          {
-            Bucket: this.bucketName,
-            Key: object.Key!.replace('pipeline.json', 'csv').replace(event.useeio.sifResourcesPrefix, event.useeio.resourcesPrefix)
-          }));
-
-        const fileContent = await uploadFile.Body!.transformToString();
-
-        await axios.put(execution.inputUploadUrl!, fileContent, {
-          headers: {
-            'Content-Type': 'text/csv'
-          }
-        });
-        executions.push({ pipelineId: existingPipeline!.id, id: execution.id });
-      } else {
-        this.log.info(`TriggerPipelineService > process > error: pipeline ${createNewPipelineResource.name} not exist`);
-      }
-
+    if (existingPipeline) {
+      // create the pipeline execution
+      const execution = await this.executionClient.create(existingPipeline!.id, { actionType: 'create', mode: 'job', expiration: 600 }, securityContext);
+      // get the uploaded file
+      const uploadFile = await this.s3Client.send(new GetObjectCommand(
+        {
+          Bucket: this.bucketName,
+          Key: fileUploadKey
+        }));
+      const fileContent = await uploadFile.Body!.transformToString();
+      // upload the input file using the signed url
+      await axios.put(execution.inputUploadUrl!, fileContent, {
+        headers: {
+          'Content-Type': 'text/csv'
+        }
+      });
+      // return the execution details so we can poll it
+      return { pipelineId: existingPipeline!.id, id: execution.id };
+    } else {
+      this.log.info(`TriggerPipelineService > process > error: pipeline ${createNewPipelineResource.name} not exist`);
+      return undefined;
     }
-
-    this.log.info(`TriggerPipelineService > process > exit:`);
-    return executions;
   }
 }
