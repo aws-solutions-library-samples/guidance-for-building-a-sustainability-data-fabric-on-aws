@@ -6,29 +6,28 @@ import { crProviderServiceTokenParameter } from '../common.stack.js';
 import { UseeioInfrastructureConstruct } from './useeio.construct.js';
 
 export interface HubProductInfrastructureProps {
-	bucketName: string;
+  bucketName: string;
 }
 
 export class HubProductInfrastructureStack extends Stack {
 
-	public constructor(scope: Construct, id: string, props: StackProps & HubProductInfrastructureProps) {
-		super(scope, id, props);
+  public constructor(scope: Construct, id: string, props: StackProps & HubProductInfrastructureProps) {
+    super(scope, id, props);
 
+    const customResourceProviderToken = StringParameter.fromStringParameterAttributes(this, 'customResourceProviderToken', {
+      parameterName: crProviderServiceTokenParameter,
+      simpleName: false
+    }).stringValue;
 
-		const customResourceProviderToken = StringParameter.fromStringParameterAttributes(this, 'customResourceProviderToken', {
-			parameterName: crProviderServiceTokenParameter,
-			simpleName: false
-		}).stringValue;
+    new UsepaInfrastructureConstruct(this, 'UsepaInfrastructure', {
+      customResourceProviderToken,
+      bucketName: props.bucketName
+    });
 
-		// new UsepaInfrastructureConstruct(this, 'UsepaInfrastructure', {
-		// 	customResourceProviderToken,
-		// 	bucketName: props.bucketName
-		// });
+    new UseeioInfrastructureConstruct(this, 'UseeioInfrastructure', {
+      customResourceProviderToken,
+      bucketName: props.bucketName
+    });
 
-		new UseeioInfrastructureConstruct(this, 'UseeioInfrastructure', {
-			customResourceProviderToken,
-			bucketName: props.bucketName
-		});
-
-	}
+  }
 }
