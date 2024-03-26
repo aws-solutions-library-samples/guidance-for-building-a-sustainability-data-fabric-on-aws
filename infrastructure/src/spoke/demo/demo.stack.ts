@@ -86,7 +86,9 @@ export class SpokeDemoInfrastructureStack extends Stack {
 	private websiteNags() {
 		NagSuppressions.addResourceSuppressionsByPath(
 			this,
-			['/SdfSpokeDemoStack/Website/SdfDemoWebsiteBucket/Resource', '/SdfSpokeDemoStack/Website/SdfDemoWebsiteBucket/Policy/Resource'],
+			['/SdfSpokeDemoStack/Website/SdfDemoWebsiteBucket/Resource',
+				'/SdfSpokeDemoStack/Website/SdfDemoWebsiteLogsBucket/Resource',
+				'/SdfSpokeDemoStack/Website/SdfDemoWebsiteBucket/Policy/Resource'],
 			[
 				{
 					id: 'AwsSolutions-S1',
@@ -110,6 +112,18 @@ export class SpokeDemoInfrastructureStack extends Stack {
 				{
 					id: 'AwsSolutions-CFR4',
 					reason: 'This is a demo application and we need to support TLSV1 for now'
+				}
+			],
+			true
+		);
+
+		NagSuppressions.addResourceSuppressionsByPath(
+			this,
+			['/SdfSpokeDemoStack/Website/SdfDemoWebsiteLogsBucket'],
+			[
+				{
+					id: 'AwsSolutions-S10',
+					reason: 'This is a demo application and does not require Access Logs'
 				}
 			],
 			true

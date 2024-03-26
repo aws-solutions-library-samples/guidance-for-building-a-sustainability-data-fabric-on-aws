@@ -57,7 +57,7 @@
             },
             {
                 "index": 4,
-                "formula": "SWITCH(:chosen_value,1,:co2e_1,2,:co2e_2,3,:co2e_3,4,:co2e_4,5,:co2e_5)",
+                "formula": "SWITCH(:chosen_result,1,:co2e_1,2,:co2e_2,3,:co2e_3,4,:co2e_4,5,:co2e_5)",
                 "outputs": [
                     {
                         "index": 0,
@@ -75,7 +75,7 @@
             },
             {
                 "index": 1,
-                "key": "chosen_value",
+                "key": "chosen_result",
                 "type": "number"
             },
             {

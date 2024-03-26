@@ -35,12 +35,14 @@ export class MaterialsNaicsMatchingConstruct extends Construct {
 		const bucket = Bucket.fromBucketName(this, 'Bucket', props.bucketName);
 
 		let dataPath = path.join(__dirname, '..', '..', '..', '..', 'typescript', 'packages', 'demo', 'materialsNaicsMatching', 'resources');
+
 		const resourceDeployment = new BucketDeployment(this, 'MaterialsNaicsMatchingResourceDeployment', {
 			sources: [Source.asset(dataPath)],
 			destinationBucket: bucket,
 			destinationKeyPrefix: 'demo/materialsNaicsMatching/resources/'
 		});
 
+		dataPath = path.join(__dirname, '..', '..', '..', '..', 'typescript', 'packages', 'demo', 'materialsNaicsMatching', 'sifResources');
 		const sifResourcesDeployment = new BucketDeployment(this, 'MaterialsNaicsMatchingSifResourceDeployment', {
 			sources: [Source.asset(dataPath)],
 			destinationBucket: bucket,

@@ -208,7 +208,7 @@ export class WorkflowConstruct extends Construct {
           callbackUrl: cfnWaitConditionHandle.ref,
           tasks: [
             {
-              priority: 1,
+              priority: 4,
               resourcesPrefix: 'products/useeio/resources',
               sifResourcesPrefix: 'products/useeio/sifResources'
             },
@@ -223,7 +223,7 @@ export class WorkflowConstruct extends Construct {
               sifResourcesPrefix: 'products/usepa/sifResources'
             },
             {
-              priority: 4,
+              priority: 1,
               resourcesPrefix: 'demo/materialsNaicsMatching/resources',
               sifResourcesPrefix: 'demo/materialsNaicsMatching/sifResources'
             }]
