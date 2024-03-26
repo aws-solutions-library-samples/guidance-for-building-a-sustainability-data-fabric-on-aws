@@ -17,7 +17,7 @@ import { Architecture, Runtime, Tracing } from 'aws-cdk-lib/aws-lambda';
 import { NodejsFunction, OutputFormat } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { Bucket } from 'aws-cdk-lib/aws-s3';
-import { DefinitionBody, LogLevel, StateMachine, TaskInput } from 'aws-cdk-lib/aws-stepfunctions';
+import { Choice, Condition, DefinitionBody, LogLevel, StateMachine, TaskInput, Wait, WaitTime } from 'aws-cdk-lib/aws-stepfunctions';
 import { LambdaInvoke } from 'aws-cdk-lib/aws-stepfunctions-tasks';
 import { NagSuppressions } from 'cdk-nag';
 import { Construct } from 'constructs';
@@ -63,6 +63,44 @@ export class WorkflowConstruct extends Construct {
       logRetention: RetentionDays.ONE_WEEK
     };
 
+    const cloudformationCallback = new NodejsFunction(this, 'CloudformationCallback', {
+      ...commonLambdaOptions,
+      description: 'Error Handler Lambda',
+      entry: path.join(__dirname, '../../../../typescript/packages/apps/workflow/src/handlers/cloudformationCallback.handler.ts'),
+      functionName: `sdf-spoke-workflow-cloudformationCallback`,
+      memorySize: 512,
+      timeout: Duration.minutes(5),
+      environment: {
+        DATA_BUCKET_NAME: bucket.bucketName
+      }
+    });
+
+    const region = Stack.of(this).region;
+    const accountId = Stack.of(this).account;
+    const stateMachinePolicy = new PolicyStatement({
+      actions: [
+        'states:DescribeExecution'
+      ],
+      resources: [
+        `arn:aws:states:${region}:${accountId}:execution:sdf-demo-seeder:*`
+      ]
+    });
+
+    cloudformationCallback.addToRolePolicy(stateMachinePolicy);
+
+    const cloudformationCallbackTask = new LambdaInvoke(this, 'CloudformationCallbackTask', {
+      lambdaFunction: cloudformationCallback,
+      payload: TaskInput.fromObject({
+        'error.$': '$',
+        'execution': {
+          'executionStartTime.$': '$$.Execution.StartTime',
+          'executionId.$': '$$.Execution.Id',
+          'stateMachineArn.$': '$$.StateMachine.Id'
+        }
+      }),
+      outputPath: '$'
+    });
+
     const triggerPipelineLambda = new NodejsFunction(this, 'TriggerPipelineLambda', {
       ...commonLambdaOptions,
       description: 'Trigger Pipeline Task Handler',
@@ -82,48 +120,32 @@ export class WorkflowConstruct extends Construct {
     pipelineProcessorLambda.grantInvoke(triggerPipelineLambda);
     pipelineLambda.grantInvoke(triggerPipelineLambda);
 
-    const region = Stack.of(this).region;
-    const accountId = Stack.of(this).account;
-    const stateMachinePolicy = new PolicyStatement({
-      actions: [
-        'states:DescribeExecution'
-      ],
-      resources: [
-        `arn:aws:states:${region}:${accountId}:execution:sdf-demo-seeder:*`
-      ]
-    });
-
     const triggerPipelineTask = new LambdaInvoke(this, 'TriggerPipelineTask', {
       lambdaFunction: triggerPipelineLambda,
       outputPath: '$.Payload'
-    });
+    }).addCatch(cloudformationCallbackTask, {});
 
-    const cloudformationCallback = new NodejsFunction(this, 'CloudformationCallback', {
+    const checkPipelineLambda = new NodejsFunction(this, 'CheckPipelineLambda', {
       ...commonLambdaOptions,
-      description: 'Error Handler Lambda',
-      entry: path.join(__dirname, '../../../../typescript/packages/apps/workflow/src/handlers/cloudformationCallback.handler.ts'),
-      functionName: `sdf-spoke-workflow-cloudformationCallback`,
+      description: 'Check Pipeline Task Handler',
+      entry: path.join(__dirname, '../../../../typescript/packages/apps/workflow/src/handlers/checkPipeline.handler.ts'),
+      functionName: `sdf-spoke-workflow-checkPipeline`,
       memorySize: 512,
       timeout: Duration.minutes(5),
       environment: {
-        DATA_BUCKET_NAME: bucket.bucketName
+        DATA_BUCKET_NAME: bucket.bucketName,
+        PIPELINE_API_FUNCTION_NAME: pipelineLambda.functionName,
+        PIPELINE_PROCESSOR_API_FUNCTION_NAME: pipelineProcessorLambda.functionName,
+        SIF_ADMINISTRATOR_EMAIL: props.sifAdminEmailAddress
       }
     });
 
-    cloudformationCallback.addToRolePolicy(stateMachinePolicy);
+    pipelineProcessorLambda.grantInvoke(checkPipelineLambda);
 
-    const cloudformationCallbackTask = new LambdaInvoke(this, 'CloudformationCallbackTask', {
-      lambdaFunction: cloudformationCallback,
-      payload: TaskInput.fromObject({
-        'error.$': '$',
-        'execution': {
-          'executionStartTime.$': '$$.Execution.StartTime',
-          'executionId.$': '$$.Execution.Id',
-          'stateMachineArn.$': '$$.StateMachine.Id'
-        }
-      }),
-      outputPath: '$'
-    });
+    const checkPipelineTask = new LambdaInvoke(this, 'CheckPipelineTask', {
+      lambdaFunction: checkPipelineLambda,
+      outputPath: '$.Payload'
+    }).addCatch(cloudformationCallbackTask, {});
 
     const sdfDemoSeederLogGroup = new LogGroup(this, 'SdfDemoSeederStateMachineLogGroup',
       { logGroupName: `/aws/vendedlogs/states/sdf-demo-seeder`, removalPolicy: RemovalPolicy.DESTROY });
@@ -141,11 +163,19 @@ export class WorkflowConstruct extends Construct {
 
     // 10 - Scope 3 purchased goods & services
 
+    const checkPipelineExecutions = new Choice(this, 'Executions Finish?')
+      .when(Condition.booleanEquals('$.done', true), triggerPipelineTask)
+      .when(Condition.booleanEquals('$.done', false), new Wait(this, 'Wait', {
+        time: WaitTime.duration(Duration.seconds(20))
+      }).next(checkPipelineTask));
+
     const demoSeederStateMachine = new StateMachine(this, 'SdfDemoSeederStateMachine', {
       definitionBody: DefinitionBody.fromChainable(
         // 2 - Import US EPA Emission Factors into SIF
-        triggerPipelineTask.addCatch(cloudformationCallbackTask, {})
-          .next(cloudformationCallbackTask)
+        triggerPipelineTask
+          .next(new Choice(this, 'Executions To Monitor?')
+            .when(Condition.numberGreaterThan('$.executionsCount', 0), checkPipelineTask.next(checkPipelineExecutions))
+            .when(Condition.numberEquals('$.executionsCount', 0), cloudformationCallbackTask))
       ),
       logs: { destination: sdfDemoSeederLogGroup, level: LogLevel.ERROR, includeExecutionData: true },
       stateMachineName: `sdf-demo-seeder`,
@@ -156,14 +186,12 @@ export class WorkflowConstruct extends Construct {
 
     NagSuppressions.addResourceSuppressions([demoSeederStateMachine],
       [
-
         {
           id: 'AwsSolutions-SF1',
           reason: 'We only care about logging the error for now.'
 
         }],
       true);
-
 
     /**
      * CloudFormation WaitCondition resource to wait until database migration has been performed successfully
@@ -178,18 +206,27 @@ export class WorkflowConstruct extends Construct {
         stateMachineArn: demoSeederStateMachine.stateMachineArn,
         input: JSON.stringify({
           callbackUrl: cfnWaitConditionHandle.ref,
-          usepa: {
-            resourcesPrefix: 'products/usepa/converted',
-            sifResourcesPrefix: 'products/usepa/sifResources'
-          },
-          useeio: {
-            resourcesPrefix: 'products/useeio/resources',
-            sifResourcesPrefix: 'products/useeio/sifResources'
-          },
-          materialsNaicsMatching: {
-            resourcesPrefix: 'demo/materialsNaicsMatching/resources',
-            sifResourcesPrefix: 'demo/materialsNaicsMatching/sifResources'
-          }
+          tasks: [
+            {
+              priority: 1,
+              resourcesPrefix: 'products/useeio/resources',
+              sifResourcesPrefix: 'products/useeio/sifResources'
+            },
+            {
+              priority: 2,
+              resourcesPrefix: 'products/usepa/converted/2023',
+              sifResourcesPrefix: 'products/usepa/sifResources'
+            },
+            {
+              priority: 3,
+              resourcesPrefix: 'products/usepa/converted/2024',
+              sifResourcesPrefix: 'products/usepa/sifResources'
+            },
+            {
+              priority: 4,
+              resourcesPrefix: 'demo/materialsNaicsMatching/resources',
+              sifResourcesPrefix: 'demo/materialsNaicsMatching/sifResources'
+            }]
         })
       } as StartExecutionInput,
       physicalResourceId: cr.PhysicalResourceId.fromResponse('executionArn')

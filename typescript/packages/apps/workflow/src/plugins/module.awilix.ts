@@ -12,8 +12,9 @@ import type { MetadataBearer, RequestPresigningArguments } from '@aws-sdk/types'
 import type { Client, Command } from '@aws-sdk/smithy-client';
 import { SSMClient } from '@aws-sdk/client-ssm';
 import { TriggerPipelineService } from '../services/triggerPipeline.service';
-import { ExecutionClient, Invoker, PipelineClient } from '@df-sustainability/clients';
+import { ExecutionClient, Invoker, LambdaRequestContext, PipelineClient } from '@df-sustainability/clients';
 import { LambdaClient } from '@aws-sdk/client-lambda';
+import { CheckPipelineService } from '../services/checkPipeline.service';
 
 const { captureAWSv3Client } = pkg;
 
@@ -33,6 +34,7 @@ declare module '@fastify/awilix' {
     lambdaClient: LambdaClient;
     getSignedUrl: GetSignedUrl;
     triggerPipelineService: TriggerPipelineService;
+    checkPipelineService: CheckPipelineService;
     invoker: Invoker;
     pipelineClient: PipelineClient;
     executionClient: ExecutionClient;
@@ -91,6 +93,16 @@ const registerContainer = (app: FastifyInstance) => {
   const bucketName = process.env['DATA_BUCKET_NAME']!;
   const adminEmailAddress = process.env['SIF_ADMINISTRATOR_EMAIL']!;
 
+  const securityContext: LambdaRequestContext = {
+    authorizer: {
+      claims: {
+        email: adminEmailAddress,
+        'cognito:groups': `/|||admin`,
+        groupContextId: '/'
+      }
+    }
+  };
+
   diContainer.register({
 
     // Clients
@@ -122,7 +134,11 @@ const registerContainer = (app: FastifyInstance) => {
       ...commonInjectionOptions
     }),
 
-    triggerPipelineService: asFunction((container: Cradle) => new TriggerPipelineService(app.log, container.s3Client, bucketName, container.pipelineClient, adminEmailAddress, container.executionClient), {
+    triggerPipelineService: asFunction((container: Cradle) => new TriggerPipelineService(app.log, container.s3Client, bucketName, container.pipelineClient, securityContext, container.executionClient), {
+      ...commonInjectionOptions
+    }),
+
+    checkPipelineService: asFunction((container: Cradle) => new CheckPipelineService(app.log, container.executionClient, securityContext), {
       ...commonInjectionOptions
     }),
 
