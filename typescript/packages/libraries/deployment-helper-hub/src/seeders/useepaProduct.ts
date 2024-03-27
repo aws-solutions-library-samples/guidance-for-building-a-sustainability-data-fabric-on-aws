@@ -8,6 +8,13 @@ import type { DataAssetClient, DFLambdaRequestContext, NewDataAssetTaskResource,
 import type { DataZoneMetadata } from '../plugins/awilix';
 import type { BaseLogger } from 'pino';
 
+
+const fileToAssetNameMapping: Record<string, string> = {
+	'scope-3-category-4-upstream-transportation-and-distribution-and-category-9-downstream-transportation-and-distribution': 'scope3-upstream-transportation',
+	'scope-3-category-5-waste-generated-in-operations-and-category-12-end-of-life-treatment-of-sold-products': 'scope3-waste-generated',
+	'scope-3-category-6-business-travel-and-category-7-employee-commuting': 'scope3-business-travel-employee-commuting'
+};
+
 export class UsepaProductSeeder implements CustomResource {
 
 	public constructor(private readonly log: BaseLogger, private readonly s3Client: S3Client, private readonly dataAssetClient: DataAssetClient, private readonly dataZoneMetadata: DataZoneMetadata, private readonly requestContext: DFLambdaRequestContext) {
@@ -88,8 +95,7 @@ export class UsepaProductSeeder implements CustomResource {
 		await Promise.all(createConvertedFutures);
 	}
 
-
-	private getDomainNamespace(domain: { name: string, id: string }) {
+	private getDomainNamespace(domain: { name: string, id: string }): string {
 		return `df.${domain.name.replace(' ', '_')}-${domain.id}`;
 	}
 
@@ -99,10 +105,10 @@ export class UsepaProductSeeder implements CustomResource {
 
 		const fileName = key.split('/').pop();
 		const extension = fileName.split('.').pop();
-		const assetName = fileName.replaceAll(/\.(csv|xlsx)/g, '');
+		const fileNameWithoutExtension = fileName.replaceAll(/\.(csv|xlsx)/g, '');
+		const assetName = fileToAssetNameMapping[fileNameWithoutExtension] ?? fileNameWithoutExtension;
 
 		const newDataAssetTaskResource: NewDataAssetTaskResource = {
-
 			'catalog': {
 				'assetName': assetName,
 				'autoPublish': true,
