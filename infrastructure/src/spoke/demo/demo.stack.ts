@@ -26,6 +26,8 @@ export type DemoStackProperties = StackProps & {
 	userVpcConfig?: SdfVpcConfig;
 	bucketName: string;
 	hubAccountId: string;
+	domainId: string;
+	projectId: string;
 };
 
 export const redshiftUserParameter = `/df/sdfDemo/redshift/username`;
@@ -45,7 +47,9 @@ export class SpokeDemoInfrastructureStack extends Stack {
 		const datagen = new DatagenInfrastructureConstruct(this, 'Datagen', {
 			userVpcConfig: props.userVpcConfig,
 			bucketName: props.bucketName,
-			hubAccountId: props.hubAccountId
+			hubAccountId: props.hubAccountId,
+			domainId: props.domainId,
+			projectId: props.projectId
 		});
 		this.datagenNags();
 
@@ -72,7 +76,7 @@ export class SpokeDemoInfrastructureStack extends Stack {
 	private datagenNags() {
 		NagSuppressions.addResourceSuppressionsByPath(
 			this,
-			['/SdfSpokeDemoStack/Datagen/RedshiftConfiguration/Resource'],
+			['/SdfSpokeDemoStack/Datagen/RedshiftConfiguration/Resource', '/SdfSpokeDemoStack/Datagen/RedshiftCredentialsSecret/Resource'],
 			[
 				{
 					id: 'AwsSolutions-SMG4',

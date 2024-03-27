@@ -6,7 +6,7 @@ import ow from 'ow';
 import type { SecretsManagerClient } from '@aws-sdk/client-secrets-manager';
 import { GetSecretValueCommand } from '@aws-sdk/client-secrets-manager';
 import type { DataAssetClient, DFLambdaRequestContext, NewDataAssetTaskResource } from '@df-sustainability/clients';
-import { type DataZoneMetadata, getDomainNamespace } from '../plugins/awilix';
+import type { DataZoneMetadata } from '../plugins/awilix';
 
 export interface RedshiftConfiguration {
 	redshiftSecretArn: string;
@@ -27,16 +27,16 @@ export class RedshiftProductSeeder implements CustomResource {
 	public async create(customResourceEvent: CustomResourceEvent): Promise<unknown> {
 		this.log.info(`RedshiftProductSeeder > create > customResourceEvent: ${customResourceEvent}`);
 		ow(customResourceEvent.ResourceProperties, ow.object.nonEmpty);
-		const { secretArn, assetName, workflowName, assetInputs } = customResourceEvent.ResourceProperties;
-		await this.createDataAsset(secretArn, assetName, workflowName, assetInputs);
+		const { secretArn, assetName, workflowName, assetInput } = customResourceEvent.ResourceProperties;
+		await this.createDataAsset(secretArn, assetName, workflowName, assetInput);
 		return Promise.resolve(undefined);
 	}
 
 	public async update(customResourceEvent: CustomResourceEvent): Promise<unknown> {
 		this.log.info(`RedshiftProductSeeder > update > customResourceEvent: ${customResourceEvent}`);
 		ow(customResourceEvent.ResourceProperties, ow.object.nonEmpty);
-		const { secretArn, assetName, workflowName, assetInputs } = customResourceEvent.ResourceProperties;
-		await this.createDataAsset(secretArn, assetName, workflowName, assetInputs);
+		const { secretArn, assetName, workflowName, assetInput } = customResourceEvent.ResourceProperties;
+		await this.createDataAsset(secretArn, assetName, workflowName, assetInput);
 		return Promise.resolve(undefined);
 	}
 
@@ -45,10 +45,10 @@ export class RedshiftProductSeeder implements CustomResource {
 	}
 
 
-	private async createDataAsset(secretArn: string, assetName: string, workflowName: string, assetInputs: string[]): Promise<void> {
+	private async createDataAsset(secretArn: string, assetName: string, workflowName: string, assetInput: string): Promise<void> {
 		this.log.info(`RedshiftProductSeeder > createDataAsset > secretArn: ${secretArn}, assetName: ${assetName}, workflowName: ${workflowName}`);
 		const redshiftConfiguration = await this.getRedshiftConfiguration(secretArn);
-		const newTaskResource = this.assembleNewDataAssetTaskResource(redshiftConfiguration, assetName, workflowName, assetInputs);
+		const newTaskResource = this.assembleNewDataAssetTaskResource(redshiftConfiguration, assetName, workflowName, assetInput);
 		this.log.info(`RedshiftProductSeeder > createDataAsset > newTaskResource: ${JSON.stringify(newTaskResource)}`);
 		await this.dataAssetClient.create(newTaskResource, this.requestContext);
 		this.log.info(`RedshiftProductSeeder > createDataAsset > redshiftConfiguration: ${redshiftConfiguration}, assetName: ${assetName}, workflowName: ${workflowName}`);
@@ -62,7 +62,7 @@ export class RedshiftProductSeeder implements CustomResource {
 		return redshiftConfiguration;
 	}
 
-	private assembleNewDataAssetTaskResource(redshiftConfiguration: RedshiftConfiguration, assetName: string, workflowName: string, assetInputs: string[]): NewDataAssetTaskResource {
+	private assembleNewDataAssetTaskResource(redshiftConfiguration: RedshiftConfiguration, assetName: string, workflowName: string, assetInput: string): NewDataAssetTaskResource {
 		this.log.trace(`RedshiftProductSeeder > assembleNewDataAssetTaskResource > redshiftConfiguration: ${redshiftConfiguration}, assetName: ${assetName}, workflowName: ${workflowName}`);
 
 		const newDataAssetTaskResource: NewDataAssetTaskResource = {
@@ -79,16 +79,8 @@ export class RedshiftProductSeeder implements CustomResource {
 			'workflow': {
 				'name': workflowName,
 				'roleArn': this.dataZoneMetadata.roleArn,
-				externalInputs: assetInputs.map(a => (
-					{
-						assetName: a,
-						assetNamespace: getDomainNamespace({
-							name: this.dataZoneMetadata.domainName,
-							id: this.dataZoneMetadata.domainId
-						})
-					})),
 				'dataset': {
-					'name': `redshift-${assetName}-dataset`,
+					'name': assetInput,
 					'format': 'json',
 					'connection': {
 						'redshift': {

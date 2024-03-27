@@ -36,9 +36,9 @@ const __dirname: string = path.dirname(__filename);
 const app = new cdk.App();
 
 function stackSuppressions(stacks: cdk.Stack[], suppressions: NagPackSuppression[]): void {
-  stacks.forEach((s) => {
-    NagSuppressions.addStackSuppressions(s, suppressions, true);
-  });
+	stacks.forEach((s) => {
+		NagSuppressions.addStackSuppressions(s, suppressions, true);
+	});
 }
 
 // user VPC config (for demo infrastructure)
@@ -46,19 +46,19 @@ const useExistingVpc = tryGetBooleanContext(app, 'useExistingVpc', false);
 
 let userVpcId, userIsolatedSubnetIds;
 if (useExistingVpc) {
-  userVpcId = getOrThrow(app, 'existingVpcId');
-  userIsolatedSubnetIds = getOrThrow(app, 'existingIsolatedSubnetIds').toString().split(',');
+	userVpcId = getOrThrow(app, 'existingVpcId');
+	userIsolatedSubnetIds = getOrThrow(app, 'existingIsolatedSubnetIds').toString().split(',');
 }
 
 const hubAccountId = getOrThrow(app, 'hubAccountId');
 const spokeAccountId = getOrThrow(app, 'spokeAccountId');
 
 const getCallerEnvironment = (): { accountId?: string; region?: string } | undefined => {
-  if (!fs.existsSync(`${__dirname}/predeploy.json`)) {
-    throw new Error('Pre deployment file does not exist\n' + 'Make sure you run the cdk using npm script which will run the predeploy script automatically\n' + 'EXAMPLE\n' + '$ npm run cdk deploy -- -e sampleEnvironment');
-  }
-  const { callerEnvironment } = JSON.parse(fs.readFileSync(`${__dirname}/predeploy.json`, 'utf-8'));
-  return callerEnvironment;
+	if (!fs.existsSync(`${__dirname}/predeploy.json`)) {
+		throw new Error('Pre deployment file does not exist\n' + 'Make sure you run the cdk using npm script which will run the predeploy script automatically\n' + 'EXAMPLE\n' + '$ npm run cdk deploy -- -e sampleEnvironment');
+	}
+	const { callerEnvironment } = JSON.parse(fs.readFileSync(`${__dirname}/predeploy.json`, 'utf-8'));
+	return callerEnvironment;
 };
 const callerEnvironment = getCallerEnvironment();
 
@@ -94,37 +94,39 @@ const sifAdminUserId = getOrThrow(app, 'sifAdminUserId');
  */
 
 const commonInfrastructureStack = new CommonInfrastructureStack(app, 'SdfSpokeCommonStack', {
-  stackName: 'sdf-common-spoke',
-  description: 'Infrastructure shared between SDF and SDF demo.',
-  hubAccountId: hubAccountId,
-  spokeBucketName,
-  domainId,
-  domainName,
-  projectId,
-  athenaEnvironmentId,
-  redshiftEnvironmentId,
-  roleArn,
-  environment,
-  tenantId,
-  sifAdminEmailAddress,
-  env: spokeEnvironment
+	stackName: 'sdf-common-spoke',
+	description: 'Infrastructure shared between SDF and SDF demo.',
+	hubAccountId: hubAccountId,
+	spokeBucketName,
+	domainId,
+	domainName,
+	projectId,
+	athenaEnvironmentId,
+	redshiftEnvironmentId,
+	roleArn,
+	environment,
+	tenantId,
+	sifAdminEmailAddress,
+	env: spokeEnvironment
 });
 
 const products = new SpokeProductInfrastructureStack(app, 'SdfSpokeProductStack', {
-  stackName: 'sdf-products-spoke',
-  description: 'Infrastructure for SDF data products.',
-  bucketName: commonInfrastructureStack.bucketName,
-  env: spokeEnvironment
+	stackName: 'sdf-products-spoke',
+	description: 'Infrastructure for SDF data products.',
+	bucketName: commonInfrastructureStack.bucketName,
+	env: spokeEnvironment
 });
 
 products.addDependency(commonInfrastructureStack);
 
 const demos = new SpokeDemoInfrastructureStack(app, 'SdfSpokeDemoStack', {
-  stackName: 'sdf-demo-spoke',
-  description: 'Infrastructure for SDF demo.',
-  bucketName: commonInfrastructureStack.bucketName,
-  hubAccountId,
-  env: spokeEnvironment
+	stackName: 'sdf-demo-spoke',
+	description: 'Infrastructure for SDF demo.',
+	bucketName: commonInfrastructureStack.bucketName,
+	hubAccountId,
+	domainId,
+	projectId,
+	env: spokeEnvironment
 });
 demos.addDependency(products);
 
@@ -134,34 +136,34 @@ demos.addDependency(products);
 
 
 const commonHubInfrastructureStack = new CommonHubInfrastructureStack(app, 'SdfHubCommonStack', {
-  stackName: 'sdf-common-hub',
-  description: 'Infrastructure shared between SDF and SDF demo in Hub.',
-  domainId,
-  domainName,
-  projectId,
-  athenaEnvironmentId,
-  redshiftEnvironmentId,
-  roleArn,
-  spokeAccountId,
-  spokeBucketArn: `arn:aws:s3:::${spokeBucketName}`,
-  env: hubEnvironment,
-  sifAdminEmailAddress,
-  sifAdminUserId
+	stackName: 'sdf-common-hub',
+	description: 'Infrastructure shared between SDF and SDF demo in Hub.',
+	domainId,
+	domainName,
+	projectId,
+	athenaEnvironmentId,
+	redshiftEnvironmentId,
+	roleArn,
+	spokeAccountId,
+	spokeBucketArn: `arn:aws:s3:::${spokeBucketName}`,
+	env: hubEnvironment,
+	sifAdminEmailAddress,
+	sifAdminUserId
 });
 
 const hubProductInfrastructureStack = new HubProductInfrastructureStack(app, 'SdfHubProductStack', {
-  stackName: 'sdf-products-hub',
-  bucketName: spokeBucketName,
-  description: 'Infrastructure for SDF data products in Hub.',
-  env: hubEnvironment
+	stackName: 'sdf-products-hub',
+	bucketName: spokeBucketName,
+	description: 'Infrastructure for SDF data products in Hub.',
+	env: hubEnvironment
 });
 
 const hubDemoInfrastructureStack = new HubDemoInfrastructureStack(app, 'SdfHubDemoStack', {
-  stackName: 'sdf-demo-hub',
-  bucketName: spokeBucketName,
-  description: 'Infrastructure for SDF demo.',
-  spokeAccountId,
-  env: hubEnvironment
+	stackName: 'sdf-demo-hub',
+	bucketName: spokeBucketName,
+	description: 'Infrastructure for SDF demo.',
+	spokeAccountId,
+	env: hubEnvironment
 });
 
 hubProductInfrastructureStack.addDependency(commonHubInfrastructureStack);
@@ -172,12 +174,12 @@ hubDemoInfrastructureStack.addDependency(commonHubInfrastructureStack);
 
 
 const spokeWorkflowInfrastructureStack = new SpokeWorkflowInfrastructureStack(app, 'SdfSpokeWorkflowStack', {
-  stackName: 'sdf-workflow-spoke',
-  bucketName: spokeBucketName,
-  environment,
-  tenantId,
-  env: spokeEnvironment,
-  sifAdminEmailAddress
+	stackName: 'sdf-workflow-spoke',
+	bucketName: spokeBucketName,
+	environment,
+	tenantId,
+	env: spokeEnvironment,
+	sifAdminEmailAddress
 });
 
 stackSuppressions([products, demos, spokeWorkflowInfrastructureStack], commonCdkNagRules);

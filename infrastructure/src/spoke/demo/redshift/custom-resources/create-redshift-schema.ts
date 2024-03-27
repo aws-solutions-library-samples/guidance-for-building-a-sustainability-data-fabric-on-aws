@@ -15,24 +15,23 @@ import { CdkCustomResourceEvent, CdkCustomResourceHandler, CdkCustomResourceResp
 import { CreateSchema, UserCredential } from '../models.js';
 import { logger } from '../utils/logger.js';
 import { executeStatementsWithWait, getRedshiftClient } from '../redshift-data.js';
-import * as randomstring from 'randomstring';
-import { CreateSecretCommand, CreateSecretCommandInput, DeleteSecretCommand, DeleteSecretCommandInput, DescribeSecretCommand, DescribeSecretCommandInput, ResourceNotFoundException, SecretsManagerClient, UpdateSecretCommand, UpdateSecretCommandInput } from '@aws-sdk/client-secrets-manager';
+import { GetSecretValueCommand, SecretsManagerClient } from '@aws-sdk/client-secrets-manager';
 import { aws_sdk_client_common_config } from '../utils/sdk-client-config.js';
-import { REDSHIFT_CREDENTIAL_SECRET, REDSHIFT_USERNAME } from '../constants.js';
+import { REDSHIFT_CREDENTIAL_SECRET } from '../constants.js';
 
 type ResourcePropertiesType = CreateSchema & {
 	readonly ServiceToken: string;
 };
 
-const secretManagerClient = new SecretsManagerClient({
-	...aws_sdk_client_common_config,
+const secretManagerClient: SecretsManagerClient = new SecretsManagerClient({
+	...aws_sdk_client_common_config
 });
 
 export const handler: CdkCustomResourceHandler = async (event) => {
 	const response: CdkCustomResourceResponse = {
 		PhysicalResourceId: 'create-redshift-db-user-custom-resource',
 		Data: {},
-		Status: 'SUCCESS',
+		Status: 'SUCCESS'
 	};
 
 	try {
@@ -50,22 +49,30 @@ async function _handler(event: CdkCustomResourceEvent) {
 	const requestType = event.RequestType;
 
 	logger.info('RequestType: ' + requestType);
-	if (requestType == 'Create' || requestType == 'Update') {
+	if (requestType === 'Create' || requestType === 'Update') {
 		await onCreate(event);
 	}
 
-	if (requestType == 'Delete') {
+	if (requestType === 'Delete') {
 		await onDelete();
 	}
 }
 
-async function onCreate(event: CdkCustomResourceEvent) {
+async function onCreate(event: CdkCustomResourceEvent): Promise<void> {
 	logger.info('onCreate()');
 
 	const props = event.ResourceProperties as ResourcePropertiesType;
 
 	const redshiftClient = getRedshiftClient(props.serverlessRedshiftProps!.dataAPIRoleArn);
-	const credential = await createUserCredentialSecret(REDSHIFT_CREDENTIAL_SECRET, REDSHIFT_USERNAME);
+
+	const secret = await secretManagerClient.send(
+		new GetSecretValueCommand({
+			SecretId: REDSHIFT_CREDENTIAL_SECRET
+		})
+	);
+
+	const credential: UserCredential = JSON.parse(secret.SecretString);
+
 	try {
 		await executeStatementsWithWait(
 			redshiftClient,
@@ -87,9 +94,9 @@ async function onCreate(event: CdkCustomResourceEvent) {
 				`GRANT ROLE sustainability_readers TO "IAMR:${props.dataRoleName}"`,
 
 				`CREATE USER ${credential.username} PASSWORD '${credential.password}'`,
-				`GRANT ROLE sustainability_readers TO ${credential.username}`,
+				`GRANT ROLE sustainability_readers TO ${credential.username}`
 			],
-			props.serverlessRedshiftProps, true,
+			props.serverlessRedshiftProps, true
 		);
 	} catch (err) {
 		if (err instanceof Error) {
@@ -99,66 +106,9 @@ async function onCreate(event: CdkCustomResourceEvent) {
 	}
 }
 
-async function onDelete() {
-	try {
-		await deleteUserCredentialSecret(REDSHIFT_CREDENTIAL_SECRET);
-	} catch (error) {
-		if (error instanceof ResourceNotFoundException) {
-			logger.warn(`The parameter '${REDSHIFT_CREDENTIAL_SECRET}' already deleted.`);
-		}
-	}
+async function onDelete(): Promise<void> {
+
 }
 
-async function createUserCredentialSecret(secretName: string, username: string): Promise<UserCredential> {
-	const credential: UserCredential = {
-		username,
-		password: randomstring.generate(32),
-	};
 
-	const readParams: DescribeSecretCommandInput = {
-		SecretId: secretName,
-	};
 
-	try {
-		await secretManagerClient.send(new DescribeSecretCommand(readParams));
-
-		const params: UpdateSecretCommandInput = {
-			SecretId: secretName,
-			SecretString: JSON.stringify(credential),
-			Description: `SDF Demo Redshift credentials for demo data flow.`,
-		};
-		logger.info(`Updating the credential of user '${username}' of Redshift to parameter ${secretName}.`);
-
-		await secretManagerClient.send(new UpdateSecretCommand(params));
-	} catch (err: any) {
-		if ((err as Error) instanceof ResourceNotFoundException) {
-			await _createUserCredentialSecret(secretName, username, credential);
-		} else {
-			throw err;
-		}
-	}
-
-	return credential;
-}
-async function _createUserCredentialSecret(secretName: string, username: string, credential: UserCredential): Promise<UserCredential> {
-	const params: CreateSecretCommandInput = {
-		Name: secretName,
-		SecretString: JSON.stringify(credential),
-		Description: `SDF Demo Redshift credentials for demo data flow.`,
-	};
-	logger.info(`Creating the credential of user '${username}' of Redshift to parameter ${secretName}.`);
-
-	await secretManagerClient.send(new CreateSecretCommand(params));
-
-	return credential;
-}
-
-async function deleteUserCredentialSecret(secretName: string) {
-	const params: DeleteSecretCommandInput = {
-		SecretId: secretName,
-		ForceDeleteWithoutRecovery: true,
-	};
-
-	logger.info(`Deleting the credential ${secretName}.`);
-	await secretManagerClient.send(new DeleteSecretCommand(params));
-}

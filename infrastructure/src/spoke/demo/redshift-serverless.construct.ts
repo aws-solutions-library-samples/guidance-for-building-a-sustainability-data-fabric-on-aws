@@ -55,7 +55,7 @@ export class RedshiftServerless extends Construct {
 					statements: [
 						new PolicyStatement({
 							actions: ['redshift-serverless:CreateNamespace', 'redshift-serverless:DeleteNamespace', 'redshift-serverless:GetNamespace'],
-							resources: ['*'],
+							resources: ['*']
 						}),
 						new PolicyStatement({
 							actions: ['redshift-serverless:TagResource', 'redshift-serverless:UntagResource'],
@@ -65,13 +65,13 @@ export class RedshiftServerless extends Construct {
 										service: 'redshift-serverless',
 										resource: 'namespace',
 										resourceName: '*',
-										arnFormat: ArnFormat.SLASH_RESOURCE_NAME,
+										arnFormat: ArnFormat.SLASH_RESOURCE_NAME
 									},
 									Stack.of(this)
-								),
-							],
-						}),
-					],
+								)
+							]
+						})
+					]
 				}),
 				'redshift-service-role': new PolicyDocument({
 					statements: [
@@ -86,25 +86,25 @@ export class RedshiftServerless extends Construct {
 										region: '', // region be empty for IAM resources
 										resourceName: 'aws-service-role/redshift.amazonaws.com/AWSServiceRoleForRedshift',
 										service: 'iam',
-										arnFormat: ArnFormat.SLASH_RESOURCE_NAME,
+										arnFormat: ArnFormat.SLASH_RESOURCE_NAME
 									},
 									Stack.of(this)
-								),
+								)
 							],
 							conditions: {
-								StringLike: { 'iam:AWSServiceName': 'redshift.amazonaws.com' },
-							},
-						}),
-					],
-				}),
+								StringLike: { 'iam:AWSServiceName': 'redshift.amazonaws.com' }
+							}
+						})
+					]
+				})
 			},
-			description: `Managed by ${Stack.of(this).templateOptions.description} to manage the lifecycle of Redshift namespace.`,
+			description: `Managed by ${Stack.of(this).templateOptions.description} to manage the lifecycle of Redshift namespace.`
 		});
 		this.grantDataAPIExecutePolicy(this.workgroupDefaultAdminRole as Role);
 
 		this.redshiftDataAPIExecRole = new Role(this, 'RedshiftServerlessDataAPIRole', {
 			assumedBy: new AccountPrincipal(Aws.ACCOUNT_ID),
-			description: `Managed by ${Stack.of(this).templateOptions.description} to load data into Redshift workgroup.`,
+			description: `Managed by ${Stack.of(this).templateOptions.description} to load data into Redshift workgroup.`
 		});
 		this.grantDataAPIExecutePolicy(this.redshiftDataAPIExecRole as Role);
 
@@ -121,11 +121,31 @@ export class RedshiftServerless extends Construct {
 			publiclyAccessible: false,
 			port: Number(this.workgroupPort),
 			securityGroupIds: Fn.split(',', props.securityGroupIds),
-			subnetIds: props.vpc.selectSubnets(props.subnetSelection).subnetIds,
+			subnetIds: props.vpc.selectSubnets(props.subnetSelection).subnetIds
 		});
-		this.redshiftUserCR = this.createRedshiftSchemaCustomResource();
+		this.redshiftUserCR = this.createRedshiftSchemaCustomResource(props.credentialSecretArn);
 
 		this.addCfnNagSuppression();
+	}
+
+	protected secretsManagerPolicies(scope: IConstruct): PolicyStatement[] {
+		const writeSecretPolicy: PolicyStatement = new PolicyStatement({
+			effect: Effect.ALLOW,
+			resources: [
+				Arn.format(
+					{
+						resource: 'secret',
+						service: 'secretsmanager',
+						resourceName: REDSHIFT_CREDENTIAL_SECRET_PARENT,
+						arnFormat: ArnFormat.COLON_RESOURCE_NAME
+					},
+					Stack.of(scope)
+				)
+			],
+			actions: ['secretsmanager:DescribeSecret', 'secretsmanager:UpdateSecret', 'secretsmanager:CreateSecret', 'secretsmanager:DeleteSecret', 'secretsmanager:TagResource', 'secretsmanager:GetSecretValue']
+		});
+
+		return [writeSecretPolicy];
 	}
 
 	private addCfnNagSuppression() {
@@ -142,33 +162,33 @@ export class RedshiftServerless extends Construct {
 				rules_to_suppress: [
 					{
 						id: 'W11',
-						reason: 'Have to using wildcard resources for creating undetermined Redshift Serverless namespace.',
-					},
-				],
+						reason: 'Have to using wildcard resources for creating undetermined Redshift Serverless namespace.'
+					}
+				]
 			},
 			{
 				paths_endswith: ['WorkgroupAdminRole/DefaultPolicy/Resource'],
-				rules_to_suppress: [ruleToSuppressRolePolicyWithWildcardResources('Create workgroup Lambda', 'redshift-serverless workgroup')],
+				rules_to_suppress: [ruleToSuppressRolePolicyWithWildcardResources('Create workgroup Lambda', 'redshift-serverless workgroup')]
 			},
 			{
 				paths_endswith: ['CreateUserFn/Resource', 'CreateNamespaceFn/Resource'],
 				rules_to_suppress: [
 					{
 						id: 'W89',
-						reason: 'Custom resource function without VPC is by design.',
-					},
-				],
-			},
+						reason: 'Custom resource function without VPC is by design.'
+					}
+				]
+			}
 		]);
 	}
 
-	private createRedshiftSchemaCustomResource(): CustomResource {
+	private createRedshiftSchemaCustomResource(credentialSecretArn: string): CustomResource {
 		const eventHandler = this.createCreateSchemaFunction();
 		this.workgroupDefaultAdminRole.grantAssumeRole(eventHandler.grantPrincipal);
 
 		const provider = new Provider(this, 'CreateRedshiftSchemaCustomResourceProvider', {
 			onEventHandler: eventHandler,
-			logRetention: RetentionDays.ONE_WEEK,
+			logRetention: RetentionDays.ONE_WEEK
 		});
 
 		const customProps: CreateSchema = {
@@ -178,18 +198,19 @@ export class RedshiftServerless extends Construct {
 				workgroupId: this.workgroup.attrWorkgroupWorkgroupId,
 				dataAPIRoleArn: this.workgroupDefaultAdminRole.roleArn,
 				databaseName: this.databaseName,
-			},
+				credentialSecretArn
+			}
 		};
 		const cr = new CustomResource(this, 'CreateRedshiftSchemaCustomResource', {
 			serviceToken: provider.serviceToken,
-			properties: customProps,
+			properties: customProps
 		});
 
 		return cr;
 	}
 
 	private createCreateSchemaFunction() {
-		const logGroup = createLogGroup(this.thisScope, {prefix: 'sdfDemo-datagen-createRedshiftSchema'});
+		const logGroup = createLogGroup(this.thisScope, { prefix: 'sdfDemo-datagen-createRedshiftSchema' });
 		const fn = new NodejsFunction(this.thisScope, 'CreateSchemaFn', {
 			functionName: `sdfDemo-datagen-createRedshiftSchema`,
 			description: `SDF Demo datagen`,
@@ -210,34 +231,14 @@ export class RedshiftServerless extends Construct {
 				target: 'node20.11',
 				sourceMap: false,
 				sourcesContent: false,
-				banner: "import { createRequire } from 'module';const require = createRequire(import.meta.url);import { fileURLToPath } from 'url';import { dirname } from 'path';const __filename = fileURLToPath(import.meta.url);const __dirname = dirname(__filename);",
-				externalModules: ['aws-sdk'],
+				banner: 'import { createRequire } from \'module\';const require = createRequire(import.meta.url);import { fileURLToPath } from \'url\';import { dirname } from \'path\';const __filename = fileURLToPath(import.meta.url);const __dirname = dirname(__filename);',
+				externalModules: ['aws-sdk']
 			},
 			depsLockFilePath: path.join(__dirname, '../../../../common/config/rush/pnpm-lock.yaml'),
-			architecture: Architecture.ARM_64,
+			architecture: Architecture.ARM_64
 		});
 
 		return fn;
-	}
-
-	protected secretsManagerPolicies(scope: IConstruct): PolicyStatement[] {
-		const writeSecretPolicy: PolicyStatement = new PolicyStatement({
-			effect: Effect.ALLOW,
-			resources: [
-				Arn.format(
-					{
-						resource: 'secret',
-						service: 'secretsmanager',
-						resourceName: REDSHIFT_CREDENTIAL_SECRET_PARENT,
-						arnFormat: ArnFormat.COLON_RESOURCE_NAME,
-					},
-					Stack.of(scope)
-				),
-			],
-			actions: ['secretsmanager:DescribeSecret', 'secretsmanager:UpdateSecret', 'secretsmanager:CreateSecret', 'secretsmanager:DeleteSecret', 'secretsmanager:TagResource'],
-		});
-
-		return [writeSecretPolicy];
 	}
 
 	private createRedshiftNamespaceCustomResource(props: RedshiftServerlessWorkgroupProps): CustomResource {
@@ -247,17 +248,17 @@ export class RedshiftServerless extends Construct {
 
 		const provider = new Provider(this, 'CreateRedshiftServerlessNamespaceCustomResourceProvider', {
 			onEventHandler: eventHandler,
-			logRetention: RetentionDays.ONE_WEEK,
+			logRetention: RetentionDays.ONE_WEEK
 		});
 
 		const customProps: NewNamespaceCustomProperties = {
 			adminRoleArn: this.workgroupDefaultAdminRole.roleArn,
 			namespaceName: props.workgroupName,
-			databaseName: props.databaseName,
+			databaseName: props.databaseName
 		};
 		const cr = new CustomResource(this, 'CreateRedshiftServerlessNamespaceCustomResource', {
 			serviceToken: provider.serviceToken,
-			properties: customProps,
+			properties: customProps
 		});
 
 		cr.node.addDependency(policy);
@@ -266,7 +267,7 @@ export class RedshiftServerless extends Construct {
 	}
 
 	private createCreateNamespaceFunction(): IFunction {
-		const logGroup = createLogGroup(this.thisScope, {prefix: 'sdfDemo-datagen-createRedshiftNamespace'});
+		const logGroup = createLogGroup(this.thisScope, { prefix: 'sdfDemo-datagen-createRedshiftNamespace' });
 		const fn = new NodejsFunction(this.thisScope, 'CreateNamespaceFn', {
 			functionName: `sdfDemo-datagen-createRedshiftNamespace`,
 			description: `SDF Demo datagen`,
@@ -288,11 +289,11 @@ export class RedshiftServerless extends Construct {
 				target: 'node20.11',
 				sourceMap: false,
 				sourcesContent: false,
-				banner: "import { createRequire } from 'module';const require = createRequire(import.meta.url);import { fileURLToPath } from 'url';import { dirname } from 'path';const __filename = fileURLToPath(import.meta.url);const __dirname = dirname(__filename);",
-				externalModules: ['aws-sdk'],
+				banner: 'import { createRequire } from \'module\';const require = createRequire(import.meta.url);import { fileURLToPath } from \'url\';import { dirname } from \'path\';const __filename = fileURLToPath(import.meta.url);const __dirname = dirname(__filename);',
+				externalModules: ['aws-sdk']
 			},
 			depsLockFilePath: path.join(__dirname, '../../../../common/config/rush/pnpm-lock.yaml'),
-			architecture: Architecture.ARM_64,
+			architecture: Architecture.ARM_64
 		});
 
 		return fn;
@@ -308,17 +309,17 @@ export class RedshiftServerless extends Construct {
 							service: 'redshift-serverless',
 							resource: 'workgroup',
 							resourceName: '*',
-							arnFormat: ArnFormat.SLASH_RESOURCE_NAME,
+							arnFormat: ArnFormat.SLASH_RESOURCE_NAME
 						},
 						Stack.of(this)
-					),
-				],
+					)
+				]
 			})
 		);
 		role.addToPolicy(
 			new PolicyStatement({
 				actions: ['redshift-data:DescribeStatement', 'redshift-data:GetStatementResult'],
-				resources: ['*'],
+				resources: ['*']
 			})
 		);
 		role.addToPolicy(
@@ -330,11 +331,11 @@ export class RedshiftServerless extends Construct {
 							service: 'redshift-serverless',
 							resource: 'workgroup',
 							resourceName: '*',
-							arnFormat: ArnFormat.SLASH_RESOURCE_NAME,
+							arnFormat: ArnFormat.SLASH_RESOURCE_NAME
 						},
 						Stack.of(this)
-					),
-				],
+					)
+				]
 			})
 		);
 	}

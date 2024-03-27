@@ -11,7 +11,7 @@
  *  and limitations under the License.
  */
 
-import { CustomResource, Duration, SecretValue, Stack } from 'aws-cdk-lib';
+import { CustomResource, Duration, SecretValue, Stack, Tags } from 'aws-cdk-lib';
 import { AccountPrincipal, IRole, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 import { Architecture, Runtime, Tracing } from 'aws-cdk-lib/aws-lambda';
 import { NodejsFunction, OutputFormat } from 'aws-cdk-lib/aws-lambda-nodejs';
@@ -25,7 +25,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { Network, SdfVpcConfig } from './network.construct.js';
 import { RedshiftServerless } from './redshift-serverless.construct.js';
-import { REDSHIFT_CONFIGURATION_SECRET, REDSHIFT_CREDENTIAL_SECRET, REDSHIFT_DATABASE_NAME, REDSHIFT_WORKGROUP_NAME } from './redshift/constants.js';
+import { REDSHIFT_CONFIGURATION_SECRET, REDSHIFT_CREDENTIAL_SECRET, REDSHIFT_DATABASE_NAME, REDSHIFT_USERNAME, REDSHIFT_WORKGROUP_NAME } from './redshift/constants.js';
 import { CopyS3Data, ExistingRedshiftServerlessProps } from './redshift/models.js';
 import { RedshiftAssociateIAMRole } from './redshift/redshift-associate-iam-role.js';
 import { createLambdaRole } from './redshift/utils/lambda.js';
@@ -42,6 +42,8 @@ export type DatagenProps = {
 	userVpcConfig?: SdfVpcConfig;
 	bucketName: string;
 	hubAccountId: string;
+	domainId: string;
+	projectId: string;
 };
 
 export const redshiftUserParameter = `/df/sdfDemo/redshift/username`;
@@ -76,6 +78,21 @@ export class DatagenInfrastructureConstruct extends Construct {
 			'Allow all internal traffic'
 		);
 
+		const redshiftCredentialSecret = new Secret(this, 'RedshiftCredentialsSecret', {
+			secretName: REDSHIFT_CREDENTIAL_SECRET,
+			generateSecretString: {
+				secretStringTemplate: JSON.stringify({
+					username: REDSHIFT_USERNAME
+				}),
+				excludePunctuation: true,
+				includeSpace: false,
+				generateStringKey: 'password'
+			}
+		});
+
+		Tags.of(redshiftCredentialSecret).add('AmazonDataZoneDomain', props.domainId);
+		Tags.of(redshiftCredentialSecret).add('AmazonDataZoneProject', props.projectId);
+
 		const redshiftServerlessWorkgroup = new RedshiftServerless(this, 'RedshiftServerlessWorkgroup', {
 			vpc: network.vpc,
 			subnetSelection: {
@@ -85,7 +102,8 @@ export class DatagenInfrastructureConstruct extends Construct {
 			baseCapacity: 8, // 8 to 512 RPUs
 			workgroupName: REDSHIFT_WORKGROUP_NAME,
 			databaseName: REDSHIFT_DATABASE_NAME,
-			dataBucket: dataBucket.bucketName
+			dataBucket: dataBucket.bucketName,
+			credentialSecretArn: redshiftCredentialSecret.secretArn
 		});
 
 		const existingRedshiftServerlessProps: ExistingRedshiftServerlessProps = {
@@ -93,7 +111,8 @@ export class DatagenInfrastructureConstruct extends Construct {
 			workgroupName: redshiftServerlessWorkgroup.workgroup.attrWorkgroupWorkgroupName,
 			namespaceId: redshiftServerlessWorkgroup.namespaceId,
 			dataAPIRoleArn: redshiftServerlessWorkgroup.redshiftDataAPIExecRole.roleArn,
-			databaseName: redshiftServerlessWorkgroup.databaseName
+			databaseName: redshiftServerlessWorkgroup.databaseName,
+			credentialSecretArn: redshiftCredentialSecret.secretArn
 		};
 
 		// Redshift requires a role with sufficient permissions to copy from S3
@@ -115,7 +134,8 @@ export class DatagenInfrastructureConstruct extends Construct {
 			redshiftServerlessWorkgroup.workgroupDefaultAdminRole,
 			redshiftRoleForCopyFromS3,
 			redshiftServerlessWorkgroup.workgroup,
-			redshiftServerlessWorkgroup.databaseName
+			redshiftServerlessWorkgroup.databaseName,
+			redshiftCredentialSecret.secretArn
 		);
 		crCopyFromS3.node.addDependency(redshiftServerlessWorkgroup.redshiftUserCR);
 		crCopyFromS3.node.addDependency(crForModifyClusterIAMRoles);
@@ -135,7 +155,7 @@ export class DatagenInfrastructureConstruct extends Construct {
 				subnetId: SecretValue.unsafePlainText(network.vpc.isolatedSubnets[0].subnetId),
 				securityGroupId: SecretValue.unsafePlainText(securityGroupForLambda.securityGroupId),
 				workgroupName: SecretValue.unsafePlainText(REDSHIFT_WORKGROUP_NAME),
-				redshiftSecretArn: SecretValue.unsafePlainText(`arn:aws:secretsmanager:${region}:${accountId}:secret:${REDSHIFT_CREDENTIAL_SECRET}`),
+				redshiftSecretArn: SecretValue.unsafePlainText(redshiftCredentialSecret.secretArn),
 				availabilityZone: SecretValue.unsafePlainText(network.vpc.isolatedSubnets[0].availabilityZone),
 				// The schema and table are set by create-redshift-schema.ts
 				path: SecretValue.unsafePlainText(`${redshiftServerlessWorkgroup.databaseName}/sustainability/golden_materials`),
@@ -148,7 +168,7 @@ export class DatagenInfrastructureConstruct extends Construct {
 		redshiftConfigurationSecret.node.addDependency(redshiftServerlessWorkgroup);
 	}
 
-	private createCopyFromS3CustomResource(dataBucket: string, workgroupDefaultAdminRole: IRole, redshiftRoleForCopyFromS3: IRole, workgroup: CfnWorkgroup, databaseName: string): CustomResource {
+	private createCopyFromS3CustomResource(dataBucket: string, workgroupDefaultAdminRole: IRole, redshiftRoleForCopyFromS3: IRole, workgroup: CfnWorkgroup, databaseName: string, credentialSecretArn: string): CustomResource {
 		const eventHandler = this.createCopyFromS3Function();
 		workgroupDefaultAdminRole.grantAssumeRole(eventHandler.grantPrincipal);
 
@@ -162,7 +182,8 @@ export class DatagenInfrastructureConstruct extends Construct {
 				workgroupName: workgroup.attrWorkgroupWorkgroupName,
 				workgroupId: workgroup.attrWorkgroupWorkgroupId,
 				dataAPIRoleArn: workgroupDefaultAdminRole.roleArn,
-				databaseName
+				databaseName,
+				credentialSecretArn
 			},
 			dataBucket,
 			redshiftRoleForCopyFromS3: redshiftRoleForCopyFromS3.roleArn

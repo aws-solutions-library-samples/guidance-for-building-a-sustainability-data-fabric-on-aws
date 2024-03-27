@@ -21,6 +21,7 @@ export interface RedshiftServerlessWorkgroupProps {
 	readonly workgroupName: string;
 	readonly databaseName: string;
 	readonly dataBucket: string;
+	readonly credentialSecretArn: string;
 }
 
 interface RedshiftProps {
@@ -35,6 +36,7 @@ export interface ExistingRedshiftServerlessProps extends RedshiftServerlessProps
 	readonly workgroupId?: string;
 	readonly namespaceId?: string;
 	readonly dataAPIRoleArn: string;
+	readonly credentialSecretArn: string;
 }
 
 export interface CustomProperties {
@@ -54,6 +56,7 @@ export type NewNamespaceCustomProperties = RedshiftProps & {
 	readonly adminRoleArn: string;
 	readonly namespaceName: string;
 };
+
 export interface UserCredential {
 	readonly username: string;
 	readonly password: string;
