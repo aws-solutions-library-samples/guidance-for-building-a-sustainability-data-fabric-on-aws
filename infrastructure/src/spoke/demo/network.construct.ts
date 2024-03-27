@@ -11,21 +11,21 @@
  *  and limitations under the License.
  */
 
-import * as cdk from "aws-cdk-lib";
-import * as ec2 from "aws-cdk-lib/aws-ec2";
-import * as iam from "aws-cdk-lib/aws-iam";
-import * as s3 from "aws-cdk-lib/aws-s3";
-import * as ssm from "aws-cdk-lib/aws-ssm";
-import { NagSuppressions } from "cdk-nag";
-import { Construct } from "constructs";
+import * as cdk from 'aws-cdk-lib';
+import * as ec2 from 'aws-cdk-lib/aws-ec2';
+import * as iam from 'aws-cdk-lib/aws-iam';
+import * as s3 from 'aws-cdk-lib/aws-s3';
+import * as ssm from 'aws-cdk-lib/aws-ssm';
+import { NagSuppressions } from 'cdk-nag';
+import { Construct } from 'constructs';
 
 export interface SdfVpcConfig {
-  vpcId: string;
-  isolatedSubnetIds: string[];
+	vpcId: string;
+	isolatedSubnetIds: string[];
 }
 
 export interface NetworkConstructProperties {
-  userVpcConfig?: SdfVpcConfig;
+	userVpcConfig?: SdfVpcConfig;
 }
 
 export const vpcIdParameter = `/df/sdfDemo/network/vpcId`;
@@ -34,125 +34,142 @@ export const isolatedSubnetIdListParameter = `/df/sdfDemo/network/isolatedSubnet
 
 
 export class Network extends Construct {
-  public vpc: ec2.Vpc;
-  public dfVpcConfig: SdfVpcConfig;
+	public vpc: ec2.Vpc;
+	public dfVpcConfig: SdfVpcConfig;
 
-  constructor(scope: Construct, id: string, props: NetworkConstructProperties) {
-    super(scope, id);
+	constructor(scope: Construct, id: string, props: NetworkConstructProperties) {
+		super(scope, id);
 
-	const accountId = cdk.Stack.of(this).account;
-	const region = cdk.Stack.of(this).region;
+		const accountId = cdk.Stack.of(this).account;
+		const region = cdk.Stack.of(this).region;
 
-    if (props.userVpcConfig === undefined) {
-      const vpc = new ec2.Vpc(this, "SdfDemoVpc", {
-		vpcName: `sdf-${accountId}-${region}-vpc`,
-        subnetConfiguration: [
-          {
-            name: "isolated-subnet",
-            subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
-            cidrMask: 24,
-          },
-		],
-      });
-      this.vpc = vpc;
+		if (props.userVpcConfig === undefined) {
+			const vpc = new ec2.Vpc(this, 'SdfDemoVpc', {
+				vpcName: `sdf-${accountId}-${region}-vpc`,
+				subnetConfiguration: [
+					{
+						name: 'isolated-subnet',
+						subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+						cidrMask: 24
+					}
+				]
+			});
 
-      new ssm.StringParameter(this, "vpcIdParameter", {
-        parameterName: vpcIdParameter,
-        stringValue: this.vpc.vpcId,
-      });
+			// These 2 endpoints are needed for Glue DataBrew to perform profiling
+			vpc.addGatewayEndpoint('s3Endpoint', {
+				service: ec2.GatewayVpcEndpointAwsService.S3,
+				subnets: [
+					{
+						subnetGroupName: 'isolated-subnet'
+					}]
+			});
 
-      new ssm.StringParameter(this, "isolatedSubnetIdsParameter", {
-        parameterName: isolatedSubnetIdsParameter,
-        description: "Isolated subnet IDs used for SDF Demo.",
-        stringValue: this.vpc
-          .selectSubnets({ subnetGroupName: "isolated-subnet" })
-          .subnets.map((o) => o.subnetId)
-          .join(","),
-      });
+			vpc.addInterfaceEndpoint('glueEndpoint', {
+				service: ec2.InterfaceVpcEndpointAwsService.GLUE,
+				subnets: {
+					subnetGroupName: 'isolated-subnet'
+				}
+			});
 
-      new ssm.StringListParameter(this, "isolatedSubnetIdListParameter", {
-        parameterName: isolatedSubnetIdListParameter,
-        description: "Isolated subnet IDs used for SDF Demo.",
-        stringListValue: this.vpc
-          .selectSubnets({ subnetGroupName: "isolated-subnet" })
-          .subnets.map((o) => o.subnetId),
-      });
+			this.vpc = vpc;
 
-      // Add flow logs.
-	  const flowLogBucket = new s3.Bucket(this, 'FlowLogBucket', {
-		bucketName: `sdfdemo-${accountId}-${region}-fl`,
-		encryption: s3.BucketEncryption.S3_MANAGED,
-		intelligentTieringConfigurations: [
-			{
-				name: 'archive',
-				archiveAccessTierTime: cdk.Duration.days(90),
-				deepArchiveAccessTierTime: cdk.Duration.days(180)
-			}
-		],
-		blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
-		enforceSSL: true,
-		autoDeleteObjects: true,
-		versioned: false,
-		serverAccessLogsPrefix: 'access-logs',
-		removalPolicy: cdk.RemovalPolicy.DESTROY,
-	});
+			new ssm.StringParameter(this, 'vpcIdParameter', {
+				parameterName: vpcIdParameter,
+				stringValue: this.vpc.vpcId
+			});
 
-      const flowLogName = `sdfDemo-flowlogs`;
-      const vpcFlowLogRole = new iam.Role(this, "vpcFlowLogRole", {
-        assumedBy: new iam.ServicePrincipal("vpc-flow-logs.amazonaws.com"),
-      });
-      flowLogBucket.grantWrite(vpcFlowLogRole, `${flowLogName}/*`);
+			new ssm.StringParameter(this, 'isolatedSubnetIdsParameter', {
+				parameterName: isolatedSubnetIdsParameter,
+				description: 'Isolated subnet IDs used for SDF Demo.',
+				stringValue: this.vpc
+					.selectSubnets({ subnetGroupName: 'isolated-subnet' })
+					.subnets.map((o) => o.subnetId)
+					.join(',')
+			});
 
-      NagSuppressions.addResourceSuppressions(
-        vpcFlowLogRole,
-        [
-          {
-            id: "AwsSolutions-IAM5",
-            reason: "The role an only modify to a specific flowlog.",
-            appliesTo: [
-              "Action::s3:Abort*",
-              "Action::s3:DeleteObject*",
-              `Resource::<NetworkFlowLogBucket879F01A6.Arn>/sdfDemo-flowlogs/*`,
-            ],
-          },
-        ],
-        true
-      );
+			new ssm.StringListParameter(this, 'isolatedSubnetIdListParameter', {
+				parameterName: isolatedSubnetIdListParameter,
+				description: 'Isolated subnet IDs used for SDF Demo.',
+				stringListValue: this.vpc
+					.selectSubnets({ subnetGroupName: 'isolated-subnet' })
+					.subnets.map((o) => o.subnetId)
+			});
+
+			// Add flow logs.
+			const flowLogBucket = new s3.Bucket(this, 'FlowLogBucket', {
+				bucketName: `sdfdemo-${accountId}-${region}-fl`,
+				encryption: s3.BucketEncryption.S3_MANAGED,
+				intelligentTieringConfigurations: [
+					{
+						name: 'archive',
+						archiveAccessTierTime: cdk.Duration.days(90),
+						deepArchiveAccessTierTime: cdk.Duration.days(180)
+					}
+				],
+				blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+				enforceSSL: true,
+				autoDeleteObjects: true,
+				versioned: false,
+				serverAccessLogsPrefix: 'access-logs',
+				removalPolicy: cdk.RemovalPolicy.DESTROY
+			});
+
+			const flowLogName = `sdfDemo-flowlogs`;
+			const vpcFlowLogRole = new iam.Role(this, 'vpcFlowLogRole', {
+				assumedBy: new iam.ServicePrincipal('vpc-flow-logs.amazonaws.com')
+			});
+			flowLogBucket.grantWrite(vpcFlowLogRole, `${flowLogName}/*`);
+
+			NagSuppressions.addResourceSuppressions(
+				vpcFlowLogRole,
+				[
+					{
+						id: 'AwsSolutions-IAM5',
+						reason: 'The role an only modify to a specific flowlog.',
+						appliesTo: [
+							'Action::s3:Abort*',
+							'Action::s3:DeleteObject*',
+							`Resource::<NetworkFlowLogBucket879F01A6.Arn>/sdfDemo-flowlogs/*`
+						]
+					}
+				],
+				true
+			);
 
 
-      // Create flow logs to S3.
-      new ec2.FlowLog(this, "sharedVpcLowLogs", {
-        destination: ec2.FlowLogDestination.toS3(
-			flowLogBucket,
-          `${flowLogName}/`
-        ),
-        trafficType: ec2.FlowLogTrafficType.ALL,
-        flowLogName: flowLogName,
-        resourceType: ec2.FlowLogResourceType.fromVpc(vpc),
-      });
+			// Create flow logs to S3.
+			new ec2.FlowLog(this, 'sharedVpcLowLogs', {
+				destination: ec2.FlowLogDestination.toS3(
+					flowLogBucket,
+					`${flowLogName}/`
+				),
+				trafficType: ec2.FlowLogTrafficType.ALL,
+				flowLogName: flowLogName,
+				resourceType: ec2.FlowLogResourceType.fromVpc(vpc)
+			});
 
-      this.dfVpcConfig = {
-        vpcId: this.vpc.vpcId,
-        isolatedSubnetIds: this.vpc
-          .selectSubnets({ subnetGroupName: "isolated-subnet" })
-          .subnets.map((o) => o.subnetId),
-      };
+			this.dfVpcConfig = {
+				vpcId: this.vpc.vpcId,
+				isolatedSubnetIds: this.vpc
+					.selectSubnets({ subnetGroupName: 'isolated-subnet' })
+					.subnets.map((o) => o.subnetId)
+			};
 
-	} else {
-      // user provided a VPC, use that
-      this.vpc = ec2.Vpc.fromLookup(this, "vpc", {
-        vpcId: props.userVpcConfig?.vpcId,
-      }) as ec2.Vpc;
+		} else {
+			// user provided a VPC, use that
+			this.vpc = ec2.Vpc.fromLookup(this, 'vpc', {
+				vpcId: props.userVpcConfig?.vpcId
+			}) as ec2.Vpc;
 
-      new ssm.StringParameter(this, "vpcIdParameter", {
-        parameterName: vpcIdParameter,
-        stringValue: this.vpc.vpcId,
-      });
+			new ssm.StringParameter(this, 'vpcIdParameter', {
+				parameterName: vpcIdParameter,
+				stringValue: this.vpc.vpcId
+			});
 
-      this.dfVpcConfig = {
-        vpcId: this.vpc.vpcId,
-        isolatedSubnetIds: props.userVpcConfig.isolatedSubnetIds,
-      };
-    }
-  }
+			this.dfVpcConfig = {
+				vpcId: this.vpc.vpcId,
+				isolatedSubnetIds: props.userVpcConfig.isolatedSubnetIds
+			};
+		}
+	}
 }

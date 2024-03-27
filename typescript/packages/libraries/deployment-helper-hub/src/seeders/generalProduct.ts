@@ -55,21 +55,19 @@ export class GeneralProductSeeder implements CustomResource {
 
 	private async createAssets(bucket: string, prefix: string): Promise<void> {
 		this.log.trace(`GeneralProductSeeder > createAssets > in: bucket: ${bucket}, prefix: ${prefix}`);
-
+		const delay = (ms: number): Promise<void> => new Promise(resolve => setTimeout(resolve, ms));
 		/**
 		 * Seed all the original files
 		 */
 		const listResourcesResponse = await this.s3Client.send(new ListObjectsCommand({ Bucket: bucket, Prefix: `${prefix}` }));
-		const createOriginalFutures = [];
 		for (const object of listResourcesResponse.Contents) {
 			if (object.Key.endsWith('csv')) {
 				const newDataAssetTaskResource = this.assembleCreateDataAssetTaskPayload(object.Key, bucket, []);
-				createOriginalFutures.push(this.dataAssetClient.create(newDataAssetTaskResource, this.requestContext));
+				await this.dataAssetClient.create(newDataAssetTaskResource, this.requestContext);
+				await delay(3000);
 				this.log.info(`GeneralProductSeeder > createAssets > newDataAssetTaskResource: ${JSON.stringify(newDataAssetTaskResource)}`);
 			}
 		}
-
-		await Promise.all(createOriginalFutures);
 		this.log.trace(`GeneralProductSeeder > createAssets > exit >`);
 	}
 

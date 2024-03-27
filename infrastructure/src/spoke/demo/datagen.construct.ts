@@ -33,6 +33,7 @@ import { createLogGroup } from './redshift/utils/logs.js';
 import { createSGForEgressToAwsService } from './redshift/utils/sg.js';
 import { Secret } from 'aws-cdk-lib/aws-secretsmanager';
 import { Key } from 'aws-cdk-lib/aws-kms';
+import { Port } from 'aws-cdk-lib/aws-ec2';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -68,6 +69,12 @@ export class DatagenInfrastructureConstruct extends Construct {
 		});
 
 		const securityGroupForLambda = createSGForEgressToAwsService(this, 'LambdaEgressToAWSServiceSG', network.vpc);
+		// https://docs.aws.amazon.com/glue/latest/dg/setup-vpc-for-glue-access.html
+		securityGroupForLambda.addIngressRule(
+			securityGroupForLambda,
+			Port.allTraffic(),
+			'Allow all internal traffic'
+		);
 
 		const redshiftServerlessWorkgroup = new RedshiftServerless(this, 'RedshiftServerlessWorkgroup', {
 			vpc: network.vpc,
@@ -139,11 +146,7 @@ export class DatagenInfrastructureConstruct extends Construct {
 		redshiftConfigurationEncryptionKey.grantDecrypt(new AccountPrincipal(props.hubAccountId));
 		redshiftConfigurationSecret.grantRead(new AccountPrincipal(props.hubAccountId));
 		redshiftConfigurationSecret.node.addDependency(redshiftServerlessWorkgroup);
-
-		// TODO: Create custom resource to call data asset module to register invoices.csv (csv), as well as setting glossary terms
-		// TODO: Create custom resource to call data asset module to register materials (redshift), as well as setting glossary terms
 	}
-
 
 	private createCopyFromS3CustomResource(dataBucket: string, workgroupDefaultAdminRole: IRole, redshiftRoleForCopyFromS3: IRole, workgroup: CfnWorkgroup, databaseName: string): CustomResource {
 		const eventHandler = this.createCopyFromS3Function();
