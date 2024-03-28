@@ -348,37 +348,37 @@
 			{
 				"index": 1,
 				"key": "Recycled",
-				"label": "Recycled",
+				"label": "Recycled (Metric Tons CO2e / Short Ton Material)",
 				"type": "number"
 			},
 			{
 				"index": 2,
 				"key": "Landfilled",
-				"label": "Landfilled",
+				"label": "Landfilled (Metric Tons CO2e / Short Ton Material)",
 				"type": "number"
 			},
 			{
 				"index": 3,
 				"key": "Combusted",
-				"label": "Combusted",
+				"label": "Combusted (Metric Tons CO2e / Short Ton Material)",
 				"type": "number"
 			},
 			{
 				"index": 4,
 				"key": "Composted",
-				"label": "Composted",
+				"label": "Composted (Metric Tons CO2e / Short Ton Material)",
 				"type": "number"
 			},
 			{
 				"index": 5,
 				"key": "Anaerobically Digested Dry",
-				"label": "Anaerobically Digested Dry",
+				"label": "Anaerobically Digested (Dry Digestate with Curing (Metric Tons CO2e / Short Ton Material))",
 				"type": "number"
 			},
 			{
 				"index": 6,
 				"key": "Anaerobically Digested Wet",
-				"label": "Anaerobically Digested Wet",
+				"label": "Anaerobically Digested (Wet  Digestate with Curing) (Metric Tons CO2e / Short Ton Material)",
 				"type": "number"
 			},
 			{

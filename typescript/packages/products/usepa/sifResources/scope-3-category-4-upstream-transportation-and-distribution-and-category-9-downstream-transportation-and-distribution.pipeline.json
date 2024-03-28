@@ -236,19 +236,19 @@
 			{
 				"index": 1,
 				"key": "CO2 Factor",
-				"label": "CO2 Factor",
+				"label": "CO2 Factor (kg CO2 / unit)",
 				"type": "number"
 			},
 			{
 				"index": 2,
 				"key": "CH4 Factor",
-				"label": "CH4 Factor",
+				"label": "CH4 Factor (g CH4 / unit)",
 				"type": "number"
 			},
 			{
 				"index": 3,
 				"key": "N2O Factor",
-				"label": "N2O Factor",
+				"label": "N2O Factor (g N2O / unit)",
 				"type": "number"
 			},
 			{

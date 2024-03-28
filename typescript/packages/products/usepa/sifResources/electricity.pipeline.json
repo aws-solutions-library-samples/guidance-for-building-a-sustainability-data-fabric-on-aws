@@ -277,7 +277,7 @@
 			},
 			{
 				"index": 21,
-				"formula": ":Non baseload CO2 Factor",
+				"formula": ":Non Baseload CO2 Factor",
 				"outputs": [
 					{
 						"description": "CO₂ factor.",
@@ -314,7 +314,7 @@
 			},
 			{
 				"index": 24,
-				"formula": ":Non baseload CH4 Factor",
+				"formula": ":Non Baseload CH4 Factor",
 				"outputs": [
 					{
 						"description": "CH₄ factor.",
@@ -351,7 +351,7 @@
 			},
 			{
 				"index": 27,
-				"formula": ":Non baseload N2O Factor",
+				"formula": ":Non Baseload N2O Factor",
 				"outputs": [
 					{
 						"description": "N₂O factor.",
@@ -393,37 +393,37 @@
 			{
 				"index": 2,
 				"key": "Total Output CO2 Factor",
-				"label": "Total Output CO2 Factor",
+				"label": "Total Output CO2 Factor (lb CO2 / MWh)",
 				"type": "number"
 			},
 			{
 				"index": 3,
 				"key": "Total Output CH4 Factor",
-				"label": "Total Output CH4 Factor",
+				"label": "Total Output CH4 Factor (lb CH4 / MWh)",
 				"type": "string"
 			},
 			{
 				"index": 4,
 				"key": "Total Output N2O Factor",
-				"label": "Total Output N2O Factor",
+				"label": "Total Output N2O Factor (lb N2O / MWh)",
 				"type": "string"
 			},
 			{
 				"index": 5,
 				"key": "Non Baseload CO2 Factor",
-				"label": "Non Baseload CO2 Factor",
+				"label": "Non-Baseload CO2 Factor (lb CO2 / MWh)",
 				"type": "number"
 			},
 			{
 				"index": 6,
 				"key": "Non Baseload CH4 Factor",
-				"label": "Non Baseload CH4 Factor",
+				"label": "Non-Baseload CH4 Factor (lb CH4 / MWh)",
 				"type": "string"
 			},
 			{
 				"index": 7,
 				"key": "Non Baseload N2O Factor",
-				"label": "Non- Baseload N2O Factor",
+				"label": "Non-Baseload N2O Factor (lb N2O / MWh)",
 				"type": "string"
 			},
 			{

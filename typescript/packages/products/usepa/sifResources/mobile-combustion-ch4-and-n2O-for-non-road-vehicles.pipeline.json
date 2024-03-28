@@ -217,13 +217,13 @@
 			{
 				"index": 2,
 				"key": "CH4 Factor",
-				"label": "CH4 Factor",
+				"label": "CH4 Factor (g CH4 / gallon)",
 				"type": "number"
 			},
 			{
 				"index": 3,
 				"key": "N2O Factor",
-				"label": "N2O Factor",
+				"label": "N2O Factor (g N2O / gallon)",
 				"type": "number"
 			},
 			{

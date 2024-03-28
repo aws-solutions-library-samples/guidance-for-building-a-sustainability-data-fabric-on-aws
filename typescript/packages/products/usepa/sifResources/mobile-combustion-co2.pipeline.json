@@ -19,7 +19,7 @@
 		"transforms": [
 			{
 				"index": 0,
-				"formula": "CONCAT('usepa:mobile_combustion_co2:', :Fuel Type,)",
+				"formula": "CONCAT('usepa:mobile_combustion_co2:', :Fuel Type)",
 				"outputs": [
 					{
 						"description": "Activity name.",
@@ -162,7 +162,7 @@
 			{
 				"index": 1,
 				"key": "CO2 Factor",
-				"label": "CO2 Factor",
+				"label": "kg CO2 per unit",
 				"type": "number"
 			},
 			{

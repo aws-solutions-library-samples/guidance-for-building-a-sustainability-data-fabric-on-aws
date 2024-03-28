@@ -505,13 +505,13 @@
 			{
 				"index": 2,
 				"key": "Heat Content",
-				"label": "Heat Content",
+				"label": "Heat Content (HHV)",
 				"type": "number"
 			},
 			{
 				"index": 3,
 				"key": "Heat Content Unit",
-				"label": "Heat Content Unit",
+				"label": "Heat Content (HHV) Unit",
 				"type": "string"
 			},
 			{
