@@ -53,7 +53,7 @@ Clay Bricks,,0.02,,,,,2023
 Concrete,0.01,0.02,,,,,2023
 Fly Ash,0.01,0.02,,,,,2023
 Tires,0.1,0.02,2.21,,,,2023
-Asphalt Concrete,,0.02,,,,,2023
+Asphalt Concrete,0,0.02,,,,,2023
 Asphalt Shingles,0.03,0.02,0.7,,,,2023
 Drywall,,0.02,,,,,2023
 Fiberglass Insulation,0.05,0.02,,,,,2023

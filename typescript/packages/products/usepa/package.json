@@ -7,7 +7,7 @@
     "scripts": {
         "clean:package": "npx shx rm -rf dist *.log .rush tsconfig.tsbuildinfo node_modules",
         "build": "npx tsc -b",
-		"test": "rushx build && vitest run",
+		"test": "rushx build && vitest",
         "start": "rushx build && npx tsx src/app.ts"
     },
     "dependencies": {

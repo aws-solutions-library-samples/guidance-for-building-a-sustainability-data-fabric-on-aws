@@ -33,19 +33,17 @@ export abstract class BaseUSEPA {
           });
     }
 
-	protected trimAsFloat(asString:string) : number {
-		if ((asString??'')==='') {
-			return null;
+	protected extractNumber(value:string) : number {
+		if ((value??'')==='') {
+			return undefined;
 		} else {
-			return Number.parseFloat(asString.toString().trim());
-		}
-	}
-
-	protected trimAsInt(asString:string) : number {
-		if ((asString??'')==='') {
-			return null;
-		} else {
-			return Number.parseInt(asString.toString().trim());
+			if (typeof value === 'number' && !isNaN(value)) {
+				return Number.parseFloat(value);
+			} else if (typeof value === 'string' && !isNaN(Number.parseFloat(value)) && value.length>0) {
+				return Number.parseFloat(value.toString().trim());
+			} else {
+				return undefined;
+			}
 		}
 	}
 

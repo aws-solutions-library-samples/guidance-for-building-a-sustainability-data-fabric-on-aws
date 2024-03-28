@@ -30,24 +30,16 @@ export class Scope3Category5WasteGeneratedinOperationsandCategory12EndofLifeTrea
 		this.worksheet['!ref'] = this.cellReferences.data;
 		const data = xlsx.utils.sheet_to_json(this.worksheet);
 
-		const extractNumber = (value: string): number => {
-			if (typeof value === 'number' && !isNaN(value)) {
-				return Number.parseFloat(value);
-			} else {
-				return undefined;
-			}
-		};
-
 		const items: Item[] = [];
 		data.forEach((d) => {
 			items.push({
 				material: d['Material'],
-				recycled: extractNumber(d['RecycledA']),
-				landfilled: extractNumber(d['LandfilledB']),
-				combusted: extractNumber(d['CombustedC']),
-				composted: extractNumber(d['CompostedD']),
-				anaerobicallyDigestedDry: extractNumber(d['Anaerobically Digested (Dry Digestate with Curing)']),
-				anaerobicallyDigestedWet: extractNumber(d['Anaerobically Digested (Wet  Digestate with Curing)']),
+				recycled: this.extractNumber(d['RecycledA']),
+				landfilled: this.extractNumber(d['LandfilledB']),
+				combusted: this.extractNumber(d['CombustedC']),
+				composted: this.extractNumber(d['CompostedD']),
+				anaerobicallyDigestedDry: this.extractNumber(d['Anaerobically Digested (Dry Digestate with Curing)']),
+				anaerobicallyDigestedWet: this.extractNumber(d['Anaerobically Digested (Wet  Digestate with Curing)']),
 				year: this.year,
 			});
 		});

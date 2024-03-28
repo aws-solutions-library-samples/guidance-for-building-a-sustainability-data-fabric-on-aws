@@ -70,7 +70,7 @@ export class StationaryCombustion extends BaseUSEPA {
 					});
 				}
 			} else {
-				hhvUnit = d['Energy Content (HHV)'];
+				hhvUnit = d['Heat Content (HHV)'];
 				co2EnergyUnit = d['CO2 Factor'];
 				ch4EnergyUnit = d['CH4 Factor)'];
 				n2oEnergyUnit = d['N2O Factor'];

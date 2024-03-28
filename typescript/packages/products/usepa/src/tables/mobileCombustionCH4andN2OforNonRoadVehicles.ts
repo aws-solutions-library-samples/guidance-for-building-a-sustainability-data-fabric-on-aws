@@ -46,8 +46,8 @@ export class MobileCombustionCH4andN2OforNonRoadVehicles extends BaseUSEPA {
 			items.push({
 				vehicleType,
 				fuelType: d['Fuel Type'],
-				ch4: this.trimAsFloat(d['CH4 Factor \r\n(g CH4 / gallon) ']),
-				n2o: this.trimAsFloat(d['N2O Factor \r\n(g N2O / gallon) ']),
+				ch4: this.extractNumber(d['CH4 Factor \r\n(g CH4 / gallon) ']),
+				n2o: this.extractNumber(d['N2O Factor \r\n(g N2O / gallon) ']),
 				year: this.year,
 			});
 		});

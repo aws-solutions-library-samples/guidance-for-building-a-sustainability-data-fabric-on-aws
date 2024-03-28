@@ -50,9 +50,9 @@ export class Scope3Category6BusinessTravelandCategory7EmployeeCommuting extends 
 
 			items.push({
 				vehicleType,
-				co2: this.trimAsFloat(d['CO2 Factor \r\n(kg CO2 / unit)']),
-				ch4: this.trimAsFloat(d['CH4 Factor \r\n(g CH4 / unit)']),
-				n2o: this.trimAsFloat(d['N2O Factor \r\n(g N2O / unit)']),
+				co2: this.extractNumber(d['CO2 Factor \r\n(kg CO2 / unit)']),
+				ch4: this.extractNumber(d['CH4 Factor \r\n(g CH4 / unit)']),
+				n2o: this.extractNumber(d['N2O Factor \r\n(g N2O / unit)']),
 				units: d['Units'],
 				year: this.year,
 			});

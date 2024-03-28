@@ -44,8 +44,8 @@ export class MobileCombustionCH4andN2OforOnRoadGasolineVehicles extends BaseUSEP
 				items.push({
 					vehicleType,
 					modelYear,
-					ch4: this.trimAsFloat(d[ch4ColumnName]),
-					n2o: this.trimAsFloat(d[n2oColumnName]),
+					ch4: this.extractNumber(d[ch4ColumnName]),
+					n2o: this.extractNumber(d[n2oColumnName]),
 					year: this.year,
 				});
 			} else {
@@ -64,8 +64,8 @@ export class MobileCombustionCH4andN2OforOnRoadGasolineVehicles extends BaseUSEP
 					items.push({
 						vehicleType,
 						modelYear: year,
-						ch4: this.trimAsFloat(d[ch4ColumnName]),
-						n2o: this.trimAsFloat(d[n2oColumnName]),
+						ch4: this.extractNumber(d[ch4ColumnName]),
+						n2o: this.extractNumber(d[n2oColumnName]),
 						year: this.year,
 					});
 				}
