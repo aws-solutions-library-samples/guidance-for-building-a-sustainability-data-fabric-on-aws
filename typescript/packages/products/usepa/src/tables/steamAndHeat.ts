@@ -45,7 +45,7 @@ export class SteamAndHeat extends BaseUSEPA {
 			header: [
 				{ id: 'category', title: 'Category' },
 				{ id: 'co2', title: 'CO2 Factor (kg CO2 / mmBtu)' },
-				{ id: 'ch4', title: 'CH4 Factor (g CH4 / mmBtu) ' },
+				{ id: 'ch4', title: 'CH4 Factor (g CH4 / mmBtu)' },
 				{ id: 'n2o', title: 'N2O Factor (g N2O / mmBtu)' },
 				{ id: 'year', title: 'Year' },
 			],

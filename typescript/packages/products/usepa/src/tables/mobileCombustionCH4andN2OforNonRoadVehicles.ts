@@ -31,7 +31,6 @@ export class MobileCombustionCH4andN2OforNonRoadVehicles extends BaseUSEPA {
 		const items: Item[] = [];
 		data.forEach((d) => {
 			const keys = Object.keys(d);
-			const keyCount = keys.length;
 
 			if (keys.includes('Vehicle Type')) {
 				vehicleType = (d['Vehicle Type'] as string).trim();
@@ -47,8 +46,8 @@ export class MobileCombustionCH4andN2OforNonRoadVehicles extends BaseUSEPA {
 			items.push({
 				vehicleType,
 				fuelType: d['Fuel Type'],
-				ch4: d['CH4 Factor \r\n(g CH4 / gallon) '],
-				n2o: d['N2O Factor \r\n(g N2O / gallon) '],
+				ch4: this.trimAsFloat(d['CH4 Factor \r\n(g CH4 / gallon) ']),
+				n2o: this.trimAsFloat(d['N2O Factor \r\n(g N2O / gallon) ']),
 				year: this.year,
 			});
 		});

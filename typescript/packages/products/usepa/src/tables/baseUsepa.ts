@@ -33,4 +33,20 @@ export abstract class BaseUSEPA {
           });
     }
 
+	protected trimAsFloat(asString:string) : number {
+		if ((asString??'')==='') {
+			return null;
+		} else {
+			return Number.parseFloat(asString.toString().trim());
+		}
+	}
+
+	protected trimAsInt(asString:string) : number {
+		if ((asString??'')==='') {
+			return null;
+		} else {
+			return Number.parseInt(asString.toString().trim());
+		}
+	}
+
 }
