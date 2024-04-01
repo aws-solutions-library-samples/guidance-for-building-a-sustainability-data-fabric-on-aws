@@ -72,7 +72,7 @@ cdk.Aspects.of(app).add(new AwsSolutionsChecks({ verbose: true }));
 const spokeBucketName = `sdf-${spokeAccountId}-${region}-data`;
 
 /**
- * Stack deployed in the hub account. This is where SIF is deployed
+ * Stack deployed in the hub account.
  */
 const domainId = getOrThrow(app, 'domainId');
 const domainName = getOrThrow(app, 'domainName');

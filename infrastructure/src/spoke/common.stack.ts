@@ -22,6 +22,7 @@ import path from 'path';
 import { Architecture, Runtime, Tracing } from 'aws-cdk-lib/aws-lambda';
 import { RetentionDays } from 'aws-cdk-lib/aws-logs';
 import * as cr from 'aws-cdk-lib/custom-resources';
+import * as lf from 'aws-cdk-lib/aws-lakeformation';
 import { fileURLToPath } from 'url';
 import { NagSuppressions } from 'cdk-nag';
 
@@ -75,6 +76,26 @@ export class CommonInfrastructureStack extends Stack {
 			serverAccessLogsPrefix: 'data',
 			removalPolicy: RemovalPolicy.DESTROY
 		});
+
+		const dataLocation = new lf.CfnResource(this, 'DataBucketResource', {
+			resourceArn: bucket.bucketArn,
+			useServiceLinkedRole: true
+		});
+
+        const dataLocationPerms = new lf.CfnPermissions(this, 'DataBucketServiceRolePerms', {
+            dataLakePrincipal: {
+                dataLakePrincipalIdentifier: props.roleArn,
+              },
+              resource: {
+                dataLocationResource: {
+                    catalogId: accountId,
+					s3Resource: bucket.bucketArn
+                }
+              },
+			  permissions: ['DATA_LOCATION_ACCESS']
+        });
+
+		dataLocationPerms.addDependency(dataLocation);
 
 		const accountPrincipal = new AccountPrincipal(props.hubAccountId);
 
