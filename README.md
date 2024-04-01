@@ -1,206 +1,101 @@
 # Guidance for Sustainability Data Fabric on AWS
 
-## Table of Content (required)
+The Guidance for Sustainability Data Fabric on AWS is an opinionated sustainability lens built on top of the Guidance for Data Fabric on AWS.
 
-List the top-level sections of the README template, along with a hyperlink to the specific section.
-
-### Required
-
-1. [Overview](#overview-required)
+## Table of Contents
+1. [Overview](#overview)
     - [Cost](#cost)
-2. [Prerequisites](#prerequisites-required)
-    - [Operating System](#operating-system-required)
-3. [Deployment Steps](#deployment-steps-required)
-4. [Deployment Validation](#deployment-validation-required)
-5. [Running the Guidance](#running-the-guidance-required)
-6. [Next Steps](#next-steps-required)
-7. [Cleanup](#cleanup-required)
+2. [Prerequisites](#prerequisites)
+    - [Operating System](#operating-system)
+3. [Deployment Steps](#deployment-steps)
+4. [Deployment Validation](#deployment-validation)
+5. [Running the Guidance](#running-the-guidance)
+6. [Next Steps](#next-steps)
+7. [Cleanup](#cleanup)
 
-***Optional***
+## Overview
 
-8. [FAQ, known issues, additional considerations, and limitations](#faq-known-issues-additional-considerations-and-limitations-optional)
-9. [Revisions](#revisions-optional)
-10. [Notices](#notices-optional)
-11. [Authors](#authors-optional)
+### Cost
 
-## Overview (required)
+To be added in April.
 
-1. Provide a brief overview explaining the what, why, or how of your Guidance. You can answer any one of the following to help you write this:
+## Prerequisites
 
-    - **Why did you build this Guidance?**
-    - **What problem does this Guidance solve?**
+### Operating System
 
-2. Include the architecture diagram image, as well as the steps explaining the high-level overview and flow of the architecture. 
-    - To add a screenshot, create an ‘assets/images’ folder in your repository and upload your screenshot to it. Then, using the relative file path, add it to your README. 
+These deployment instructions are intended for use on MacOS. Deployment using a different operating system may require additional steps.
 
-### Cost ( required )
+### Third-Party tools
 
-This section is for a high-level cost estimate. Think of a likely straightforward scenario with reasonable assumptions based on the problem the Guidance is trying to solve. If applicable, provide an in-depth cost breakdown table in this section.
+1. [Rush](https://rushjs.io/)
+2. [Node](https://nodejs.org/en/learn/getting-started/introduction-to-nodejs) 20
 
-Start this section with the following boilerplate text:
+### AWS Account Requirements
 
-_You are responsible for the cost of the AWS services used while running this Guidance. As of <month> <year>, the cost for running this Guidance with the default settings in the <Default AWS Region (Most likely will be US East (N. Virginia)) > is approximately $<n.nn> per month for processing ( <nnnnn> records )._
+1. Deploy the Guidance for Data Fabric sample code.
+2. Deploy the Guidance for Sustainability Insights Framework sample code. See steps [here](https://gitlab.aws.dev/wwso-cross-industry-prototyping/sif/sif-core/-/blob/main/docs/deployment/cdk_walkthrough.md).
+    1. Clone GitLab repo `git clone git@ssh.gitlab.aws.dev:wwso-cross-industry-prototyping/sif/sif-core.git`
+    2. Change into directory `cd sif-core`
+    3. Switch to feature branch `git switch feature/sif_publish_openlineage`
+    4. Install dependencies `rush update --bypass-policy`
+    5. Build `rush build`
+    6. Change into platform infrastructure directory `cd infrastructure/platform`
+    7. [Export credentials and the AWS region to the environment](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html)
+    8. Deploy platform (can choose appropriate environment) `npm run cdk — deploy -c environment=dev -c clusterDeletionProtection=false -c includeCaml=true --all --require-approval never --concurrency=5`
+    9. Change into tenant infrastructure directory `cd ../tenant`
+    10. Deploy tenant (can choose appropriate tenantId) `npm run cdk -- deploy -c tenantId=<tenantId> -c environment=<SIF_ENVIRONMENT> -c administratorEmail=<ADMIN_EMAIL> -c enableDeleteResource=true -c deleteBucket=true -c includeCaml=true --all --require-approval never --concurrency=10`
+    11. Change admin password `cd ../../typescript/packages/integrationTests && ``npm run generate:token -- <tenantId> <SIF_ENVIRONMENT> <ADMIN_EMAIL> 'temporary password' 'new password'`
 
-Replace this amount with the approximate cost for running your Guidance in the default Region. This estimate should be per month and for processing/serving resonable number of requests/entities.
+### AWS CDK Bootstrap
 
-Suggest you keep this boilerplate text:
-_We recommend creating a [Budget](https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html) through [AWS Cost Explorer](https://aws.amazon.com/aws-cost-management/aws-cost-explorer/) to help manage costs. Prices are subject to change. For full details, refer to the pricing webpage for each AWS service used in this Guidance._
+The hub and spoke accounts must be [bootstrapped](https://docs.aws.amazon.com/cdk/v2/guide/bootstrapping.html) for the [AWS Cloud Development Kit](https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html). The spoke account must be bootstrapped to trust the hub account.
 
-### Sample Cost Table ( required )
+1. `cdk bootstrap <HUB_ACCOUNT_ID>/<REGION> --profile <HUB_PROFILE>`
+2. `cdk bootstrap <SPOKE_ACCOUNT_ID>/<REGION> --trust <HUB_ACCOUNT_ID> --cloudformation-execution-policies=arn:aws:iam::aws:policy/AdministratorAccess --profile <SPOKE_PROFILE>`
 
-The following table provides a sample cost breakdown for deploying this Guidance with the default parameters in the US East (N. Virginia) Region for one month.
+### Service limits
 
-| AWS service  | Dimensions | Cost [USD] |
-| ----------- | ------------ | ------------ |
-| Amazon API Gateway | 1,000,000 REST API calls per month  | $ 3.50month |
-| Amazon Cognito | 1,000 active users per month without advanced security feature | $ 0.00 |
+1. Go to **Service Quotas** in the AWS Console. Navigate to Glue DataBrew and request a service quota increase to 50 for **Concurrent jobs per AWS account** (Quota code L-935D4120).
 
-## Prerequisites (required)
+## Deployment Steps
 
-### Operating System (required)
+1. `git clone git@github.com:aws-solutions-library-samples/guidance-for-sustainability-data-fabric-on-aws.git`
+2. `cd guidance-for-sustainability-data-fabric-on-aws`
+3. Install dependencies `rush update --bypass-policy`
+4. Build `rush build`
+5. `cd infrastructure`
+6. [Export credentials for the hub account and the AWS region to the environment](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html)
+7. Deploy `npm run cdk -- deploy -c hubAccountId=<HUB_ACCOUNT_ID> -c spokeAccountId=<SPOKE_ACCOUNT_ID> -c domainId=<DATAZONE_DOMAIN_ID> -c domainName=<DATAZONE_DOMAIN_NAME> -c projectId=<DATAZONE_PROJECT_ID> -c athenaEnvironmentId=<DATAZONE_DATA_LAKE_ENV_ID> -c redshiftEnvironmentId=<DATAZONE_DATA_WAREHOUSE_ENV_ID> -c roleArn=<SERVICE_ROLE_ARN> -c environment=<SIF_ENV> -c tenantId=<SIF_TENANT_ID> -c sifAdminEmailAddress=<SIF_ADMIN_EMAIL> -c sifAdminUserId=<IAM_IDENTITY_CENTER_USERNAME> —all —require-approval never —concurrency=10`
 
-- Talk about the base Operating System (OS) and environment that can be used to run or deploy this Guidance, such as *Mac, Linux, or Windows*. Include all installable packages or modules required for the deployment. 
-- By default, assume Amazon Linux 2/Amazon Linux 2023 AMI as the base environment. All packages that are not available by default in AMI must be listed out.  Include the specific version number of the package or module.
+## Deployment Validation
 
-**Example:**
-“These deployment instructions are optimized to best work on **<Amazon Linux 2 AMI>**.  Deployment in another OS may require additional steps.”
+1. Check that the following CloudFormation stacks have been successfully created:
+    1. Hub account
+        1. `sdf-common-hub`
+        2. `sdf-products-hub`
+        3. `sdf-demo-spoke`
+    2. Spoke account
+        1. `sdf-common-spoke`
+        2. `sdf-workflow-spoke`
+        3. `sdf-products-spoke`
+        4. `sdf-demo-spoke`
+2. Check that the Step Functions have completed successfully.
+    1. Go to the AWS Console in the hub account and look at the `df-data-asset` State Machine in AWS Step Functions. You should see about 30 successful executions.
+    2. Go to the AWS Console in the spoke account and look at the `df-spoke-data-asset` State Machine in AWS Step Functions. You should see about 30 successful executions.
 
-- Include install commands for packages, if applicable.
+## Running the Guidance
 
+Everything should run automatically after deployment completes. You can now navigate to the DataZone UI and explore the assets that have been created. If you don’t see all assets in the DataZone catalog, try rerunning the deployment steps.
 
-### Third-party tools (If applicable)
+## Next Steps
 
-*List any installable third-party tools required for deployment.*
+1. See the next steps of the Guidance for Data Fabric on AWS to learn more about general next steps.
 
+## Cleanup
 
-### AWS account requirements (If applicable)
+1. Go to the AWS Console and delete all CloudFormation stacks prefixed by `sdf` in the hub and spoke accounts.
+2. Clean up SIF as described in the [documentation](https://github.com/aws-solutions-library-samples/guidance-for-aws-sustainability-insights-framework/blob/main/docs/deployment/cli_walkthrough.md#tear-down).
 
-*List out pre-requisites required on the AWS account if applicable, this includes enabling AWS regions, requiring ACM certificate.*
+## Notices
 
-**Example:** “This deployment requires you have public ACM certificate available in your AWS account”
-
-**Example resources:**
-- ACM certificate 
-- DNS record
-- S3 bucket
-- VPC
-- IAM role with specific permissions
-- Enabling a Region or service etc.
-
-
-### aws cdk bootstrap (if sample code has aws-cdk)
-
-<If using aws-cdk, include steps for account bootstrap for new cdk users.>
-
-**Example blurb:** “This Guidance uses aws-cdk. If you are using aws-cdk for first time, please perform the below bootstrapping....”
-
-### Service limits  (if applicable)
-
-<Talk about any critical service limits that affect the regular functioning of the Guidance. If the Guidance requires service limit increase, include the service name, limit name and link to the service quotas page.>
-
-### Supported Regions (if applicable)
-
-<If the Guidance is built for specific AWS Regions, or if the services used in the Guidance do not support all Regions, please specify the Region this Guidance is best suited for>
-
-
-## Deployment Steps (required)
-
-Deployment steps must be numbered, comprehensive, and usable to customers at any level of AWS expertise. The steps must include the precise commands to run, and describe the action it performs.
-
-* All steps must be numbered.
-* If the step requires manual actions from the AWS console, include a screenshot if possible.
-* The steps must start with the following command to clone the repo. ```git clone xxxxxxx```
-* If applicable, provide instructions to create the Python virtual environment, and installing the packages using ```requirement.txt```.
-* If applicable, provide instructions to capture the deployed resource ARN or ID using the CLI command (recommended), or console action.
-
- 
-**Example:**
-
-1. Clone the repo using command ```git clone xxxxxxxxxx```
-2. cd to the repo folder ```cd <repo-name>```
-3. Install packages in requirements using command ```pip install requirement.txt```
-4. Edit content of **file-name** and replace **s3-bucket** with the bucket name in your account.
-5. Run this command to deploy the stack ```cdk deploy``` 
-6. Capture the domain name created by running this CLI command ```aws apigateway ............```
-
-
-
-## Deployment Validation  (required)
-
-<Provide steps to validate a successful deployment, such as terminal output, verifying that the resource is created, status of the CloudFormation template, etc.>
-
-
-**Examples:**
-
-* Open CloudFormation console and verify the status of the template with the name starting with xxxxxx.
-* If deployment is successful, you should see an active database instance with the name starting with <xxxxx> in        the RDS console.
-*  Run the following CLI command to validate the deployment: ```aws cloudformation describe xxxxxxxxxxxxx```
-
-
-
-## Running the Guidance (required)
-
-<Provide instructions to run the Guidance with the sample data or input provided, and interpret the output received.> 
-
-This section should include:
-
-* Guidance inputs
-* Commands to run
-* Expected output (provide screenshot if possible)
-* Output description
-
-
-
-## Next Steps (required)
-
-Provide suggestions and recommendations about how customers can modify the parameters and the components of the Guidance to further enhance it according to their requirements.
-
-
-## Cleanup (required)
-
-- Include detailed instructions, commands, and console actions to delete the deployed Guidance.
-- If the Guidance requires manual deletion of resources, such as the content of an S3 bucket, please specify.
-
-
-
-## FAQ, known issues, additional considerations, and limitations (optional)
-
-
-**Known issues (optional)**
-
-<If there are common known issues, or errors that can occur during the Guidance deployment, describe the issue and resolution steps here>
-
-
-**Additional considerations (if applicable)**
-
-<Include considerations the customer must know while using the Guidance, such as anti-patterns, or billing considerations.>
-
-**Examples:**
-
-- “This Guidance creates a public AWS bucket required for the use-case.”
-- “This Guidance created an Amazon SageMaker notebook that is billed per hour irrespective of usage.”
-- “This Guidance creates unauthenticated public API endpoints.”
-
-
-Provide a link to the *GitHub issues page* for users to provide feedback.
-
-
-**Example:** *“For any feedback, questions, or suggestions, please use the issues tab under this repo.”*
-
-## Revisions (optional)
-
-Document all notable changes to this project.
-
-Consider formatting this section based on Keep a Changelog, and adhering to Semantic Versioning.
-
-## Notices (optional)
-
-Include a legal disclaimer
-
-**Example:**
 *Customers are responsible for making their own independent assessment of the information in this Guidance. This Guidance: (a) is for informational purposes only, (b) represents AWS current product offerings and practices, which are subject to change without notice, and (c) does not create any commitments or assurances from AWS and its affiliates, suppliers or licensors. AWS products or services are provided “as is” without warranties, representations, or conditions of any kind, whether express or implied. AWS responsibilities and liabilities to its customers are controlled by AWS agreements, and this Guidance is not part of, nor does it modify, any agreement between AWS and its customers.*
-
-
-## Authors (optional)
-
-Name of code contributors
