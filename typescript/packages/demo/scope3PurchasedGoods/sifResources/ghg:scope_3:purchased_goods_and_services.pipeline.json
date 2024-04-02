@@ -84,7 +84,7 @@
 			},
 			{
 				"index": 5,
-				"formula": "set :activity_name = CONCAT('eiolca:', :material_code)\n#impact(:activity_name, 'ghg_emissions', 'co2e')",
+				"formula": "set :activity_name = CONCAT('eiolca:', :materialCode)\nIMPACT(:activity_name, 'ghg_emissions', 'co2e')",
 				"outputs": [
 					{
 						"description": "CO2e generated from purchased good/service",

@@ -8,12 +8,12 @@ const app: FastifyInstance = await buildLightApp();
 const di: AwilixContainer = app.diContainer;
 
 export const handler: CheckPipelineEventHandler = async (event, _context, _callback) => {
-  app.log.debug(`CheckPipeline > handler > event: ${JSON.stringify(event)}`);
-  const task = di.resolve<CheckPipelineService>('checkPipelineService');
-  const done = await task.process(event);
-  app.log.debug(`CheckPipeline > handler > exit:`);
-  return {
-    ...event,
-    done
-  };
+	app.log.debug(`CheckPipeline > handler > event: ${JSON.stringify(event)}`);
+	const task = di.resolve<CheckPipelineService>('checkPipelineService');
+	const done = await task.process(event);
+	app.log.debug(`CheckPipeline > handler > exit:`);
+	return {
+		...event,
+		done
+	};
 };

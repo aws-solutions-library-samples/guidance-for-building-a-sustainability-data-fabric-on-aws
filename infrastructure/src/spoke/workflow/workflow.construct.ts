@@ -208,10 +208,31 @@ export class WorkflowConstruct extends Construct {
 					callbackUrl: cfnWaitConditionHandle.ref,
 					tasks: [
 						{
+							priority: 5,
+							resourcesPrefix: 'demo/datagen',
+							sifResourcesPrefix: 'demo/scope3PurchasedGoods/sifResources'
+						},
+						{
 							priority: 4,
 							resourcesPrefix: 'products/useeio/resources',
 							sifResourcesPrefix: 'products/useeio/sifResources'
-						}]
+						},
+						{
+							priority: 2,
+							resourcesPrefix: 'products/usepa/converted/2023',
+							sifResourcesPrefix: 'products/usepa/sifResources'
+						},
+						{
+							priority: 3,
+							resourcesPrefix: 'products/usepa/converted/2024',
+							sifResourcesPrefix: 'products/usepa/sifResources'
+						},
+						{
+							priority: 1,
+							resourcesPrefix: 'demo/materialsNaicsMatching/resources',
+							sifResourcesPrefix: 'demo/materialsNaicsMatching/sifResources'
+						}
+					]
 				})
 			} as StartExecutionInput,
 			physicalResourceId: cr.PhysicalResourceId.fromResponse('executionArn')
@@ -229,7 +250,7 @@ export class WorkflowConstruct extends Construct {
 		// Note: AWS::CloudFormation::WaitCondition resource type does not support updates.
 		new CfnWaitCondition(this, 'WC'.concat(dataHash), {
 			count: 1,
-			timeout: '3600',
+			timeout: '7200',
 			handle: cfnWaitConditionHandle.ref
 		}).node.addDependency(runDemoSeederCustomResource);
 

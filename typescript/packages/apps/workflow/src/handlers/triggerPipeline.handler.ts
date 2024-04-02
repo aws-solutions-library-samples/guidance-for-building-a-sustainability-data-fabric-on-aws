@@ -8,14 +8,14 @@ const app: FastifyInstance = await buildLightApp();
 const di: AwilixContainer = app.diContainer;
 
 export const handler: TriggerPipelineEventHandler = async (event, _context, _callback) => {
-  app.log.debug(`TriggerPipeline > handler > event: ${JSON.stringify(event)}`);
-  const task = di.resolve<TriggerPipelineService>('triggerPipelineService');
-  const [executions, tasks] = await task.process(event);
-  app.log.debug(`TriggerPipeline > handler > exit:`);
-  return {
-    ...event,
-    executions,
-    executionsCount: executions.length,
-    tasks
-  };
+	app.log.debug(`TriggerPipeline > handler > event: ${JSON.stringify(event)}`);
+	const task = di.resolve<TriggerPipelineService>('triggerPipelineService');
+	const [executions, tasks] = await task.process(event);
+	app.log.debug(`TriggerPipeline > handler > exit:`);
+	return {
+		...event,
+		executions,
+		executionsCount: executions.length,
+		tasks
+	};
 };
