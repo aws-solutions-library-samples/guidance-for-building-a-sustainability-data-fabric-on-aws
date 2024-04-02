@@ -58,7 +58,7 @@ writableStream.end();
 console.log(`Finished creating materials.`)
 
 // write out invoices to file
-writableStream = fs.createWriteStream(`${outputDirectory}/invoices.csv`);
+writableStream = fs.createWriteStream(`${outputDirectory}/ghg:scope_3:purchased_goods_and_services.csv`);
 writableStream.write(Invoice.CSV_HEADER);
 invoices.forEach(i=> writableStream.write(i.asCsv()));
 writableStream.end();

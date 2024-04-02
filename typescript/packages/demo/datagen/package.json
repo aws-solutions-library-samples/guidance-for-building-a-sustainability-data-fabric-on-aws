@@ -8,7 +8,7 @@
         "clean:package": "npx shx rm -rf dist *.log .rush tsconfig.tsbuildinfo node_modules",
         "build": "npx tsc -b",
 		"test": "pnpm run build && vitest run",
-        "start:scope_3_purchased_goods": "rushx build && npx tsx src/scope_3_purchased_goods/app.ts"
+        "start": "rushx build && npx tsx src/scope_3_purchased_goods/app.ts"
     },
     "dependencies": {
 		"csv-parse": "5.5.4",
