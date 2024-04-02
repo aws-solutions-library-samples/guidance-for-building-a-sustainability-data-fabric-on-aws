@@ -170,8 +170,7 @@ hubProductInfrastructureStack.addDependency(commonHubInfrastructureStack);
 hubProductInfrastructureStack.addDependency(products);
 
 hubDemoInfrastructureStack.addDependency(commonHubInfrastructureStack);
-// hubDemoInfrastructureStack.addDependency(demos);
-
+hubDemoInfrastructureStack.addDependency(demos);
 
 const spokeWorkflowInfrastructureStack = new SpokeWorkflowInfrastructureStack(app, 'SdfSpokeWorkflowStack', {
 	stackName: 'sdf-workflow-spoke',
@@ -181,6 +180,9 @@ const spokeWorkflowInfrastructureStack = new SpokeWorkflowInfrastructureStack(ap
 	env: spokeEnvironment,
 	sifAdminEmailAddress
 });
+
+spokeWorkflowInfrastructureStack.addDependency(hubDemoInfrastructureStack);
+spokeWorkflowInfrastructureStack.addDependency(hubProductInfrastructureStack);
 
 stackSuppressions([products, demos, spokeWorkflowInfrastructureStack], commonCdkNagRules);
 

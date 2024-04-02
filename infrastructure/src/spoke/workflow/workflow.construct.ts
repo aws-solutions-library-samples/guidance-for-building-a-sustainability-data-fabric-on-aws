@@ -180,7 +180,7 @@ export class WorkflowConstruct extends Construct {
 			logs: { destination: sdfDemoSeederLogGroup, level: LogLevel.ERROR, includeExecutionData: true },
 			stateMachineName: `sdf-demo-seeder`,
 			// It should time out in 15 minutes
-			timeout: Duration.minutes(15),
+			timeout: Duration.hours(2),
 			tracingEnabled: true
 		});
 
