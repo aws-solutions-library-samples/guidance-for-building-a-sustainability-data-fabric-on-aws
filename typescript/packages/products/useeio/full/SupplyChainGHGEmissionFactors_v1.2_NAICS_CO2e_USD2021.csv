@@ -1,4 +1,4 @@
-"NAICS Code 2017","NAICS Title 2017","GHG","Unit","Without Margins","Margins","With Margins","Reference USEEIO Code"
+"NAICS Code 2017","NAICS Title 2017","GHG","Unit","Supply Chain Emission Factors without Margins","Margins of Supply Chain Emission Factors","Supply Chain Emission Factors with Margins","Reference USEEIO Code"
 111110,"Soybean Farming","All GHGs","kg CO2e/2021 USD, purchaser price",1.223,0.103,1.326,"1111A0"
 111120,"Oilseed (except Soybean) Farming","All GHGs","kg CO2e/2021 USD, purchaser price",1.223,0.103,1.326,"1111A0"
 111130,"Dry Pea and Bean Farming","All GHGs","kg CO2e/2021 USD, purchaser price",2.874,0.134,3.007,"1111B0"
