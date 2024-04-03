@@ -161,18 +161,9 @@ export class WorkflowConstruct extends Construct {
 		const sdfDemoSeederLogGroup = new LogGroup(this, 'SdfDemoSeederStateMachineLogGroup',
 			{ logGroupName: `/aws/vendedlogs/states/sdf-demo-seeder`, removalPolicy: RemovalPolicy.DESTROY });
 
-
-		// 5 - Mapping materials to EEIO emission factors
-
-		// 6 - Publishing matched material NAICS to DF
-
-		// 7 - Included in runtime workflow? Yes
-
 		// 8 - Cleaned invoice data
 
 		// 9 - Cleaned invoice data quality assertions
-
-		// 10 - Scope 3 purchased goods & services
 
 		const checkPipelineExecutions = new Choice(this, 'Executions Finish?')
 			.when(Condition.booleanEquals('$.done', true), triggerPipelineTask)
@@ -222,27 +213,27 @@ export class WorkflowConstruct extends Construct {
 							priority: 5,
 							sifResourceKey: 'demo/scope3PurchasedGoods/sifResources/purchased_goods_and_services.pipeline.json',
 							resourceAssetName: 'purchased_goods_and_services'
-						},
-						{
-							priority: 4,
-							resourcesPrefix: 'products/useeio/resources',
-							sifResourcesPrefix: 'products/useeio/sifResources'
-						},
-						{
-							priority: 2,
-							resourcesPrefix: 'products/usepa/converted/2023',
-							sifResourcesPrefix: 'products/usepa/sifResources'
-						},
-						{
-							priority: 3,
-							resourcesPrefix: 'products/usepa/converted/2024',
-							sifResourcesPrefix: 'products/usepa/sifResources'
-						},
-						{
-							priority: 1,
-							resourcesPrefix: 'demo/materialsNaicsMatching/resources',
-							sifResourcesPrefix: 'demo/materialsNaicsMatching/sifResources'
 						}
+						// {
+						// 	priority: 4,
+						// 	resourcesPrefix: 'products/useeio/resources',
+						// 	sifResourcesPrefix: 'products/useeio/sifResources'
+						// },
+						// {
+						// 	priority: 2,
+						// 	resourcesPrefix: 'products/usepa/converted/2023',
+						// 	sifResourcesPrefix: 'products/usepa/sifResources'
+						// },
+						// {
+						// 	priority: 3,
+						// 	resourcesPrefix: 'products/usepa/converted/2024',
+						// 	sifResourcesPrefix: 'products/usepa/sifResources'
+						// },
+						// {
+						// 	priority: 1,
+						// 	resourcesPrefix: 'demo/materialsNaicsMatching/resources',
+						// 	sifResourcesPrefix: 'demo/materialsNaicsMatching/sifResources'
+						// }
 					]
 				})
 			} as StartExecutionInput,
