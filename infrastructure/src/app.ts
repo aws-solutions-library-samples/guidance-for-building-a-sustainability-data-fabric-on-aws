@@ -71,6 +71,7 @@ cdk.Aspects.of(app).add(new AwsSolutionsChecks({ verbose: true }));
 
 const spokeBucketName = `sdf-${spokeAccountId}-${region}-data`;
 
+const dfSustainabilityRoleName = 'df-sustainability-read-only';
 /**
  * Stack deployed in the hub account.
  */
@@ -163,7 +164,8 @@ const hubDemoInfrastructureStack = new HubDemoInfrastructureStack(app, 'SdfHubDe
 	bucketName: spokeBucketName,
 	description: 'Infrastructure for SDF demo.',
 	spokeAccountId,
-	env: hubEnvironment
+	env: hubEnvironment,
+	dfSustainabilityRoleName
 });
 
 hubProductInfrastructureStack.addDependency(commonHubInfrastructureStack);
@@ -178,7 +180,10 @@ const spokeWorkflowInfrastructureStack = new SpokeWorkflowInfrastructureStack(ap
 	environment,
 	tenantId,
 	env: spokeEnvironment,
-	sifAdminEmailAddress
+	sifAdminEmailAddress,
+	dfSustainabilityRoleArn: `arn:aws:iam::${hubAccountId}:role/${dfSustainabilityRoleName}`,
+	domainId,
+	athenaEnvironmentId
 });
 
 spokeWorkflowInfrastructureStack.addDependency(hubDemoInfrastructureStack);

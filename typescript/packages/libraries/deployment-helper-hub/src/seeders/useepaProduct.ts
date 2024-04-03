@@ -84,10 +84,7 @@ export class UsepaProductSeeder implements CustomResource {
 						assetName: assetNameByYear[fileYear],
 						assetNamespace: this.getDomainNamespace({ name: this.dataZoneMetadata.domainName, id: this.dataZoneMetadata.domainId })
 					}]);
-				const { assetName } = newDataAssetTaskResource.catalog;
 				// file looks like this ghg-emission-factors-hub-2023.xlsx
-				const year = assetName.split('-').pop();
-				assetNameByYear[year] = assetName;
 				createConvertedFutures.push(this.dataAssetClient.create(newDataAssetTaskResource, this.requestContext));
 			}
 		}
@@ -101,12 +98,13 @@ export class UsepaProductSeeder implements CustomResource {
 
 	private assembleCreateDataAssetTaskPayload(key: string, bucket: string, externalInputs: OpenLineageInput[]): NewDataAssetTaskResource {
 
-		this.log.trace(`Product Seeder > assembleCreateDataAssetTaskPayload >`);
+		this.log.trace(`Product Seeder > assembleCreateDataAssetTaskPayload > in > key: ${key}, bucket: ${bucket}, externalInputs: ${externalInputs}`);
 
 		const fileName = key.split('/').pop();
 		const extension = fileName.split('.').pop();
-		const fileNameWithoutExtension = fileName.replaceAll(/\.(csv|xlsx)/g, '');
-		const assetName = fileToAssetNameMapping[fileNameWithoutExtension] ?? fileNameWithoutExtension;
+		const folder = key.replaceAll(`/${fileName}`, '');
+		let assetName = folder.split('/').pop();
+		assetName = fileToAssetNameMapping[assetName] ?? assetName;
 
 		const newDataAssetTaskResource: NewDataAssetTaskResource = {
 			'catalog': {
@@ -124,12 +122,12 @@ export class UsepaProductSeeder implements CustomResource {
 				'name': 's3_processing_workflow',
 				'roleArn': this.dataZoneMetadata.roleArn,
 				'dataset': {
-					'name': fileName,
+					'name': assetName,
 					'format': extension === 'xlsx' ? 'excel' : 'csv',
 					'connection': {
 						'dataLake': {
 							's3': {
-								'path': `s3://${bucket}/${key}`,
+								'path': `s3://${bucket}/${folder}`,
 								'region': this.dataZoneMetadata.region
 							}
 						}

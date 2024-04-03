@@ -22,6 +22,8 @@ export interface DFLambdaRequestContext {
 		claims: {
 			email: string;
 			identities: string
+			userId: string,
+			idcUserId: string
 		};
 	};
 }
@@ -30,7 +32,9 @@ export const getLambdaRequestContext = (email: string, userId: string): DFLambda
 	authorizer: {
 		claims: {
 			email: email,
-			identities: JSON.stringify({ userId })
+			identities: JSON.stringify({ userId: userId }),
+			userId: userId,
+			idcUserId: userId
 		}
 	}
 });

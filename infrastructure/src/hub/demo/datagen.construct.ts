@@ -37,7 +37,5 @@ export class DatagenInfrastructureConstruct extends Construct {
 				secretArn: `arn:aws:secretsmanager:${Stack.of(this).region}:${props.spokeAccountId}:secret:${REDSHIFT_CONFIGURATION_SECRET}`
 			}
 		});
-
 	};
-
 }

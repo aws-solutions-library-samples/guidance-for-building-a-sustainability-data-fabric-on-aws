@@ -12,7 +12,7 @@
  */
 
 import { CfnWaitCondition, CfnWaitConditionHandle, Duration, RemovalPolicy, Stack } from 'aws-cdk-lib';
-import { PolicyStatement } from 'aws-cdk-lib/aws-iam';
+import { Effect, PolicyStatement } from 'aws-cdk-lib/aws-iam';
 import { Architecture, Runtime, Tracing } from 'aws-cdk-lib/aws-lambda';
 import { NodejsFunction, OutputFormat } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
@@ -30,12 +30,15 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 
-export type WorkflowProps = {
+export interface WorkflowProps {
 	bucketName: string;
 	pipelineApiFunctionName: string;
 	pipelineProcessorApiFunctionName: string;
 	sifAdminEmailAddress: string;
-};
+	dfSustainabilityRoleArn: string;
+	domainId: string;
+	athenaEnvironmentId: string;
+}
 
 export class WorkflowConstruct extends Construct {
 	constructor(scope: Construct, id: string, props: WorkflowProps) {
@@ -112,13 +115,21 @@ export class WorkflowConstruct extends Construct {
 				DATA_BUCKET_NAME: bucket.bucketName,
 				PIPELINE_API_FUNCTION_NAME: pipelineLambda.functionName,
 				PIPELINE_PROCESSOR_API_FUNCTION_NAME: pipelineProcessorLambda.functionName,
-				SIF_ADMINISTRATOR_EMAIL: props.sifAdminEmailAddress
+				SIF_ADMINISTRATOR_EMAIL: props.sifAdminEmailAddress,
+				DF_SUSTAINABILITY_ROLE_ARN: props.dfSustainabilityRoleArn,
+				DATAZONE_DOMAIN_ID: props.domainId,
+				DATAZONE_ATHENA_ENVIRONMENT_ID: props.athenaEnvironmentId
 			}
 		});
 
 		bucket.grantRead(triggerPipelineLambda);
 		pipelineProcessorLambda.grantInvoke(triggerPipelineLambda);
 		pipelineLambda.grantInvoke(triggerPipelineLambda);
+		triggerPipelineLambda.addToRolePolicy(new PolicyStatement({
+			effect: Effect.ALLOW,
+			actions: ['sts:AssumeRole'],
+			resources: [props.dfSustainabilityRoleArn]
+		}));
 
 		const triggerPipelineTask = new LambdaInvoke(this, 'TriggerPipelineTask', {
 			lambdaFunction: triggerPipelineLambda,
@@ -209,8 +220,8 @@ export class WorkflowConstruct extends Construct {
 					tasks: [
 						{
 							priority: 5,
-							resourcesPrefix: 'demo/datagen',
-							sifResourcesPrefix: 'demo/scope3PurchasedGoods/sifResources'
+							sifResourceKey: 'demo/scope3PurchasedGoods/sifResources/purchased_goods_and_services.pipeline.json',
+							resourceAssetName: 'purchased_goods_and_services'
 						},
 						{
 							priority: 4,

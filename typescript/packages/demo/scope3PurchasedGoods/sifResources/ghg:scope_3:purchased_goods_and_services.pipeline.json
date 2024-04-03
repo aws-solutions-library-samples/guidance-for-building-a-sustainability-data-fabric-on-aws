@@ -10,7 +10,7 @@
 	"connectorConfig": {
 		"input": [
 			{
-				"name": "sif-csv-pipeline-input-connector"
+				"name": "sif-dataFabric-pipeline-input-connector"
 			}
 		]
 	},
@@ -103,61 +103,61 @@
 			{
 				"index": 0,
 				"key": "invoiceId",
-				"label": "Invoice Id",
+				"label": "invoiceid",
 				"type": "string"
 			},
 			{
 				"index": 1,
 				"key": "line",
-				"label": "Invoice Line",
+				"label": "line",
 				"type": "number"
 			},
 			{
 				"index": 2,
 				"key": "invoiceDate",
-				"label": "Invoice Date",
+				"label": "invoicedate",
 				"type": "string"
 			},
 			{
 				"index": 3,
 				"key": "dueDate",
-				"label": "Due Date",
+				"label": "duedate",
 				"type": "string"
 			},
 			{
 				"index": 4,
 				"key": "materialCode",
-				"label": "Material Code",
+				"label": "materialcode",
 				"type": "string"
 			},
 			{
 				"index": 5,
 				"key": "quantity",
-				"label": "Quantity",
+				"label": "quantity",
 				"type": "number"
 			},
 			{
 				"index": 6,
 				"key": "itemValue",
-				"label": "Item Value",
+				"label": "itemvalue",
 				"type": "number"
 			},
 			{
 				"index": 7,
 				"key": "totalValue",
-				"label": "Total Value",
+				"label": "totalvalue",
 				"type": "number"
 			},
 			{
 				"index": 8,
 				"key": "currencyCode",
-				"label": "Currency Code",
+				"label": "currencycode",
 				"type": "string"
 			},
 			{
 				"index": 9,
 				"key": "shipMethod",
-				"label": "Ship Method",
+				"label": "shipmethod",
 				"type": "string"
 			}
 		]

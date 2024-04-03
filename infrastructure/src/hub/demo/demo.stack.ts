@@ -3,10 +3,12 @@ import { Construct } from 'constructs';
 import { StringParameter } from 'aws-cdk-lib/aws-ssm';
 import { DatagenInfrastructureConstruct } from './datagen.construct.js';
 import { crProviderServiceTokenParameter } from '../common.stack.js';
+import { CredentialConstruct } from './credential.construct.js';
 
 export type DemoStackProperties = StackProps & {
 	bucketName: string;
 	spokeAccountId: string;
+	dfSustainabilityRoleName: string;
 };
 
 export class HubDemoInfrastructureStack extends Stack {
@@ -23,6 +25,11 @@ export class HubDemoInfrastructureStack extends Stack {
 			bucketName: props.bucketName,
 			customResourceProviderToken,
 			spokeAccountId: props.spokeAccountId
+		});
+
+		new CredentialConstruct(this, 'Credential', {
+			spokeAccountId: props.spokeAccountId,
+			dfSustainabilityRoleName: props.dfSustainabilityRoleName
 		});
 
 	}

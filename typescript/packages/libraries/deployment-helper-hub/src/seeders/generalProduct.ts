@@ -77,10 +77,10 @@ export class GeneralProductSeeder implements CustomResource {
 
 		const fileName = key.split('/').pop();
 		const extension = fileName.split('.').pop();
-		const assetName = fileName.replaceAll(/\.(csv|xlsx)/g, '');
+		const folder = key.replaceAll(`/${fileName}`, '');
+		const assetName = folder.split('/').pop();
 
 		const newDataAssetTaskResource: NewDataAssetTaskResource = {
-
 			'catalog': {
 				'assetName': assetName,
 				'autoPublish': true,
@@ -96,12 +96,12 @@ export class GeneralProductSeeder implements CustomResource {
 				'name': 's3_processing_workflow',
 				'roleArn': this.dataZoneMetadata.roleArn,
 				'dataset': {
-					'name': fileName,
+					'name': assetName,
 					'format': extension === 'xlsx' ? 'excel' : 'csv',
 					'connection': {
 						'dataLake': {
 							's3': {
-								'path': `s3://${bucket}/${key}`,
+								'path': `s3://${bucket}/${folder}`,
 								'region': this.dataZoneMetadata.region
 							}
 						}

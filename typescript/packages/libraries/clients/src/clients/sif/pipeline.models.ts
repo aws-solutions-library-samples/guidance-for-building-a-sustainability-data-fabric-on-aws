@@ -88,7 +88,6 @@ export interface PipelineConnectorConfig {
 }
 
 export interface ConnectorConfig {
-	name: string;
 	parameters?: Record<string, string>;
 }
 

@@ -1,34 +1,49 @@
 import type { Handler } from 'aws-lambda/handler';
 import type { Execution } from '@df-sustainability/clients';
 
-export interface PipelineTask {
-  priority: number;
-  resourcesPrefix: string;
-  sifResourcesPrefix: string;
+
+export interface MultiPipelineTask {
+	priority: number;
+	resourcesPrefix: string;
+	sifResourcesPrefix: string;
 }
 
+export interface SinglePipelineCsvTask {
+	priority: number;
+	sifResourceKey: string;
+	resourceKey: string;
+}
+
+export interface SinglePipelineDataFabricTask {
+	priority: number;
+	sifResourceKey: string;
+	resourceAssetName: string;
+}
+
+export type PipelineTask = MultiPipelineTask | SinglePipelineCsvTask | SinglePipelineDataFabricTask;
+
 export interface TriggerPipelineTask {
-  callbackUrl: string;
-  tasks: PipelineTask[];
+	callbackUrl: string;
+	tasks: PipelineTask[];
 }
 
 export interface CheckPipelineTask {
-  callbackUrl: string;
-  tasks: PipelineTask[];
-  executions: ExecutionDetailList;
-  executionsCount: number;
+	callbackUrl: string;
+	tasks: PipelineTask[];
+	executions: ExecutionDetailList;
+	executionsCount: number;
 }
 
 export type TaskExecutionDetails = {
-  executionId: string,
-  executionStartTime: string,
-  stateMachineArn: string,
+	executionId: string,
+	executionStartTime: string,
+	stateMachineArn: string,
 }
 
 export interface TerminationEvent {
-  Error?: string;
-  Cause?: string;
-  execution: TaskExecutionDetails;
+	Error?: string;
+	Cause?: string;
+	execution: TaskExecutionDetails;
 }
 
 export type ExecutionDetail = Pick<Execution, 'id' | 'pipelineId'>
