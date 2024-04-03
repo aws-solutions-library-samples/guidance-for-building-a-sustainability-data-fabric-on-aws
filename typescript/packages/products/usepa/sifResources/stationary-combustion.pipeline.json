@@ -1,0 +1,597 @@
+{
+	"name": "usepa:stationary_combustion:impacts",
+	"description": "Imports USEPA Stationary Combustion (table 1) GHG impact factors.",
+	"type": "impacts",
+	"attributes": {
+		"type": "integration"
+	},
+	"tags": {
+		"source": "usepa"
+	},
+	"connectorConfig": {
+		"input": [
+			{
+				"name": "sif-csv-pipeline-input-connector"
+			}
+		]
+	},
+	"transformer": {
+		"transforms": [
+			{
+				"index": 0,
+				"formula": "CONCAT('usepa:stationary_combustion:', :Fuel Type)",
+				"outputs": [
+					{
+						"description": "Activity name.",
+						"index": 0,
+						"key": "activity:name",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 1,
+				"formula": "CONCAT('USEPA stationary combustion emission factors for ', :Fuel Type)",
+				"outputs": [
+					{
+						"description": "Activity description.",
+						"index": 0,
+						"key": "activity:description",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 2,
+				"formula": "'US EPA'",
+				"outputs": [
+					{
+						"description": "Activity provider tag.",
+						"index": 0,
+						"key": "activity:tag:provider",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 3,
+				"formula": "'Stationary Combustion'",
+				"outputs": [
+					{
+						"description": "Activity dataset tag.",
+						"index": 0,
+						"key": "activity:tag:dataset",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 4,
+				"formula": ":Fuel Type",
+				"outputs": [
+					{
+						"description": "Activity fuel type tag.",
+						"index": 0,
+						"key": "activity:tag:fuel_type",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 5,
+				"formula": ":Fuel Category",
+				"outputs": [
+					{
+						"description": "Activity fuel category tag.",
+						"index": 0,
+						"key": "activity:tag:fuel_category",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 6,
+				"formula": ":Year",
+				"outputs": [
+					{
+						"description": "Activity version tag.",
+						"index": 0,
+						"key": "activity:tag:version",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 7,
+				"formula": "'Heat emission factors'",
+				"outputs": [
+					{
+						"description": "Heat emission factors.",
+						"index": 0,
+						"key": "impact:heat_emissions:name",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 8,
+				"formula": "'Heat Content'",
+				"outputs": [
+					{
+						"description": "Heat content factor.",
+						"index": 0,
+						"key": "impact:heat_emissions:component:heat_content:key",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 9,
+				"formula": ":Heat Content",
+				"outputs": [
+					{
+						"description": "Heat content factor.",
+						"index": 0,
+						"key": "impact:heat_emissions:component:heat_content:value",
+						"type": "number"
+					}
+				]
+			},
+			{
+				"index": 10,
+				"formula": "'pollutant'",
+				"outputs": [
+					{
+						"description": "Heat content factor type.",
+						"index": 0,
+						"key": "impact:heat_emissions:component:heat_content:type",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 11,
+				"formula": ":Heat Content Unit",
+				"outputs": [
+					{
+						"description": "Heat content factor unit.",
+						"index": 0,
+						"key": "impact:heat_emissions:component:heat_content:description",
+						"type": "string"
+					}
+				]
+			},
+
+
+			{
+				"index": 12,
+				"formula": "'GHG energy emission factors'",
+				"outputs": [
+					{
+						"description": "GHG energy emission factors.",
+						"index": 0,
+						"key": "impact:ghg_energy_emissions:name",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 13,
+				"formula": "'CO2'",
+				"outputs": [
+					{
+						"description": "CO₂ factor.",
+						"index": 0,
+						"key": "impact:ghg_energy_emissions:component:co2:key",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 14,
+				"formula": ":CO2 Factor Energy",
+				"outputs": [
+					{
+						"description": "CO₂ factor.",
+						"index": 0,
+						"key": "impact:ghg_energy_emissions:component:co2:value",
+						"type": "number"
+					}
+				]
+			},
+			{
+				"index": 15,
+				"formula": "'pollutant'",
+				"outputs": [
+					{
+						"description": "CO₂ factor type.",
+						"index": 0,
+						"key": "impact:ghg_energy_emissions:component:co2:type",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 16,
+				"formula": ":CO2 Factor Energy Unit",
+				"outputs": [
+					{
+						"description": "CO₂ factor unit.",
+						"index": 0,
+						"key": "impact:ghg_energy_emissions:component:co2:description",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 17,
+				"formula": "'CH4'",
+				"outputs": [
+					{
+						"description": "CH₄ factor.",
+						"index": 0,
+						"key": "impact:ghg_energy_emissions:component:ch4:key",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 18,
+				"formula": ":CH4 Factor Energy",
+				"outputs": [
+					{
+						"description": "CH₄ factor.",
+						"index": 0,
+						"key": "impact:ghg_energy_emissions:component:ch4:value",
+						"type": "number"
+					}
+				]
+			},
+			{
+				"index": 19,
+				"formula": "'pollutant'",
+				"outputs": [
+					{
+						"description": "CH₄ factor type.",
+						"index": 0,
+						"key": "impact:ghg_energy_emissions:component:ch4:type",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 20,
+				"formula": ":CH4 Factor Energy Unit",
+				"outputs": [
+					{
+						"description": "CH₄ factor unit.",
+						"index": 0,
+						"key": "impact:ghg_energy_emissions:component:ch4:description",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 21,
+				"formula": "'N2O'",
+				"outputs": [
+					{
+						"description": "N₂O factor.",
+						"index": 0,
+						"key": "impact:ghg_energy_emissions:component:n2o:key",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 22,
+				"formula": ":N2O Factor Energy",
+				"outputs": [
+					{
+						"description": "N₂O factor.",
+						"index": 0,
+						"key": "impact:ghg_energy_emissions:component:n2o:value",
+						"type": "number"
+					}
+				]
+			},
+			{
+				"index": 23,
+				"formula": "'pollutant'",
+				"outputs": [
+					{
+						"description": "N₂O factor type.",
+						"index": 0,
+						"key": "impact:ghg_energy_emissions:component:n2o:type",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 24,
+				"formula": ":N2O Factor Energy Unit",
+				"outputs": [
+					{
+						"description": "N₂O factor unit.",
+						"index": 0,
+						"key": "impact:ghg_energy_emissions:component:n2o:description",
+						"type": "string"
+					}
+				]
+			},
+
+
+
+			{
+				"index": 25,
+				"formula": "'GHG emission factors'",
+				"outputs": [
+					{
+						"description": "GHG emission factors.",
+						"index": 0,
+						"key": "impact:ghg_emissions:name",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 26,
+				"formula": "'CO2'",
+				"outputs": [
+					{
+						"description": "CO₂ factor.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:co2:key",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 27,
+				"formula": ":CO2 Factor",
+				"outputs": [
+					{
+						"description": "CO₂ factor.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:co2:value",
+						"type": "number"
+					}
+				]
+			},
+			{
+				"index": 28,
+				"formula": "'pollutant'",
+				"outputs": [
+					{
+						"description": "CO₂ factor type.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:co2:type",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 29,
+				"formula": ":CO2 Factor Unit",
+				"outputs": [
+					{
+						"description": "CO₂ factor unit.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:co2:description",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 30,
+				"formula": "'CH4'",
+				"outputs": [
+					{
+						"description": "CH₄ factor.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:ch4:key",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 31,
+				"formula": ":CH4 Factor",
+				"outputs": [
+					{
+						"description": "CH₄ factor.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:ch4:value",
+						"type": "number"
+					}
+				]
+			},
+			{
+				"index": 32,
+				"formula": "'pollutant'",
+				"outputs": [
+					{
+						"description": "CH₄ factor type.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:ch4:type",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 33,
+				"formula": ":CH4 Factor Unit",
+				"outputs": [
+					{
+						"description": "CH₄ factor unit.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:ch4:description",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 34,
+				"formula": "'N2O'",
+				"outputs": [
+					{
+						"description": "N₂O factor.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:n2o:key",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 35,
+				"formula": ":N2O Factor",
+				"outputs": [
+					{
+						"description": "N₂O factor.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:n2o:value",
+						"type": "number"
+					}
+				]
+			},
+			{
+				"index": 36,
+				"formula": "'pollutant'",
+				"outputs": [
+					{
+						"description": "N₂O factor type.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:n2o:type",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 37,
+				"formula": ":N2O Factor Unit",
+				"outputs": [
+					{
+						"description": "N₂O factor unit.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:n2o:description",
+						"type": "string"
+					}
+				]
+			}
+
+
+		],
+		"parameters": [
+			{
+				"index": 0,
+				"key": "Fuel Category",
+				"label": "Fuel Category",
+				"type": "string"
+			},
+			{
+				"index": 1,
+				"key": "Fuel Type",
+				"label": "Fuel Type",
+				"type": "string"
+			},
+			{
+				"index": 2,
+				"key": "Heat Content",
+				"label": "Heat Content (HHV)",
+				"type": "number"
+			},
+			{
+				"index": 3,
+				"key": "Heat Content Unit",
+				"label": "Heat Content (HHV) Unit",
+				"type": "string"
+			},
+			{
+				"index": 4,
+				"key": "CO2 Factor Energy",
+				"label": "CO2 Factor Energy",
+				"type": "number"
+			},
+			{
+				"index": 5,
+				"key": "CO2 Factor Energy Unit",
+				"label": "CO2 Factor Energy Unit",
+				"type": "string"
+			},
+			{
+				"index": 6,
+				"key": "CH4 Factor Energy",
+				"label": "CH4 Factor Energy",
+				"type": "number"
+			},
+			{
+				"index": 7,
+				"key": "CH4 Factor Energy Unit",
+				"label": "CH4 Factor Energy Unit",
+				"type": "string"
+			},
+			{
+				"index": 8,
+				"key": "N2O Factor Energy",
+				"label": "N2O Factor Energy",
+				"type": "number"
+			},
+			{
+				"index": 9,
+				"key": "N2O Factor Energy Unit",
+				"label": "N2O Factor Energy Unit",
+				"type": "string"
+			},
+			{
+				"index": 10,
+				"key": "CO2 Factor",
+				"label": "CO2 Factor",
+				"type": "number"
+			},
+			{
+				"index": 11,
+				"key": "CO2 Factor Unit",
+				"label": "CO2 Factor Unit",
+				"type": "string"
+			},
+			{
+				"index": 12,
+				"key": "CH4 Factor",
+				"label": "CH4 Factor",
+				"type": "number"
+			},
+			{
+				"index": 13,
+				"key": "CH4 Factor Unit",
+				"label": "CH4 Factor Unit",
+				"type": "string"
+			},
+			{
+				"index": 14,
+				"key": "N2O Factor",
+				"label": "N2O Factor",
+				"type": "number"
+			},
+			{
+				"index": 15,
+				"key": "N2O Factor Unit",
+				"label": "N2O Factor Unit",
+				"type": "string"
+			},
+			{
+				"index": 16,
+				"key": "Year",
+				"label": "Year",
+				"type": "string"
+			}
+		]
+	}
+}

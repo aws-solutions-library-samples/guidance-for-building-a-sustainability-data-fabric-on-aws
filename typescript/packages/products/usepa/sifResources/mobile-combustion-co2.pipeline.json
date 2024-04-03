@@ -1,0 +1,182 @@
+{
+	"name": "usepa:mobile_combustion_co2:impacts",
+	"description": "Imports USEPA Mobile Combustion CO2 (table 2) GHG impact factors.",
+	"type": "impacts",
+	"attributes": {
+		"type": "integration"
+	},
+	"tags": {
+		"source": "usepa"
+	},
+	"connectorConfig": {
+		"input": [
+			{
+				"name": "sif-csv-pipeline-input-connector"
+			}
+		]
+	},
+	"transformer": {
+		"transforms": [
+			{
+				"index": 0,
+				"formula": "CONCAT('usepa:mobile_combustion_co2:', :Fuel Type)",
+				"outputs": [
+					{
+						"description": "Activity name.",
+						"index": 0,
+						"key": "activity:name",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 1,
+				"formula": "CONCAT('USEPA Mobile Combustion CO2 emission factors for ', :Fuel Type, '.')",
+				"outputs": [
+					{
+						"description": "Activity description.",
+						"index": 0,
+						"key": "activity:description",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 2,
+				"formula": "'US EPA'",
+				"outputs": [
+					{
+						"description": "Activity provider tag.",
+						"index": 0,
+						"key": "activity:tag:provider",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 3,
+				"formula": "'Mobile Combustion CO2'",
+				"outputs": [
+					{
+						"description": "Activity dataset tag.",
+						"index": 0,
+						"key": "activity:tag:dataset",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 4,
+				"formula": ":Fuel Type",
+				"outputs": [
+					{
+						"description": "Activity fuel type tag.",
+						"index": 0,
+						"key": "activity:tag:fuel_type",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 5,
+				"formula": ":Year",
+				"outputs": [
+					{
+						"description": "Activity version tag.",
+						"index": 0,
+						"key": "activity:tag:version",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 6,
+				"formula": "'GHG emissions'",
+				"outputs": [
+					{
+						"description": "GHG emissions.",
+						"index": 0,
+						"key": "impact:ghg_emissions:name",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 7,
+				"formula": ":Unit",
+				"outputs": [
+					{
+						"description": "Emission factor unit.",
+						"index": 0,
+						"key": "impact:ghg_emissions:attribute:unit",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 8,
+				"formula": "'CO2'",
+				"outputs": [
+					{
+						"description": "CO₂ factor.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:co2:key",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 9,
+				"formula": ":CO2 Factor",
+				"outputs": [
+					{
+						"description": "CO₂ factor.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:co2:value",
+						"type": "number"
+					}
+				]
+			},
+			{
+				"index": 10,
+				"formula": "'pollutant'",
+				"outputs": [
+					{
+						"description": "CO₂ factor type.",
+						"index": 0,
+						"key": "impact:ghg_emissions:component:co2:type",
+						"type": "string"
+					}
+				]
+			}
+		],
+		"parameters": [
+			{
+				"index": 0,
+				"key": "Fuel Type",
+				"label": "Fuel Type",
+				"type": "string"
+			},
+			{
+				"index": 1,
+				"key": "CO2 Factor",
+				"label": "kg CO2 per unit",
+				"type": "number"
+			},
+			{
+				"index": 2,
+				"key": "Unit",
+				"label": "Unit",
+				"type": "string"
+			},
+			{
+				"index": 3,
+				"key": "Year",
+				"label": "Year",
+				"type": "string"
+			}
+		]
+	}
+}

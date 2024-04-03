@@ -1,0 +1,62 @@
+﻿Material,Recycled (Metric Tons CO2e / Short Ton Material),Landfilled (Metric Tons CO2e / Short Ton Material),Combusted (Metric Tons CO2e / Short Ton Material),Composted (Metric Tons CO2e / Short Ton Material),Anaerobically Digested (Dry Digestate with Curing (Metric Tons CO2e / Short Ton Material)),Anaerobically Digested (Wet  Digestate with Curing) (Metric Tons CO2e / Short Ton Material),Year
+Aluminum Cans,0.06,0.02,0.01,,,,2024
+Aluminum Ingot,0.04,0.02,0.01,,,,2024
+Steel Cans,0.32,0.02,0.01,,,,2024
+Copper Wire,0.18,0.02,0.01,,,,2024
+Glass,0.05,0.02,0.01,,,,2024
+HDPE,0.21,0.02,2.8,,,,2024
+LDPE,,0.02,2.8,,,,2024
+PET,0.23,0.02,2.05,,,,2024
+LLDPE,,0.02,2.8,,,,2024
+PP,0.2,0.02,2.8,,,,2024
+PS,,0.02,3.02,,,,2024
+PVC,,0.02,1.26,,,,2024
+PLA,,0.02,0.01,0.13,,,2024
+Corrugated Containers,0.11,1,0.05,,,,2024
+Magazines/Third-class mail,0.02,0.46,0.05,,,,2024
+Newspaper,0.02,0.39,0.05,,,,2024
+Office Paper,0.02,1.41,0.05,,,,2024
+Phonebooks,0.04,0.39,0.05,,,,2024
+Textbooks,0.04,1.41,0.05,,,,2024
+Dimensional Lumber,,0.17,0.05,,,,2024
+Medium-density Fiberboard,,0.07,0.05,,,,2024
+Food Waste (non-meat),,0.67,0.05,0.11,0.14,0.11,2024
+Food Waste (meat only),,0.69,0.05,0.11,0.14,0.11,2024
+Beef,,0.64,0.05,0.11,0.14,0.11,2024
+Poultry,,0.73,0.05,0.11,0.14,0.11,2024
+Grains,,2.06,0.05,0.11,0.14,0.11,2024
+Bread,,1.49,0.05,0.11,0.14,0.11,2024
+Fruits and Vegetables,,0.28,0.05,0.11,0.14,0.11,2024
+Dairy Products,,0.72,0.05,0.11,0.14,0.11,2024
+Yard Trimmings,,0.36,0.05,0.14,0.11,,2024
+Grass,,0.28,0.05,0.14,0.09,,2024
+Leaves,,0.28,0.05,0.14,0.12,,2024
+Branches,,0.58,0.05,0.14,0.15,,2024
+Mixed Paper (general),0.07,0.89,0.05,,,,2024
+Mixed Paper (primarily residential),0.07,0.86,0.05,,,,2024
+Mixed Paper (primarily from offices),0.03,0.84,0.05,,,,2024
+Mixed Metals,0.23,0.02,0.01,,,,2024
+Mixed Plastics,0.22,0.02,2.34,,,,2024
+Mixed Recyclables,0.09,0.75,0.11,,,,2024
+Food Waste,,0.68,0.05,0.11,,,2024
+Mixed Organics,,0.54,0.05,0.13,,,2024
+Mixed MSW,,0.58,0.43,,,,2024
+Carpet,,0.02,1.68,,,,2024
+Desktop CPUs,0.01,0.02,0.4,,,,2024
+Portable Electronic Devices,0.02,0.02,0.89,,,,2024
+Flat-panel Displays,0.02,0.02,0.74,,,,2024
+CRT Displays,,0.02,0.64,,,,2024
+Electronic Peripherals,0.05,0.02,2.23,,,,2024
+Hard-copy Devices,0.01,0.02,1.92,,,,2024
+Mixed Electronics,0.02,0.02,0.96,,,,2024
+Clay Bricks,,0.02,,,,,2024
+Concrete,0.01,0.02,,,,,2024
+Fly Ash,0.01,0.02,,,,,2024
+Tires,0.1,0.02,2.21,,,,2024
+Asphalt Concrete,0.0035205384954666674,0.02,,,,,2024
+Asphalt Shingles,0.03,0.02,0.7,,,,2024
+Drywall,,0.02,,,,,2024
+Fiberglass Insulation,0.05,0.02,,,,,2024
+Structural Steel,0.04,0.02,,,,,2024
+Vinyl Flooring,,0.02,0.29,,,,2024
+Wood Flooring,,0.18,0.08,,,,2024

@@ -1,0 +1,298 @@
+{
+    "name": "eiolca:naics:materials:matching",
+    "description": "Maps provided product names to North American Industry Classification System (NAICS) codes.",
+    "type": "data",
+	"attributes": {
+		"type": "integration"
+	},
+    "connectorConfig": {
+        "input": [
+            {
+                "name": "sif-csv-pipeline-input-connector"
+            }
+        ]
+    },
+    "transformer": {
+        "transforms": [
+            {
+                "index": 0,
+                "formula": ":material_code",
+                "outputs": [
+                    {
+                        "index": 0,
+                        "key": "material_code",
+                        "type": "string"
+                    }
+                ]
+            },
+            {
+                "index": 1,
+                "formula": ":material_name",
+                "outputs": [
+                    {
+                        "index": 0,
+                        "key": "material_name",
+                        "type": "string"
+                    }
+                ]
+            },
+            {
+                "index": 2,
+                "formula": "1",
+                "outputs": [
+                    {
+                        "index": 0,
+                        "key": "chosen_result",
+                        "type": "string"
+                    }
+                ]
+            },
+            {
+                "index": 3,
+                "formula": "GET_VALUE(CAML(:material_name),'$[0].naicsCode')",
+                "outputs": [
+                    {
+                        "index": 0,
+                        "key": "naicsCode_1",
+                        "type": "number"
+                    }
+                ]
+            },
+            {
+                "index": 4,
+                "formula": "GET_VALUE(CAML(:material_name),'$[0].title')",
+                "outputs": [
+                    {
+                        "index": 0,
+                        "key": "title_1",
+                        "type": "string"
+                    }
+                ]
+            },
+            {
+                "index": 5,
+                "formula": "GET_VALUE(CAML(:material_name),'$[0].co2ePerDollar')",
+                "outputs": [
+                    {
+                        "index": 0,
+                        "key": "co2e_1",
+                        "type": "string"
+                    }
+                ]
+            },
+            {
+                "index": 6,
+                "formula": "GET_VALUE(CAML(:material_name),'[0].confidence')",
+                "outputs": [
+                    {
+                        "index": 0,
+                        "key": "confidence_1",
+                        "type": "number"
+                    }
+                ]
+            },
+
+            {
+                "index": 7,
+                "formula": "GET_VALUE(CAML(:material_name),'$[1].naicsCode')",
+                "outputs": [
+                    {
+                        "index": 0,
+                        "key": "naicsCode_2",
+                        "type": "number"
+                    }
+                ]
+            },
+            {
+                "index": 8,
+                "formula": "GET_VALUE(CAML(:material_name),'$[1].title')",
+                "outputs": [
+                    {
+                        "index": 0,
+                        "key": "title_2",
+                        "type": "string"
+                    }
+                ]
+            },
+            {
+                "index": 9,
+                "formula": "GET_VALUE(CAML(:material_name),'$[1].co2ePerDollar')",
+                "outputs": [
+                    {
+                        "index": 0,
+                        "key": "co2e_2",
+                        "type": "string"
+                    }
+                ]
+            },
+            {
+                "index": 10,
+                "formula": "GET_VALUE(CAML(:material_name),'$[1].confidence')",
+                "outputs": [
+                    {
+                        "index": 0,
+                        "key": "confidence_2",
+                        "type": "number"
+                    }
+                ]
+            },
+
+            {
+                "index": 11,
+                "formula": "GET_VALUE(CAML(:material_name),'$[2].naicsCode')",
+                "outputs": [
+                    {
+                        "index": 0,
+                        "key": "naicsCode_3",
+                        "type": "number"
+                    }
+                ]
+            },
+            {
+                "index": 12,
+                "formula": "GET_VALUE(CAML(:material_name),'$[2].title')",
+                "outputs": [
+                    {
+                        "index": 0,
+                        "key": "title_3",
+                        "type": "string"
+                    }
+                ]
+            },
+            {
+                "index": 13,
+                "formula": "GET_VALUE(CAML(:material_name),'$[2].co2ePerDollar')",
+                "outputs": [
+                    {
+                        "index": 0,
+                        "key": "co2e_3",
+                        "type": "string"
+                    }
+                ]
+            },
+            {
+                "index": 14,
+                "formula": "GET_VALUE(CAML(:material_name),'$[2].confidence')",
+                "outputs": [
+                    {
+                        "index": 0,
+                        "key": "confidence_3",
+                        "type": "number"
+                    }
+                ]
+            },
+
+            {
+                "index": 15,
+                "formula": "GET_VALUE(CAML(:material_name),'$[3].naicsCode')",
+                "outputs": [
+                    {
+                        "index": 0,
+                        "key": "naicsCode_4",
+                        "type": "number"
+                    }
+                ]
+            },
+            {
+                "index": 16,
+                "formula": "GET_VALUE(CAML(:material_name),'$[3].title')",
+                "outputs": [
+                    {
+                        "index": 0,
+                        "key": "title_4",
+                        "type": "string"
+                    }
+                ]
+            },
+            {
+                "index": 17,
+                "formula": "GET_VALUE(CAML(:material_name),'$[3].co2ePerDollar')",
+                "outputs": [
+                    {
+                        "index": 0,
+                        "key": "co2e_4",
+                        "type": "string"
+                    }
+                ]
+            },
+            {
+                "index": 18,
+                "formula": "GET_VALUE(CAML(:material_name),'$[3].confidence')",
+                "outputs": [
+                    {
+                        "index": 0,
+                        "key": "confidence_4",
+                        "type": "number"
+                    }
+                ]
+            },
+
+            {
+                "index": 19,
+                "formula": "GET_VALUE(CAML(:material_name),'$[4].naicsCode')",
+                "outputs": [
+                    {
+                        "index": 0,
+                        "key": "naicsCode_5",
+                        "type": "number"
+                    }
+                ]
+            },
+            {
+                "index": 20,
+                "formula": "GET_VALUE(CAML(:material_name),'$[4].title')",
+                "outputs": [
+                    {
+                        "index": 0,
+                        "key": "title_5",
+                        "type": "string"
+                    }
+                ]
+            },
+            {
+                "index": 21,
+                "formula": "GET_VALUE(CAML(:material_name),'$[4].co2ePerDollar')",
+                "outputs": [
+                    {
+                        "index": 0,
+                        "key": "co2e_5",
+                        "type": "string"
+                    }
+                ]
+            },
+            {
+                "index": 22,
+                "formula": "GET_VALUE(CAML(:material_name),'$[4].confidence')",
+                "outputs": [
+                    {
+                        "index": 0,
+                        "key": "confidence_5",
+                        "type": "number"
+                    }
+                ]
+            }
+        ],
+        "parameters": [
+            {
+                "index": 0,
+                "key": "material_code",
+                "type": "string"
+            },
+            {
+                "index": 1,
+                "key": "material_name",
+                "type": "string"
+            },
+            {
+                "index": 2,
+                "key": "supplier_code",
+                "type": "string"
+            },
+            {
+                "index": 3,
+                "key": "supplier_name",
+                "type": "string"
+            }
+        ]
+    }
+}

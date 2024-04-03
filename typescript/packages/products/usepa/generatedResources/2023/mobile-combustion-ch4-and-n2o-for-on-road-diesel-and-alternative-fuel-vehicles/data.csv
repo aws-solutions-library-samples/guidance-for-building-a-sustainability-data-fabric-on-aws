@@ -1,0 +1,35 @@
+﻿Vehicle Type,Fuel Type,Model Year,CH4 Factor (g CH4 / vehicle-mile),N2O Factor (g N2O / vehicle-mile),Year
+Passenger Cars,Diesel,,,,2023
+Passenger Cars,Diesel,,,,2023
+Passenger Cars,Diesel,,,,2023
+Light-Duty Trucks,Diesel,,,,2023
+Light-Duty Trucks,Diesel,,,,2023
+Light-Duty Trucks,Diesel,,,,2023
+Medium- and Heavy-Duty Vehicles,Diesel,,,,2023
+Medium- and Heavy-Duty Vehicles,Diesel,,,,2023
+Light-Duty Cars,Methanol,,,,2023
+Light-Duty Cars,Ethanol,,,,2023
+Light-Duty Cars,CNG,,,,2023
+Light-Duty Cars,LPG,,,,2023
+Light-Duty Cars,Biodiesel,,,,2023
+Light-Duty Trucks,Ethanol,,,,2023
+Light-Duty Trucks,CNG,,,,2023
+Light-Duty Trucks,LPG,,,,2023
+Light-Duty Trucks,LNG,,,,2023
+Light-Duty Trucks,Biodiesel,,,,2023
+Medium-Duty Trucks,CNG,,,,2023
+Medium-Duty Trucks,LPG,,,,2023
+Medium-Duty Trucks,LNG,,,,2023
+Medium-Duty Trucks,Biodiesel,,,,2023
+Heavy-Duty Trucks,Methanol,,,,2023
+Heavy-Duty Trucks,Ethanol,,,,2023
+Heavy-Duty Trucks,CNG,,,,2023
+Heavy-Duty Trucks,LPG,,,,2023
+Heavy-Duty Trucks,LNG,,,,2023
+Heavy-Duty Trucks,Biodiesel,,,,2023
+Buses,Methanol,,,,2023
+Buses,Ethanol,,,,2023
+Buses,CNG,,,,2023
+Buses,LPG,,,,2023
+Buses,LNG,,,,2023
+Buses,Biodiesel,,,,2023
