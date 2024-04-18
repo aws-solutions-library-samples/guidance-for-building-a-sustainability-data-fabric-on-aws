@@ -1,0 +1,46 @@
+{
+    "contactPoint": {
+        "URL": "https://www.epa.gov/climateleadership/forms/contact-us-about-epa-center-corporate-climate-leadership"
+    },
+    "describedBy": "https://www.epa.gov/climateleadership/ghg-emission-factors-hub",
+    "description": "EPA's GHG Emission Factors Hub was designed to provide organizations with a regularly updated and easy-to-use set of default emission factors for organizational greenhouse gas reporting.",
+    "distribution": [
+        {
+            "downloadURL": "https://www.epa.gov/system/files/documents/2024-02/ghg-emission-factors-hub-2024.xlsx",
+            "mediaType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "title": "2024 GHG Emission Factors Hub (xlsx)"
+        },
+        {
+            "downloadURL": "https://www.epa.gov/system/files/documents/2024-02/ghg-emission-factors-hub-2024.pdf",
+            "mediaType": "application/pdf",
+            "title": "2024 GHG Emission Factors Hub (pdf)"
+        }
+    ],
+    "keyword": [
+        "USEPA",
+        "2024",
+        "scope 1",
+        "scope 2",
+        "scope 3",
+        "GHG emission factors",
+        "carbon footprint"
+    ],
+    "modified": "2024-02-13",
+    "publisher": {
+        "name": "U.S. EPA Center for Corporate Climate Leadership",
+        "subOrganizationOf": {
+            "name": "U.S. Environmental Protection Agency",
+            "subOrganizationOf": {
+                "name": "U.S. Government"
+            }
+        }
+    },
+    "references": [
+        "https://www.ecfr.gov/current/title-40/chapter-I/subchapter-C/part-98",
+        "https://www.epa.gov/ghgemissions/inventory-us-greenhouse-gas-emissions-and-sinks",
+        "https://www.epa.gov/system/files/documents/2024-01/egrid2022_summary_tables.xlsx",
+        "https://www.epa.gov/system/files/documents/2024-01/egrid2022_technical_guide.pdf"
+    ],
+    "rights": null,
+    "title": "2024 GHG Emission Factors Hub)"
+}

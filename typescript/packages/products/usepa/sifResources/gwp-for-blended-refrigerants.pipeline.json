@@ -1,0 +1,183 @@
+{
+	"name": "usepa:gwp_for_blended_refrigerants:impacts",
+	"description": "Imports USEPA Global Warming Potential (GWP) for Blended Refrigerants (table 12) as impact factors.",
+	"type": "impacts",
+	"attributes": {
+		"type": "integration"
+	},
+	"tags": {
+		"source": "usepa"
+	},
+	"connectorConfig": {
+		"input": [
+			{
+				"name": "sif-csv-pipeline-input-connector"
+			}
+		]
+	},
+	"transformer": {
+		"transforms": [
+			{
+				"index": 0,
+				"formula": "CONCAT('usepa:gwp_for_blended_refrigerants:', :ASHRAE)",
+				"outputs": [
+					{
+						"description": "Activity name.",
+						"index": 0,
+						"key": "activity:name",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 1,
+				"formula": "CONCAT('USEPA Global Warming Potential (GWP) for Blended Refrigerants - ', :ASHRAE)",
+				"outputs": [
+					{
+						"description": "Activity description.",
+						"index": 0,
+						"key": "activity:description",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 2,
+				"formula": "'US EPA'",
+				"outputs": [
+					{
+						"description": "Activity provider tag.",
+						"index": 0,
+						"key": "activity:tag:provider",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 3,
+				"formula": "'Global Warming Potential (GWP) for Blended Refrigerants'",
+				"outputs": [
+					{
+						"description": "Activity dataset tag.",
+						"index": 0,
+						"key": "activity:tag:dataset",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 4,
+				"formula": ":ASHRAE",
+				"outputs": [
+					{
+						"description": "Activity ASHRAE tag.",
+						"index": 0,
+						"key": "activity:tag:ashrae",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 5,
+				"formula": ":Year",
+				"outputs": [
+					{
+						"description": "Activity version tag.",
+						"index": 0,
+						"key": "activity:tag:version",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 6,
+				"formula": ":Blend Composition",
+				"outputs": [
+					{
+						"description": "Activity blend composition attribute.",
+						"index": 0,
+						"key": "activity:attribute:blend_composition",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 7,
+				"formula": "'100 yr'",
+				"outputs": [
+					{
+						"description": "100 year impact.",
+						"index": 0,
+						"key": "impact:100_yr:name",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 8,
+				"formula": "'GWP'",
+				"outputs": [
+					{
+						"description": "100-yr GWP.",
+						"index": 0,
+						"key": "impact:100_yr:component:gwp:key",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 9,
+				"formula": ":100 year GWP",
+				"outputs": [
+					{
+						"description": "100-yr GWP.",
+						"index": 0,
+						"key": "impact:100_yr:component:gwp:value",
+						"type": "number"
+					}
+				]
+			},
+			{
+				"index": 10,
+				"formula": "'pollutant'",
+				"outputs": [
+					{
+						"description": "100-yr GWP.",
+						"index": 0,
+						"key": "impact:100_yr:component:gwp:type",
+						"type": "string"
+					}
+				]
+			}
+
+		],
+		"parameters": [
+			{
+				"index": 0,
+				"key": "ASHRAE",
+				"label": "ASHRAE",
+				"type": "string"
+			},
+			{
+				"index": 1,
+				"key": "100 year GWP",
+				"label": "100-year GWP",
+				"type": "string"
+			},
+			{
+				"index": 2,
+				"key": "Blend Composition",
+				"label": "Blend Composition",
+				"type": "string"
+			},
+			{
+				"index": 3,
+				"key": "Year",
+				"label": "Year",
+				"type": "string"
+			}
+		]
+	}
+}

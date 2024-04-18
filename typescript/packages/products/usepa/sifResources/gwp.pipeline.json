@@ -1,0 +1,183 @@
+{
+	"name": "usepa:gwp:impacts",
+	"description": "Imports USEPA Global Warming Potential (GWP) (table 11) as impact factors.",
+	"type": "impacts",
+	"attributes": {
+		"type": "integration"
+	},
+	"tags": {
+		"source": "usepa"
+	},
+	"connectorConfig": {
+		"input": [
+			{
+				"name": "sif-csv-pipeline-input-connector"
+			}
+		]
+	},
+	"transformer": {
+		"transforms": [
+			{
+				"index": 0,
+				"formula": "CONCAT('usepa:gwp:', :Industrial Designation or Common Name)",
+				"outputs": [
+					{
+						"description": "Activity name.",
+						"index": 0,
+						"key": "activity:name",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 1,
+				"formula": "CONCAT('USEPA Global Warming Potential (GWP) - ', :Industrial Designation or Common Name)",
+				"outputs": [
+					{
+						"description": "Activity description.",
+						"index": 0,
+						"key": "activity:description",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 2,
+				"formula": "'US EPA'",
+				"outputs": [
+					{
+						"description": "Activity provider tag.",
+						"index": 0,
+						"key": "activity:tag:provider",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 3,
+				"formula": "'Global Warming Potential (GWP)'",
+				"outputs": [
+					{
+						"description": "Activity dataset tag.",
+						"index": 0,
+						"key": "activity:tag:dataset",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 4,
+				"formula": ":Industrial Designation or Common Name",
+				"outputs": [
+					{
+						"description": "Activity Industrial Designation or Common Name tag.",
+						"index": 0,
+						"key": "activity:tag:industrial_designation_or_common_name",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 5,
+				"formula": ":Year",
+				"outputs": [
+					{
+						"description": "Activity version tag.",
+						"index": 0,
+						"key": "activity:tag:version",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 6,
+				"formula": ":Chemical Formula",
+				"outputs": [
+					{
+						"description": "Activity chemical formula attribute.",
+						"index": 0,
+						"key": "activity:attribute:chemical_formula",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 7,
+				"formula": "'100 yr'",
+				"outputs": [
+					{
+						"description": "100 year impact.",
+						"index": 0,
+						"key": "impact:100_yr:name",
+						"type": "string"
+					}
+				]
+			},
+
+			{
+				"index": 8,
+				"formula": "'GWP'",
+				"outputs": [
+					{
+						"description": "100-yr GWP.",
+						"index": 0,
+						"key": "impact:100_yr:component:gwp:key",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 9,
+				"formula": ":100 year GWP",
+				"outputs": [
+					{
+						"description": "100-yr GWP.",
+						"index": 0,
+						"key": "impact:100_yr:component:gwp:value",
+						"type": "number"
+					}
+				]
+			},
+			{
+				"index": 10,
+				"formula": "'pollutant'",
+				"outputs": [
+					{
+						"description": "100-yr GWP.",
+						"index": 0,
+						"key": "impact:100_yr:component:gwp:type",
+						"type": "string"
+					}
+				]
+			}
+
+		],
+		"parameters": [
+			{
+				"index": 0,
+				"key": "Industrial Designation or Common Name",
+				"label": "Industrial Designation or Common Name",
+				"type": "string"
+			},
+			{
+				"index": 1,
+				"key": "Chemical Formula",
+				"label": "Chemical Formula",
+				"type": "string"
+			},
+			{
+				"index": 2,
+				"key": "100 year GWP",
+				"label": "100-Year GWP",
+				"type": "string"
+			},
+			{
+				"index": 3,
+				"key": "Year",
+				"label": "Year",
+				"type": "string"
+			}
+		]
+	}
+}

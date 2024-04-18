@@ -1,0 +1,184 @@
+{
+	"name": "ghg:scope_3:purchased_goods_and_services",
+	"attributes": {
+		"source": "sif",
+		"activityType": "Scope 3 - Purchased Goods and Services",
+		"calculationMethod": "GHG Spend-Based",
+		"emissionFactors": "USEEIO"
+	},
+	"description": "Pipeline to process GHG emissions from Scope 3 activities using GHG spend-based method with USEEIO commodity emission factors",
+	"connectorConfig": {
+		"input": [
+			{
+				"name": "sif-dataFabric-pipeline-input-connector"
+			}
+		],
+		"output": [
+			{
+				"name": "sif-dataFabric-pipeline-output-connector"
+			}
+		]
+	},
+	"transformer": {
+		"transforms": [
+			{
+				"index": 0,
+				"formula": "AS_TIMESTAMP(:invoiceDate, 'yyyy-MM-dd HH:mm:ss.SSS')",
+				"outputs": [
+					{
+						"description": "Date of activity",
+						"index": 0,
+						"key": "date",
+						"label": "Date",
+						"type": "timestamp"
+					}
+				]
+			},
+			{
+				"index": 1,
+				"formula": ":invoiceId",
+				"outputs": [
+					{
+						"description": "Invoice ID for the activity data",
+						"index": 0,
+						"key": "invoiceId",
+						"label": "Invoice ID",
+						"type": "string",
+						"includeAsUnique": true
+					}
+				]
+			},
+			{
+				"index": 2,
+				"formula": ":line",
+				"outputs": [
+					{
+						"description": "Line item for the activity data",
+						"index": 0,
+						"key": "line",
+						"label": "Line",
+						"type": "string",
+						"includeAsUnique": true
+					}
+				]
+			},
+			{
+				"index": 3,
+				"formula": ":materialCode",
+				"outputs": [
+					{
+						"description": "Purchased Goods and Services material code.",
+						"index": 0,
+						"key": "materialCode",
+						"label": "PG&S Material Code",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 4,
+				"formula": ":totalValue",
+				"outputs": [
+					{
+						"description": "Total value spent on good or service.",
+						"index": 0,
+						"key": "totalValue",
+						"label": "PG&S total value",
+						"type": "number"
+					}
+				]
+			},
+			{
+				"index": 5,
+				"formula": ":currencyCode",
+				"outputs": [
+					{
+						"description": "Unit of currency spent on activity",
+						"index": 0,
+						"key": "currencyCode",
+						"label": "PG&S Currency Code",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"index": 6,
+				"formula": "set :activity_name = CONCAT('eiolca:', :materialCode)\nIMPACT(:activity_name, 'ghg_emissions', 'co2e')",
+				"outputs": [
+					{
+						"description": "CO2e generated from purchased good/service",
+						"index": 0,
+						"key": "co2e",
+						"label": "CO₂e",
+						"type": "number",
+						"metrics": [
+							"ghg:co2e:scope3:purchased_goods_services"
+						]
+					}
+				]
+			}
+		],
+		"parameters": [
+			{
+				"index": 0,
+				"key": "invoiceId",
+				"label": "invoiceid",
+				"type": "string"
+			},
+			{
+				"index": 1,
+				"key": "line",
+				"label": "line",
+				"type": "number"
+			},
+			{
+				"index": 2,
+				"key": "invoiceDate",
+				"label": "invoicedate",
+				"type": "string"
+			},
+			{
+				"index": 3,
+				"key": "dueDate",
+				"label": "duedate",
+				"type": "string"
+			},
+			{
+				"index": 4,
+				"key": "materialCode",
+				"label": "materialcode",
+				"type": "string"
+			},
+			{
+				"index": 5,
+				"key": "quantity",
+				"label": "quantity",
+				"type": "number"
+			},
+			{
+				"index": 6,
+				"key": "itemValue",
+				"label": "itemvalue",
+				"type": "number"
+			},
+			{
+				"index": 7,
+				"key": "totalValue",
+				"label": "totalvalue",
+				"type": "number"
+			},
+			{
+				"index": 8,
+				"key": "currencyCode",
+				"label": "currencycode",
+				"type": "string"
+			},
+			{
+				"index": 9,
+				"key": "shipMethod",
+				"label": "shipmethod",
+				"type": "string"
+			}
+		]
+	}
+}

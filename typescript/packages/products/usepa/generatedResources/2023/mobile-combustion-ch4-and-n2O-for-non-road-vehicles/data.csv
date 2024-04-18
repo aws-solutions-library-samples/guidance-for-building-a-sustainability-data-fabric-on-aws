@@ -1,0 +1,41 @@
+﻿Vehicle Type,Fuel Type,CH4 Factor (g CH4 / gallon),N2O Factor (g N2O / gallon),Year
+Ships and Boats,Residual Fuel Oil,,,2023
+Ships and Boats,Gasoline (2 stroke),,,2023
+Ships and Boats,Gasoline (4 stroke),,,2023
+Ships and Boats,Diesel,,,2023
+Locomotives,Diesel,,,2023
+Aircraft,Jet Fuel,,,2023
+Aircraft,Aviation Gasoline,,,2023
+Agricultural Equipment,Gasoline (2 stroke),,,2023
+Agricultural Equipment,Gasoline (4 stroke),,,2023
+Agricultural Equipment,Gasoline Off-Road Trucks,,,2023
+Agricultural Equipment,Diesel Equipment,,,2023
+Agricultural Equipment,Diesel Off-Road Trucks,,,2023
+Agricultural Equipment,LPG,,,2023
+Construction/Mining Equipment,Gasoline (2 stroke),,,2023
+Construction/Mining Equipment,Gasoline (4 stroke),,,2023
+Construction/Mining Equipment,Gasoline Off-Road Trucks,,,2023
+Construction/Mining Equipment,Diesel Equipment,,,2023
+Construction/Mining Equipment,Diesel Off-Road Trucks,,,2023
+Construction/Mining Equipment,LPG,,,2023
+Lawn and Garden Equipment,Gasoline (2 stroke),,,2023
+Lawn and Garden Equipment,Gasoline (4 stroke),,,2023
+Lawn and Garden Equipment,Diesel,,,2023
+Lawn and Garden Equipment,LPG,,,2023
+Airport Equipment,Gasoline,,,2023
+Airport Equipment,Diesel,,,2023
+Airport Equipment,LPG,,,2023
+Industrial/Commercial Equipment,Gasoline (2 stroke),,,2023
+Industrial/Commercial Equipment,Gasoline (4 stroke),,,2023
+Industrial/Commercial Equipment,Diesel,,,2023
+Industrial/Commercial Equipment,LPG,,,2023
+Logging Equipment,Gasoline (2 stroke),,,2023
+Logging Equipment,Gasoline (4 stroke),,,2023
+Logging Equipment,Diesel,,,2023
+Railroad Equipment,Gasoline,,,2023
+Railroad Equipment,Diesel,,,2023
+Railroad Equipment,LPG,,,2023
+Recreational Equipment,Gasoline (2 stroke),,,2023
+Recreational Equipment,Gasoline (4 stroke),,,2023
+Recreational Equipment,Diesel,,,2023
+Recreational Equipment,LPG,,,2023

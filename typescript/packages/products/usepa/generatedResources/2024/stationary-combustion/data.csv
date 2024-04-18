@@ -1,0 +1,64 @@
+﻿Fuel Category,Fuel Type,Heat Content (HHV),Heat Content (HHV) Unit,CO2 Factor Energy,CO2 Factor Energy Unit,CH4 Factor Energy,CH4 Factor Energy Unit,N2O Factor Energy,N2O Factor Energy Unit,CO2 Factor,CO2 Factor Unit,CH4 Factor,CH4 Factor Unit,N2O Factor,N2O Factor Unit,Year
+Coal and Coke,Anthracite,25.09,mmBtu per short ton,103.69,kg CO2 per mmBtu,11,,1.6,g N2O per mmBtu,2602,kg CO2 per short ton,276,g CH4 per short ton,40,g N2O per short ton,2024
+Coal and Coke,Bituminous,24.93,mmBtu per short ton,93.28,kg CO2 per mmBtu,11,,1.6,g N2O per mmBtu,2325,kg CO2 per short ton,274,g CH4 per short ton,40,g N2O per short ton,2024
+Coal and Coke,Sub-bituminous,17.25,mmBtu per short ton,97.17,kg CO2 per mmBtu,11,,1.6,g N2O per mmBtu,1676,kg CO2 per short ton,190,g CH4 per short ton,28,g N2O per short ton,2024
+Coal and Coke,Lignite,14.21,mmBtu per short ton,97.72,kg CO2 per mmBtu,11,,1.6,g N2O per mmBtu,1389,kg CO2 per short ton,156,g CH4 per short ton,23,g N2O per short ton,2024
+Coal and Coke,Mixed (Commercial Sector),21.39,mmBtu per short ton,94.27,kg CO2 per mmBtu,11,,1.6,g N2O per mmBtu,2016,kg CO2 per short ton,235,g CH4 per short ton,34,g N2O per short ton,2024
+Coal and Coke,Mixed (Electric Power Sector),19.73,mmBtu per short ton,95.52,kg CO2 per mmBtu,11,,1.6,g N2O per mmBtu,1885,kg CO2 per short ton,217,g CH4 per short ton,32,g N2O per short ton,2024
+Coal and Coke,Mixed (Industrial Coking),26.28,mmBtu per short ton,93.9,kg CO2 per mmBtu,11,,1.6,g N2O per mmBtu,2468,kg CO2 per short ton,289,g CH4 per short ton,42,g N2O per short ton,2024
+Coal and Coke,Mixed (Industrial Sector),22.35,mmBtu per short ton,94.67,kg CO2 per mmBtu,11,,1.6,g N2O per mmBtu,2116,kg CO2 per short ton,246,g CH4 per short ton,36,g N2O per short ton,2024
+Coal and Coke,Coal Coke,24.8,mmBtu per short ton,113.67,kg CO2 per mmBtu,11,,1.6,g N2O per mmBtu,2819,kg CO2 per short ton,273,g CH4 per short ton,40,g N2O per short ton,2024
+Other Fuels - Solid,Municipal Solid Waste,9.95,mmBtu per short ton,90.7,kg CO2 per mmBtu,32,,4.2,g N2O per mmBtu,902,kg CO2 per short ton,318,g CH4 per short ton,42,g N2O per short ton,2024
+Other Fuels - Solid,Petroleum Coke (Solid),30,mmBtu per short ton,102.41,kg CO2 per mmBtu,32,,4.2,g N2O per mmBtu,3072,kg CO2 per short ton,960,g CH4 per short ton,126,g N2O per short ton,2024
+Other Fuels - Solid,Plastics,38,mmBtu per short ton,75,kg CO2 per mmBtu,32,,4.2,g N2O per mmBtu,2850,kg CO2 per short ton,1216,g CH4 per short ton,160,g N2O per short ton,2024
+Other Fuels - Solid,Tires,28,mmBtu per short ton,85.97,kg CO2 per mmBtu,32,,4.2,g N2O per mmBtu,2407,kg CO2 per short ton,896,g CH4 per short ton,118,g N2O per short ton,2024
+Biomass Fuels - Solid,Agricultural Byproducts,8.25,mmBtu per short ton,118.17,kg CO2 per mmBtu,32,,4.2,g N2O per mmBtu,975,kg CO2 per short ton,264,g CH4 per short ton,35,g N2O per short ton,2024
+Biomass Fuels - Solid,Peat,8,mmBtu per short ton,111.84,kg CO2 per mmBtu,32,,4.2,g N2O per mmBtu,895,kg CO2 per short ton,256,g CH4 per short ton,34,g N2O per short ton,2024
+Biomass Fuels - Solid,Solid Byproducts,10.39,mmBtu per short ton,105.51,kg CO2 per mmBtu,32,,4.2,g N2O per mmBtu,1096,kg CO2 per short ton,332,g CH4 per short ton,44,g N2O per short ton,2024
+Biomass Fuels - Solid,Wood and Wood Residuals,17.48,mmBtu per short ton,93.8,kg CO2 per mmBtu,7.2,,3.6,g N2O per mmBtu,1640,kg CO2 per short ton,126,g CH4 per short ton,63,g N2O per short ton,2024
+Natural Gas,Natural Gas,0.001026,mmBtu per scf,53.06,kg CO2 per mmBtu,1,,0.1,g N2O per mmBtu,0.05444,kg CO2 per scf,0.00103,g CH4 per scf,0.0001,g N2O per scf,2024
+Other Fuels - Gaseous,Blast Furnace Gas,0.000092,mmBtu per scf,274.32,kg CO2 per mmBtu,0.022000000000000002,,0.1,g N2O per mmBtu,0.02524,kg CO2 per scf,0.000002,g CH4 per scf,0.000009,g N2O per scf,2024
+Other Fuels - Gaseous,Coke Oven Gas,0.000599,mmBtu per scf,46.85,kg CO2 per mmBtu,0.48,,0.1,g N2O per mmBtu,0.02806,kg CO2 per scf,0.000288,g CH4 per scf,0.00006,g N2O per scf,2024
+Other Fuels - Gaseous,Fuel Gas,0.001388,mmBtu per scf,59,kg CO2 per mmBtu,3,,0.6,g N2O per mmBtu,0.08189,kg CO2 per scf,0.004164,g CH4 per scf,0.000833,g N2O per scf,2024
+Other Fuels - Gaseous,Propane Gas,0.002516,mmBtu per scf,61.46,kg CO2 per mmBtu,3,,0.6,g N2O per mmBtu,0.15463,kg CO2 per scf,0.007548,g CH4 per scf,0.00151,g N2O per scf,2024
+Biomass Fuels - Gaseous,Landfill Gas,0.000485,mmBtu per scf,52.07,kg CO2 per mmBtu,3.2,,0.63,g N2O per mmBtu,0.025254,kg CO2 per scf,0.001552,g CH4 per scf,0.000306,g N2O per scf,2024
+Biomass Fuels - Gaseous,Other Biomass Gases,0.000655,mmBtu per scf,52.07,kg CO2 per mmBtu,3.2,,0.63,g N2O per mmBtu,0.034106,kg CO2 per scf,0.002096,g CH4 per scf,0.000413,g N2O per scf,2024
+Petroleum Products,Asphalt and Road Oil,0.158,mmBtu per gallon,75.36,kg CO2 per mmBtu,3,,0.6,g N2O per mmBtu,11.91,kg CO2 per gallon,0.47,g CH4 per gallon,0.09,g N2O per gallon,2024
+Petroleum Products,Aviation Gasoline,0.12,mmBtu per gallon,69.25,kg CO2 per mmBtu,3,,0.6,g N2O per mmBtu,8.31,kg CO2 per gallon,0.36,g CH4 per gallon,0.07,g N2O per gallon,2024
+Petroleum Products,Butane,0.103,mmBtu per gallon,64.77,kg CO2 per mmBtu,3,,0.6,g N2O per mmBtu,6.67,kg CO2 per gallon,0.31,g CH4 per gallon,0.06,g N2O per gallon,2024
+Petroleum Products,Butylene,0.105,mmBtu per gallon,68.72,kg CO2 per mmBtu,3,,0.6,g N2O per mmBtu,7.22,kg CO2 per gallon,0.32,g CH4 per gallon,0.06,g N2O per gallon,2024
+Petroleum Products,Crude Oil,0.138,mmBtu per gallon,74.54,kg CO2 per mmBtu,3,,0.6,g N2O per mmBtu,10.29,kg CO2 per gallon,0.41,g CH4 per gallon,0.08,g N2O per gallon,2024
+Petroleum Products,Distillate Fuel Oil No. 1,0.139,mmBtu per gallon,73.25,kg CO2 per mmBtu,3,,0.6,g N2O per mmBtu,10.18,kg CO2 per gallon,0.42,g CH4 per gallon,0.08,g N2O per gallon,2024
+Petroleum Products,Distillate Fuel Oil No. 2,0.138,mmBtu per gallon,73.96,kg CO2 per mmBtu,3,,0.6,g N2O per mmBtu,10.21,kg CO2 per gallon,0.41,g CH4 per gallon,0.08,g N2O per gallon,2024
+Petroleum Products,Distillate Fuel Oil No. 4,0.146,mmBtu per gallon,75.04,kg CO2 per mmBtu,3,,0.6,g N2O per mmBtu,10.96,kg CO2 per gallon,0.44,g CH4 per gallon,0.09,g N2O per gallon,2024
+Petroleum Products,Ethane,0.068,mmBtu per gallon,59.6,kg CO2 per mmBtu,3,,0.6,g N2O per mmBtu,4.05,kg CO2 per gallon,0.2,g CH4 per gallon,0.04,g N2O per gallon,2024
+Petroleum Products,Ethylene,0.058,mmBtu per gallon,65.96,kg CO2 per mmBtu,3,,0.6,g N2O per mmBtu,3.83,kg CO2 per gallon,0.17,g CH4 per gallon,0.03,g N2O per gallon,2024
+Petroleum Products,Heavy Gas Oils,0.148,mmBtu per gallon,74.92,kg CO2 per mmBtu,3,,0.6,g N2O per mmBtu,11.09,kg CO2 per gallon,0.44,g CH4 per gallon,0.09,g N2O per gallon,2024
+Petroleum Products,Isobutane,0.099,mmBtu per gallon,64.94,kg CO2 per mmBtu,3,,0.6,g N2O per mmBtu,6.43,kg CO2 per gallon,0.3,g CH4 per gallon,0.06,g N2O per gallon,2024
+Petroleum Products,Isobutylene,0.103,mmBtu per gallon,68.86,kg CO2 per mmBtu,3,,0.6,g N2O per mmBtu,7.09,kg CO2 per gallon,0.31,g CH4 per gallon,0.06,g N2O per gallon,2024
+Petroleum Products,Kerosene,0.135,mmBtu per gallon,75.2,kg CO2 per mmBtu,3,,0.6,g N2O per mmBtu,10.15,kg CO2 per gallon,0.41,g CH4 per gallon,0.08,g N2O per gallon,2024
+Petroleum Products,Kerosene-Type Jet Fuel,0.135,mmBtu per gallon,72.22,kg CO2 per mmBtu,3,,0.6,g N2O per mmBtu,9.75,kg CO2 per gallon,0.41,g CH4 per gallon,0.08,g N2O per gallon,2024
+Petroleum Products,Liquefied Petroleum Gases (LPG),0.092,mmBtu per gallon,61.71,kg CO2 per mmBtu,3,,0.6,g N2O per mmBtu,5.68,kg CO2 per gallon,0.28,g CH4 per gallon,0.06,g N2O per gallon,2024
+Petroleum Products,Lubricants,0.144,mmBtu per gallon,74.27,kg CO2 per mmBtu,3,,0.6,g N2O per mmBtu,10.69,kg CO2 per gallon,0.43,g CH4 per gallon,0.09,g N2O per gallon,2024
+Petroleum Products,Motor Gasoline,0.125,mmBtu per gallon,70.22,kg CO2 per mmBtu,3,,0.6,g N2O per mmBtu,8.78,kg CO2 per gallon,0.38,g CH4 per gallon,0.08,g N2O per gallon,2024
+Petroleum Products,Naphtha (<401 deg F),0.125,mmBtu per gallon,68.02,kg CO2 per mmBtu,3,,0.6,g N2O per mmBtu,8.5,kg CO2 per gallon,0.38,g CH4 per gallon,0.08,g N2O per gallon,2024
+Petroleum Products,Natural Gasoline,0.11,mmBtu per gallon,66.88,kg CO2 per mmBtu,3,,0.6,g N2O per mmBtu,7.36,kg CO2 per gallon,0.33,g CH4 per gallon,0.07,g N2O per gallon,2024
+Petroleum Products,Other Oil (>401 deg F),0.139,mmBtu per gallon,76.22,kg CO2 per mmBtu,3,,0.6,g N2O per mmBtu,10.59,kg CO2 per gallon,0.42,g CH4 per gallon,0.08,g N2O per gallon,2024
+Petroleum Products,Pentanes Plus,0.11,mmBtu per gallon,70.02,kg CO2 per mmBtu,3,,0.6,g N2O per mmBtu,7.7,kg CO2 per gallon,0.33,g CH4 per gallon,0.07,g N2O per gallon,2024
+Petroleum Products,Petrochemical Feedstocks,0.125,mmBtu per gallon,71.02,kg CO2 per mmBtu,3,,0.6,g N2O per mmBtu,8.88,kg CO2 per gallon,0.38,g CH4 per gallon,0.08,g N2O per gallon,2024
+Petroleum Products,Propane,0.091,mmBtu per gallon,62.87,kg CO2 per mmBtu,3,,0.6,g N2O per mmBtu,5.72,kg CO2 per gallon,0.27,g CH4 per gallon,0.05,g N2O per gallon,2024
+Petroleum Products,Propylene,0.091,mmBtu per gallon,67.77,kg CO2 per mmBtu,3,,0.6,g N2O per mmBtu,6.17,kg CO2 per gallon,0.27,g CH4 per gallon,0.05,g N2O per gallon,2024
+Petroleum Products,Residual Fuel Oil No. 5,0.14,mmBtu per gallon,72.93,kg CO2 per mmBtu,3,,0.6,g N2O per mmBtu,10.21,kg CO2 per gallon,0.42,g CH4 per gallon,0.08,g N2O per gallon,2024
+Petroleum Products,Residual Fuel Oil No. 6,0.15,mmBtu per gallon,75.1,kg CO2 per mmBtu,3,,0.6,g N2O per mmBtu,11.27,kg CO2 per gallon,0.45,g CH4 per gallon,0.09,g N2O per gallon,2024
+Petroleum Products,Special Naphtha,0.125,mmBtu per gallon,72.34,kg CO2 per mmBtu,3,,0.6,g N2O per mmBtu,9.04,kg CO2 per gallon,0.38,g CH4 per gallon,0.08,g N2O per gallon,2024
+Petroleum Products,Unfinished Oils,0.139,mmBtu per gallon,74.54,kg CO2 per mmBtu,3,,0.6,g N2O per mmBtu,10.36,kg CO2 per gallon,0.42,g CH4 per gallon,0.08,g N2O per gallon,2024
+Petroleum Products,Used Oil,0.138,mmBtu per gallon,74,kg CO2 per mmBtu,3,,0.6,g N2O per mmBtu,10.21,kg CO2 per gallon,0.41,g CH4 per gallon,0.08,g N2O per gallon,2024
+Biomass Fuels - Liquid,Biodiesel (100%),0.128,mmBtu per gallon,73.84,kg CO2 per mmBtu,1.1,,0.11,g N2O per mmBtu,9.45,kg CO2 per gallon,0.14,g CH4 per gallon,0.01,g N2O per gallon,2024
+Biomass Fuels - Liquid,Ethanol (100%),0.084,mmBtu per gallon,68.44,kg CO2 per mmBtu,1.1,,0.11,g N2O per mmBtu,5.75,kg CO2 per gallon,0.09,g CH4 per gallon,0.01,g N2O per gallon,2024
+Biomass Fuels - Liquid,Rendered Animal Fat,0.125,mmBtu per gallon,71.06,kg CO2 per mmBtu,1.1,,0.11,g N2O per mmBtu,8.88,kg CO2 per gallon,0.14,g CH4 per gallon,0.01,g N2O per gallon,2024
+Biomass Fuels - Liquid,Vegetable Oil,0.12,mmBtu per gallon,81.55,kg CO2 per mmBtu,1.1,,0.11,g N2O per mmBtu,9.79,kg CO2 per gallon,0.13,g CH4 per gallon,0.01,g N2O per gallon,2024
+"Biomass Fuels - Kraft Pulping Liquor, by Wood Furnish",North American Softwood,,,94.4,kg CO2 per mmBtu,1.9,,0.42,g N2O per mmBtu,,,,,,,2024
+"Biomass Fuels - Kraft Pulping Liquor, by Wood Furnish",North American Hardwood,,,93.7,kg CO2 per mmBtu,1.9,,0.42,g N2O per mmBtu,,,,,,,2024
+"Biomass Fuels - Kraft Pulping Liquor, by Wood Furnish",Bagasse,,,95.5,kg CO2 per mmBtu,1.9,,0.42,g N2O per mmBtu,,,,,,,2024
+"Biomass Fuels - Kraft Pulping Liquor, by Wood Furnish",Bamboo,,,93.7,kg CO2 per mmBtu,1.9,,0.42,g N2O per mmBtu,,,,,,,2024
+"Biomass Fuels - Kraft Pulping Liquor, by Wood Furnish",Straw,,,95.1,kg CO2 per mmBtu,1.9,,0.42,g N2O per mmBtu,,,,,,,2024
