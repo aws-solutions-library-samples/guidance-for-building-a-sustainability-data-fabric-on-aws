@@ -9,7 +9,7 @@
 7. [Cleanup](#cleanup)
 
 ## Overview
-The Guidance for Sustainability Data Fabric on AWS is an opinionated sustainability lens built on top of the Guidance for Data Fabric on AWS.
+The Guidance for Sustainability Data Fabric on AWS is an opinionated sustainability lens built on top of the [Guidance for Data Fabric on AWS](https://github.com/aws-solutions-library-samples/guidance-for-data-fabric-on-aws).
 
 ## Prerequisites
 
@@ -24,7 +24,7 @@ These deployment instructions are intended for use on MacOS. Deployment using a 
 
 ### AWS Account Requirements
 
-1. Deploy the Guidance for Data Fabric sample code.
+1. Deploy the Guidance for Data Fabric sample code. See [Guidance for Data Fabric on AWS](https://github.com/aws-solutions-library-samples/guidance-for-data-fabric-on-aws) for instructions.
 2. Create an IAM Role in the hub account that can be assumed principal spoke account (where SIF is deployed). You can assign the managed policy `AmazonDataZoneFullUserAcces` to the IAM role.
 3. Deploy the Guidance for Sustainability Insights Framework sample code. See steps [here](https://github.com/aws-solutions-library-samples/guidance-for-aws-sustainability-insights-framework/blob/main/docs/deployment/cdk_walkthrough.md).
     1. Clone GitHub repo `git clone git@github.com:aws-solutions-library-samples/guidance-for-aws-sustainability-insights-framework.git`
@@ -80,7 +80,7 @@ npm run cdk -- deploy -c hubAccountId=<HUB_ACCOUNT_ID> \
 -c athenaEnvironmentId=<DATAZONE_DATA_LAKE_ENV_ID> -c redshiftEnvironmentId=<DATAZONE_DATA_WAREHOUSE_ENV_ID> \
 -c roleArn=<SERVICE_ROLE_ARN> -c environment=<SIF_ENV> -c tenantId=<SIF_TENANT_ID> \
 -c sifAdminEmailAddress=<SIF_ADMIN_EMAIL> -c sdfAdminUserId=<IAM_IDENTITY_CENTER_USERNAME> \
-—require-approval never —concurrency=10 SdfHubDemoStack SdfHubProductStack
+-—require-approval never -—concurrency=10 SdfHubDemoStack SdfHubProductStack
 ```
 
 ### Products and Pipelines Deployment Validation
