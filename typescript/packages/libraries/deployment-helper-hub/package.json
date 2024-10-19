@@ -30,7 +30,7 @@
 		"@aws-sdk/client-lambda": "3.370.0",
 		"@aws-sdk/client-glue": "3.370.0",
 		"aws-xray-sdk": "3.5.0",
-		"axios": "1.6.7",
+		"axios": "1.7.4",
 		"@aws-sdk/client-secrets-manager": "3.370.0",
 		"@aws-sdk/util-stream-node": "3.370.0",
 		"@df-sustainability/clients": "workspace:*",
