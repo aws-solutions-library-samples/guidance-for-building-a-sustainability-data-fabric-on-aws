@@ -1,4 +1,4 @@
-# Guidance for Sustainability Data Fabric on AWS
+# Guidance for Sustainability Data Management on AWS
 
 ## Table of Contents
 1. [Overview](#overview)
@@ -9,7 +9,7 @@
 7. [Cleanup](#cleanup)
 
 ## Overview
-The Guidance for Sustainability Data Fabric on AWS is an opinionated sustainability lens built on top of the [Guidance for Data Fabric on AWS](https://github.com/aws-solutions-library-samples/guidance-for-data-fabric-on-aws).
+The Guidance for Sustainability Data Management on AWS is an opinionated sustainability lens built on top of the [Guidance for Data Fabric on AWS](https://github.com/aws-solutions-library-samples/guidance-for-data-fabric-on-aws).
 
 ## Prerequisites
 
